@@ -1,0 +1,70 @@
+@import './open-props/props.colors-oklch-hues.css';
+@import './open-props/props.colors-oklch.css';
+@import './open-props/props.gray-oklch.css';
+
+@source './components/**/*.svelte';
+
+:root {
+	--dim: 0.3;
+	--radius: 6px;
+	--font-sans: 'Wix Madefor Text Variable', sans-serif;
+	--font-serif: Merriweather, serif;
+	--font-mono: Fira Code, monospace;
+
+	--color-hue: var(--hue-orange);
+	--gray-hue: 250;
+
+	--compote-ink: var(--gray-15);
+	--compote-ink-dim: var(--gray-11);
+	--compote-surface-3: var(--gray-5);
+	--compote-surface-2: var(--gray-4);
+	--compote-surface-1: var(--gray-3);
+	--compote-surface-document: var(--gray-2);
+	--compote-well: var(--gray-1);
+
+	--compote-primary: var(--color-7);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--compote-ink: var(--gray-1);
+		--compote-ink-dim: var(--gray-5);
+		--compote-surface-3: var(--gray-11);
+		--compote-surface-2: var(--gray-12);
+		--compote-surface-1: var(--gray-13);
+		--compote-surface-document: var(--gray-14);
+		--compote-well: var(--gray-15);
+
+		--compote-primary: oklch(from var(--color-7) l c var(--hue-orange));
+	}
+}
+
+@theme inline {
+	--color-ink: var(--compote-ink);
+	--color-ink-dim: var(--compote-ink-dim);
+	--color-surface-3: var(--compote-surface-3);
+	--color-surface-2: var(--compote-surface-2);
+	--color-surface-1: var(--compote-surface-1);
+	--color-surface-document: var(--compote-surface-document);
+	--color-well: var(--compote-well);
+
+	--color-primary: var(--compote-primary);
+
+	--font-sans: var(--font-sans);
+	--font-mono: var(--font-mono);
+	--font-serif: var(--font-serif);
+
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+	* {
+		@apply border-surface-3;
+	}
+	body {
+		@apply bg-surface-document text-ink;
+	}
+}
