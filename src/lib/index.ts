@@ -19,7 +19,7 @@ export { default as NumberInput } from './components/number-input/number-input.s
 
 export { default as Select } from './components/select/select.svelte';
 
-export { default as Spliter } from './components/splitter/splitter.svelte';
+export { default as Splitter } from './components/splitter/splitter.svelte';
 export type { SplitterPanelConfig, SplitterProps } from './components/splitter/types';
 
 export { default as Switch } from './components/switch/switch.svelte';
