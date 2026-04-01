@@ -31,3 +31,4 @@ export * as Menu from './components/menu';
 export * as Field from './components/field';
 
 export { default as TreeView } from './components/tree-view/tree-view.svelte';
+export type { TreeNode } from './components/tree-view/types';
