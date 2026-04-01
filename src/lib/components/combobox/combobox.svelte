@@ -16,8 +16,9 @@
 		placeholder,
 		layout = 'vertical',
 		name,
-		readonly,
+		readOnly,
 		multiple,
+		loading = false,
 		...restProps
 	}: ComboboxProps<T> = $props();
 
@@ -91,21 +92,22 @@
 	onInputValueChange={handleInputChange}
 	openOnClick
 	{multiple}
-	readOnly={readonly}
+	{readOnly}
 	{...restProps}
 	class={cn(layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5')}
 >
 	{#if label}
-		<Combobox.Label>
+		<Combobox.Label class="text-sm">
 			{label}
-			<Field.RequiredIndicator />
+			<Field.RequiredIndicator class="text-danger" />
 		</Combobox.Label>
 	{/if}
 
 	<Combobox.Control
 		class={cn(
 			'rounded-ark flex min-h-9 items-center gap-1 border px-3 shadow-sm',
-			'focus-within:ring-1 focus-within:ring-(--ark-ring)',
+			'focus-within:ring-1 focus-within:ring-primary',
+			'data-invalid:border-danger data-invalid:focus-within:ring-danger',
 			multiple && 'flex-wrap py-1'
 		)}
 	>
@@ -114,21 +116,8 @@
 				{#each value as v (v)}
 					{@const item = items.find((i) => i.value === v)}
 					{#if item}
-						<span
-							class="inline-flex items-center gap-1 rounded bg-(--ark-hover-bg) px-2 py-0.5 text-xs"
-						>
+						<span class="inline-flex items-center gap-1 rounded bg-surface-2 px-2 py-0.5 text-xs">
 							{item.label}
-							{#if !readonly}
-								<button
-									type="button"
-									onclick={() => {
-										value = (value as (number | string)[]).filter((x) => x !== v);
-									}}
-									class="hover:text-(--ark-error)"
-								>
-									<PhX class="size-3" />
-								</button>
-							{/if}
 						</span>
 					{/if}
 				{/each}
@@ -138,7 +127,7 @@
 			placeholder={placeholder ?? 'Search...'}
 			class="flex-1 bg-transparent text-sm outline-none placeholder:text-ink-dim disabled:cursor-not-allowed disabled:opacity-50"
 		/>
-		{#if value != null && !readonly && !multiple}
+		{#if !readOnly}
 			<Combobox.ClearTrigger class="text-ink-dim transition-colors hover:text-ink">
 				<PhX class="size-4" />
 			</Combobox.ClearTrigger>
@@ -153,11 +142,19 @@
 			<Combobox.Content
 				class="data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-1 p-1  shadow-md"
 			>
-				<Combobox.Empty class="py-2 text-center text-sm text-ink-dim">
-					No results found
-				</Combobox.Empty>
+				{#if loading}
+					<div class="flex items-center justify-center py-4">
+						<span
+							class="size-5 animate-spin rounded-full border-2 border-surface-3 border-t-ink-dim"
+						></span>
+					</div>
+				{:else}
+					<Combobox.Empty class="py-2 text-center text-sm text-ink-dim">
+						No results found
+					</Combobox.Empty>
+				{/if}
 
-				{#each collection.items as item (item.value)}
+				{#each loading ? [] : collection.items as item (item.value)}
 					<Combobox.Item
 						{item}
 						class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-2 data-[state=checked]:bg-surface-2"

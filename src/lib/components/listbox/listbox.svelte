@@ -1,4 +1,5 @@
 <script module>
+	// eslint-disable-next-line no-import-assign
 	export type { ListboxItem, ListboxProps } from './types';
 </script>
 
@@ -55,7 +56,7 @@
 	{collection}
 	onValueChange={handleValueChange}
 	{...restProps}
-	class={cn('flex flex-col gap-1.5 w-full h-full overflow-hidden', className)}
+	class={cn('flex h-full w-full flex-col gap-1.5 overflow-hidden', className)}
 >
 	{#if label}
 		<Listbox.Label>{label}</Listbox.Label>
@@ -64,26 +65,24 @@
 		<Listbox.Input
 			placeholder={filterPlaceholder}
 			oninput={(e) => (filterText = e.currentTarget.value)}
-			class="w-full bg-transparent mx-1 border border-(--ark-border) rounded-xs px-2.5 h-8 text-sm outline-none focus:ring-1 focus:ring-(--ark-ring) placeholder:text-(--ark-muted)"
+			class="mx-1 h-8 w-full rounded-xs border border-surface-3 bg-transparent px-2.5 text-sm outline-none placeholder:text-ink-dim focus-visible:ring-1 focus-visible:ring-primary"
 		/>
 	{/if}
-	<Listbox.Content class="flex flex-col outline-none gap-1 w-full flex-1 min-h-0 overflow-y-auto">
+	<Listbox.Content class="flex min-h-0 w-full flex-1 flex-col gap-1 overflow-y-auto outline-none">
 		{#if hasGroups}
 			{#each collection.group() as [type, group] (type)}
 				<Listbox.ItemGroup class="flex flex-col gap-1 px-1 py-1">
-					<Listbox.ItemGroupLabel
-						class="font-medium text-sm text-(--ark-muted) h-10 flex items-center"
-					>
+					<Listbox.ItemGroupLabel class="flex h-10 items-center text-sm font-medium text-ink-dim">
 						{type}
 					</Listbox.ItemGroupLabel>
 					{#each group as item (item.value)}
 						<Listbox.Item
 							{item}
-							class="items-center rounded-xs data-highlighted:bg-(--ark-accent-bg) cursor-pointer flex justify-between font-medium data-disabled:opacity-50 text-sm transition-all duration-150 py-1.5 px-2.5 hover:bg-(--ark-accent-bg)"
+							class="flex cursor-pointer items-center justify-between rounded-xs px-2.5 py-1.5 text-sm font-medium transition-all duration-150 hover:bg-surface-2 data-disabled:opacity-50 data-highlighted:bg-surface-2"
 						>
 							<Listbox.ItemText class="flex-1 truncate">{item.label}</Listbox.ItemText>
 							<Listbox.ItemIndicator
-								class="text-primary w-5 h-5 data-[state=checked]:flex data-[state=unchecked]:hidden"
+								class="h-5 w-5 text-primary data-[state=checked]:flex data-[state=unchecked]:hidden"
 							>
 								<PhCheckBold />
 							</Listbox.ItemIndicator>
@@ -95,20 +94,18 @@
 			{#each collection.items as item (item.value)}
 				<Listbox.Item
 					{item}
-					class="items-center rounded-xs data-highlighted:bg-(--ark-accent-bg) cursor-pointer flex justify-between font-medium data-disabled:opacity-50 text-sm transition-all duration-150 py-1.5 px-2.5 hover:bg-(--ark-accent-bg)"
+					class="flex cursor-pointer items-center justify-between rounded-xs px-2.5 py-1.5 text-sm font-medium transition-all duration-150 hover:bg-surface-2 data-disabled:opacity-50 data-highlighted:bg-surface-2"
 				>
 					<Listbox.ItemText class="flex-1 truncate">{item.label}</Listbox.ItemText>
 					<Listbox.ItemIndicator
-						class="text-primary w-5 h-5 data-[state=checked]:flex data-[state=unchecked]:hidden"
+						class="h-5 w-5 text-primary data-[state=checked]:flex data-[state=unchecked]:hidden"
 					>
 						<PhCheckBold />
 					</Listbox.ItemIndicator>
 				</Listbox.Item>
 			{/each}
 		{/if}
-		<Listbox.Empty class="py-4 text-center text-sm text-(--ark-muted)"
-			>No results found</Listbox.Empty
-		>
+		<Listbox.Empty class="py-4 text-center text-sm text-ink-dim">No results found</Listbox.Empty>
 	</Listbox.Content>
 </Listbox.Root>
 

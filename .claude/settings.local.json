@@ -1,10 +1,10 @@
 {
-  "permissions": {
-    "allow": [
-      "mcp__plugin_svelte_svelte__svelte-autofixer",
-      "mcp__ark-ui__list_examples",
-      "mcp__ark-ui__get_example",
-      "mcp__ark-ui__get_component_props"
-    ]
-  }
+	"permissions": {
+		"allow": [
+			"mcp__plugin_svelte_svelte__svelte-autofixer",
+			"mcp__ark-ui__list_examples",
+			"mcp__ark-ui__get_example",
+			"mcp__ark-ui__get_component_props"
+		]
+	}
 }

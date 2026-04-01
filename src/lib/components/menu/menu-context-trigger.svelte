@@ -11,13 +11,10 @@
 	const { class: className, children }: Props = $props();
 </script>
 
-<Menu.Positioner>
-	<Menu.Content
-		class={cn(
-			'bg-surface-1 text-ink z-50 min-w-32 overflow-hidden rounded-md border p-1 shadow-md outline-none',
-			className
-		)}
-	>
-		{@render children()}
-	</Menu.Content>
-</Menu.Positioner>
+<Menu.ContextTrigger>
+	{#snippet asChild(props)}
+		<div {...props()} class={cn(props().class, className)}>
+			{@render children()}
+		</div>
+	{/snippet}
+</Menu.ContextTrigger>

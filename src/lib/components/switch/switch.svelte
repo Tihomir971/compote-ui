@@ -6,7 +6,13 @@
 		layout?: 'vertical' | 'horizontal';
 	}
 
-	let { checked = $bindable(), label, labelSpacer = false, layout = 'horizontal', ...rootProps }: Props = $props();
+	let {
+		checked = $bindable(),
+		label,
+		labelSpacer = false,
+		layout = 'horizontal',
+		...rootProps
+	}: Props = $props();
 	const rootClass = $derived(
 		layout === 'vertical'
 			? 'flex flex-col items-start gap-1 data-disabled:cursor-not-allowed data-disabled:opacity-50'
@@ -19,14 +25,14 @@
 {/if}
 <Switch.Root {...rootProps} bind:checked class={rootClass}>
 	<Switch.Control
-		class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-transparent bg-(--ark-track-bg) ring-offset-background transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-(--ark-ring) focus-visible:ring-offset-2 focus-visible:outline-hidden data-[state=checked]:bg-(--ark-primary)"
+		class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-transparent bg-surface-3 transition-colors duration-150 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-hidden data-invalid:ring-2 data-invalid:ring-danger data-invalid:ring-offset-2 data-[state=checked]:bg-primary"
 	>
 		<Switch.Thumb
-			class="pointer-events-none block size-5 rounded-full bg-(--ark-bg) shadow-sm ring-0 transition-transform duration-150 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+			class="pointer-events-none block size-5 rounded-full bg-white shadow-sm ring-0 transition-transform duration-150 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
 		/>
 	</Switch.Control>
 	{#if label}
-		<Switch.Label class="cursor-pointer select-none text-sm font-medium text-(--ark-foreground)">
+		<Switch.Label class="cursor-pointer text-sm font-medium text-ink select-none">
 			{label}
 		</Switch.Label>
 	{/if}

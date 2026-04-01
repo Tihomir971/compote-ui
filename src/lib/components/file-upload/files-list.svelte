@@ -27,22 +27,20 @@
 		{#snippet render(context)}
 			<!-- Dropzone -->
 			<FileUpload.Dropzone
-				class="flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-12 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+				class="flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-surface-3 bg-surface-2 px-6 py-12 transition-colors hover:bg-surface-3"
 			>
 				<!-- File Icon -->
 				<div
-					class="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900"
+					class="mb-4 flex h-12 w-12 items-center justify-center rounded-full border bg-surface-1"
 				>
-					<PhFileText class="h-5 w-5 text-gray-400 dark:text-gray-500" />
+					<PhFileText class="h-5 w-5 text-ink-dim" />
 				</div>
 
 				<!-- Text -->
 				<div class="space-y-2 text-center">
-					<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100">Upload files</h3>
-					<p class="text-sm text-gray-600 dark:text-gray-400">Drag & drop or click to browse</p>
-					<p class="text-xs text-gray-500 dark:text-gray-400">
-						All files • Max 10 files • Up to 100MB
-					</p>
+					<h3 class="text-sm font-medium text-ink">Upload files</h3>
+					<p class="text-sm text-ink-dim">Drag & drop or click to browse</p>
+					<p class="text-xs text-ink-dim">All files • Max 10 files • Up to 100MB</p>
 				</div>
 			</FileUpload.Dropzone>
 
@@ -52,12 +50,10 @@
 					<FileUpload.ItemGroup>
 						{#each context().acceptedFiles as file (file.name)}
 							<FileUpload.Item {file}>
-								<div
-									class="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900"
-								>
+								<div class="flex items-center gap-3 rounded-lg border bg-surface-1 p-3">
 									<!-- File Icon/Preview -->
 									<div
-										class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+										class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-surface-2"
 									>
 										{#if file.type.startsWith('image/')}
 											<FileUpload.ItemPreview type="image/*">
@@ -71,15 +67,13 @@
 
 									<!-- File Info -->
 									<div class="min-w-0 flex-1">
-										<FileUpload.ItemName
-											class="truncate text-sm font-medium text-gray-900 dark:text-gray-100"
-										/>
-										<FileUpload.ItemSizeText class="text-xs text-gray-500 dark:text-gray-400" />
+										<FileUpload.ItemName class="truncate text-sm font-medium text-ink" />
+										<FileUpload.ItemSizeText class="text-xs text-ink-dim" />
 									</div>
 
 									<!-- Delete Button -->
 									<FileUpload.ItemDeleteTrigger
-										class="flex h-6 w-6 shrink-0 items-center justify-center text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+										class="flex h-6 w-6 shrink-0 items-center justify-center text-ink-dim hover:text-ink"
 									>
 										<PhX class="h-4 w-4" />
 									</FileUpload.ItemDeleteTrigger>
@@ -90,7 +84,7 @@
 
 					<!-- Remove All Button -->
 					<FileUpload.ClearTrigger
-						class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-100"
+						class="inline-flex items-center rounded-md border bg-surface-1 px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-hidden"
 					>
 						Remove all files
 					</FileUpload.ClearTrigger>

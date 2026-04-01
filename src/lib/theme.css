@@ -22,7 +22,11 @@
 	--compote-surface-document: var(--gray-2);
 	--compote-well: var(--gray-1);
 
-	--compote-primary: var(--color-7);
+	--compote-primary: oklch(from var(--color-7) l c var(--hue-orange));
+	--compote-danger: oklch(from var(--color-7) l c var(--hue-red));
+	--compote-warning: oklch(from var(--color-7) l c var(--hue-yellow));
+	--compote-success: oklch(from var(--color-7) l c var(--hue-green));
+	--compote-info: oklch(from var(--color-7) l c var(--hue-blue));
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +40,10 @@
 		--compote-well: var(--gray-15);
 
 		--compote-primary: oklch(from var(--color-7) l c var(--hue-orange));
+		--compote-danger: oklch(from var(--color-7) l c var(--hue-red));
+		--compote-warning: oklch(from var(--color-7) l c var(--hue-yellow));
+		--compote-success: oklch(from var(--color-7) l c var(--hue-green));
+		--compote-info: oklch(from var(--color-7) l c var(--hue-blue));
 	}
 }
 
@@ -49,6 +57,10 @@
 	--color-well: var(--compote-well);
 
 	--color-primary: var(--compote-primary);
+	--color-danger: var(--compote-danger);
+	--color-warning: var(--compote-warning);
+	--color-success: var(--compote-success);
+	--color-info: var(--compote-info);
 
 	--font-sans: var(--font-sans);
 	--font-mono: var(--font-mono);

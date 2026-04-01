@@ -17,9 +17,7 @@
 		...restProps
 	}: SelectProps<T> = $props();
 	const rootClass = $derived(
-		layout === 'horizontal'
-			? 'flex items-center gap-(--ark-field-gap)'
-			: 'grid gap-(--ark-field-gap)'
+		layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5'
 	);
 
 	const collection = $derived(
@@ -56,12 +54,12 @@
 	{/if}
 	<Select.Control>
 		<Select.Trigger
-			class="rounded-ark flex h-(--ark-input-height) w-full cursor-pointer items-center justify-between border border-(--ark-border) bg-(--ark-bg) px-(--ark-input-px) text-sm shadow-sm focus:ring-1 focus:ring-(--ark-ring) focus:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50"
+			class="flex h-9 w-full cursor-pointer items-center justify-between rounded-md border bg-surface-1 px-3 text-sm shadow-sm focus-visible:ring-1 focus-visible:ring-primary focus-visible:outline-none active:bg-surface-2 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-invalid:border-danger data-invalid:focus-visible:ring-danger"
 		>
 			<div class="flex items-center gap-2">
 				<Select.ValueText
 					placeholder={placeholder ?? 'Select a item'}
-					class={cn('text-nowrap', value ? '' : 'text-(--ark-muted)')}
+					class={cn('text-nowrap', value ? '' : 'text-ink-dim')}
 				/>
 			</div>
 			<Select.Indicator>
@@ -72,13 +70,13 @@
 	<Portal>
 		<Select.Positioner>
 			<Select.Content
-				class="data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-(--ark-popover-bg) p-1 text-(--ark-popover-fg) shadow-md"
+				class="data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-1 p-1 text-ink shadow-md"
 			>
 				<Select.ItemGroup>
 					{#each items as item (item.value)}
 						<Select.Item
 							{item}
-							class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm text-(--ark-accent-fg) select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-(--ark-accent-bg) data-[state=checked]:bg-(--ark-accent-bg)"
+							class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm text-ink select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-2 data-[state=checked]:bg-surface-2"
 						>
 							<Select.ItemText>{item.label}</Select.ItemText>
 							<Select.ItemIndicator class="absolute right-2 items-center justify-center">

@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		ImageCropper,
-		useImageCropper,
-		type ImageCropperGetCroppedImageOptions
-	} from '@ark-ui/svelte/image-cropper';
+	import { ImageCropper, useImageCropper } from '@ark-ui/svelte/image-cropper';
 	import type { ImageCropperProps } from './types';
 	import { Button } from '$lib';
 
@@ -11,7 +7,9 @@
 		src,
 		alt = 'Image',
 		aspectRatio = $bindable(),
+		// eslint-disable-next-line no-useless-assignment
 		getCroppedImage = $bindable(),
+		// eslint-disable-next-line no-useless-assignment
 		getCropData = $bindable(),
 		...cropperProps
 	}: ImageCropperProps = $props();
@@ -41,7 +39,9 @@
 
 	const imageCropper = useImageCropper(() => ({ ...cropperProps, aspectRatio }));
 
+	// eslint-disable-next-line no-useless-assignment
 	getCroppedImage = (options) => imageCropper().getCroppedImage(options);
+	// eslint-disable-next-line no-useless-assignment
 	getCropData = () => imageCropper().getCropData();
 
 	let cropData = $derived(imageCropper().getCropData());
@@ -52,7 +52,7 @@
 		<div>
 			{#each ASPECT_RATIO_OPTIONS as option (option.label)}
 				<Button
-					variant={aspectRatio === option.value ? 'solid' : 'outline'}
+					variant={aspectRatio === option.value ? 'default' : 'outline'}
 					size="sm"
 					onclick={() => {
 						aspectRatio = option.value;
@@ -67,7 +67,7 @@
 
 	<ImageCropper.RootProvider value={imageCropper}>
 		<ImageCropper.Viewport
-			class="bg-surface-2 relative overflow-hidden rounded-lg"
+			class="relative overflow-hidden rounded-lg bg-surface-2"
 			style={imageAspectRatio ? `aspect-ratio: ${imageAspectRatio}` : 'aspect-ratio: 1'}
 		>
 			<ImageCropper.Image

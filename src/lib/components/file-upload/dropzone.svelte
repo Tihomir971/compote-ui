@@ -17,7 +17,7 @@
 
 <FileUpload.Root {maxFiles} {accept} {onFileAccept} {...restProps}>
 	<FileUpload.Dropzone
-		class="text-muted-foreground flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center transition-colors hover:border-primary/50 data-dragging:border-primary data-dragging:bg-primary/5"
+		class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center text-ink-dim transition-colors hover:border-primary/50 data-dragging:border-primary data-dragging:bg-primary/5"
 	>
 		<PhUploadSimple class="size-8 opacity-60" />
 		<span class="text-sm">{label}</span>

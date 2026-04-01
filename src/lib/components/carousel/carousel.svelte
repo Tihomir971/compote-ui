@@ -43,7 +43,7 @@
 
 {#if images.length === 0}
 	<div
-		class="text-ink-dim flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed py-12 text-center"
+		class="flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed py-12 text-center text-ink-dim"
 	>
 		<PhImage class="size-10 opacity-40" />
 		<p class="text-sm">No images yet.</p>
@@ -52,7 +52,7 @@
 	<Carousel.Root slideCount={images.length} {...rootProps}>
 		<Carousel.Control class="flex items-center gap-2">
 			<Carousel.PrevTrigger
-				class="bg-background hover:bg-accent inline-flex size-9 items-center justify-center rounded-md border shadow-sm disabled:opacity-50"
+				class="inline-flex size-9 items-center justify-center rounded-md border bg-surface-1 shadow-sm hover:bg-surface-2 active:bg-surface-3 disabled:opacity-50"
 			>
 				<PhArrowLeft class="size-4" />
 			</Carousel.PrevTrigger>
@@ -65,7 +65,7 @@
 							<img
 								src={image.src}
 								alt={image.alt ?? ''}
-								class="bg-muted aspect-square w-full rounded-lg object-contain"
+								class="aspect-square w-full rounded-lg bg-surface-2 object-contain"
 							/>
 							{#if onSetStar && image.id != null}
 								<button
@@ -85,7 +85,7 @@
 							{#if selectable}
 								<button
 									class="absolute top-2 right-2 z-10 flex size-6 items-center justify-center rounded-full border-2 transition-all {isSelected
-										? 'text-primary-foreground border-primary bg-primary opacity-100'
+										? 'border-primary bg-primary text-white opacity-100'
 										: 'border-white/80 bg-black/40 opacity-0 group-hover/slide:opacity-100'}"
 									onclick={() => toggleSelect(key)}
 								>
@@ -99,14 +99,14 @@
 				{/each}
 			</Carousel.ItemGroup>
 			<Carousel.NextTrigger
-				class="bg-background hover:bg-accent inline-flex size-9 items-center justify-center rounded-md border shadow-sm disabled:opacity-50"
+				class="inline-flex size-9 items-center justify-center rounded-md border bg-surface-1 shadow-sm hover:bg-surface-2 active:bg-surface-3 disabled:opacity-50"
 			>
 				<PhArrowRight class="size-4" />
 			</Carousel.NextTrigger>
 		</Carousel.Control>
 		{#if indicator}
 			<Carousel.IndicatorGroup class="mt-2 flex justify-center gap-2">
-				{#each images as image, index}
+				{#each images as image, index (index)}
 					<Carousel.Indicator
 						{index}
 						class="h-15 w-15 cursor-pointer overflow-hidden rounded-sm border-2 border-transparent opacity-60 transition-all data-current:border-primary data-current:opacity-100"

@@ -11,7 +11,8 @@
 	}: SplitterProps = $props();
 
 	const isHorizontal = $derived(orientation === 'horizontal');
-	const arkPanels = $derived(panels.map(({ content, ...rest }) => rest));
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const arkPanels = $derived(panels.map(({ content: _content, ...rest }) => rest));
 </script>
 
 <Splitter.Root
@@ -40,7 +41,7 @@
 				<!-- Divider line -->
 				<div
 					class={cn(
-						'absolute bg-surface-3 transition-colors group-focus-within:bg-primary group-data-dragging:bg-primary',
+						'absolute bg-surface-3 transition-colors group-focus-within:bg-primary group-hover:bg-primary/40 group-data-dragging:bg-primary',
 						isHorizontal
 							? 'inset-y-0 left-1/2 w-px -translate-x-1/2'
 							: 'inset-x-0 top-1/2 h-px -translate-y-1/2'
@@ -49,7 +50,7 @@
 				<!-- Handle pill -->
 				<div
 					class={cn(
-						'relative z-10 rounded-full bg-surface-3 shadow-sm transition-colors group-data-dragging:bg-primary',
+						'relative z-10 rounded-full bg-surface-3 shadow-sm transition-colors group-hover:bg-primary/40 group-data-dragging:bg-primary',
 						isHorizontal ? 'h-6 w-1' : 'h-1 w-6'
 					)}
 				></div>

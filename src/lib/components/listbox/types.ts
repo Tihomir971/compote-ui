@@ -7,8 +7,10 @@ export interface ListboxItem<T = number | string> {
 	group?: string;
 }
 
-export interface ListboxProps<T extends number | string = number | string>
-	extends Omit<ListboxRootBaseProps<ListboxItem<T>>, 'collection' | 'value'> {
+export interface ListboxProps<T extends number | string = number | string> extends Omit<
+	ListboxRootBaseProps<ListboxItem<T>>,
+	'collection' | 'value'
+> {
 	items: ListboxItem<T>[];
 	value?: T[];
 	label?: string;

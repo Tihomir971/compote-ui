@@ -40,7 +40,7 @@
 				<div class="flex items-center gap-3">
 					<!-- Image Preview / Placeholder -->
 					<div
-						class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+						class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border bg-surface-2"
 					>
 						{#if context().acceptedFiles.length > 0}
 							<FileUpload.ItemGroup>
@@ -58,13 +58,13 @@
 								{/each}
 							</FileUpload.ItemGroup>
 						{:else}
-							<PhFileText class="h-5 w-5 text-gray-400 dark:text-gray-500" />
+							<PhFileText class="h-5 w-5 text-ink-dim" />
 						{/if}
 					</div>
 
 					<!-- Upload/Change Button -->
 					<FileUpload.Trigger
-						class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-hidden dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200 dark:focus:ring-gray-100"
+						class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-hidden"
 					>
 						{context().acceptedFiles.length > 0 ? 'Change image' : 'Upload image'}
 					</FileUpload.Trigger>
@@ -74,10 +74,8 @@
 				{#if context().acceptedFiles.length > 0}
 					<FileUpload.ItemGroup>
 						<FileUpload.Item file={context().acceptedFiles[0]} class="flex items-center gap-2">
-							<FileUpload.ItemName class="text-sm text-gray-600 dark:text-gray-400" />
-							<FileUpload.ItemDeleteTrigger
-								class="text-sm text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
-							>
+							<FileUpload.ItemName class="text-sm text-ink-dim" />
+							<FileUpload.ItemDeleteTrigger class="text-sm text-red-500 hover:text-red-600">
 								Remove
 							</FileUpload.ItemDeleteTrigger>
 						</FileUpload.Item>
