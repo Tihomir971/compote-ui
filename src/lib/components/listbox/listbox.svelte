@@ -6,9 +6,9 @@
 <script lang="ts" generics="T extends number | string = number | string">
 	import { Listbox, createListCollection } from '@ark-ui/svelte/listbox';
 	import { useFilter } from '@ark-ui/svelte/locale';
-	import PhCheckBold from '~icons/ph/check-bold';
 	import type { ListboxItem, ListboxProps } from './types';
 	import { cn } from 'tailwind-variants';
+	import PhCheck from '$lib/icons/PhCheck.svelte';
 
 	type Props = ListboxProps<T>;
 
@@ -84,7 +84,7 @@
 							<Listbox.ItemIndicator
 								class="h-5 w-5 text-primary data-[state=checked]:flex data-[state=unchecked]:hidden"
 							>
-								<PhCheckBold />
+								<PhCheck />
 							</Listbox.ItemIndicator>
 						</Listbox.Item>
 					{/each}
@@ -100,7 +100,7 @@
 					<Listbox.ItemIndicator
 						class="h-5 w-5 text-primary data-[state=checked]:flex data-[state=unchecked]:hidden"
 					>
-						<PhCheckBold />
+						<PhCheck />
 					</Listbox.ItemIndicator>
 				</Listbox.Item>
 			{/each}

@@ -140,7 +140,7 @@
 	<Portal>
 		<Combobox.Positioner class="data-[state=closed]:pointer-events-none">
 			<Combobox.Content
-				class="data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-1 p-1  shadow-md"
+				class="data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-document p-1  shadow-md"
 			>
 				{#if loading}
 					<div class="flex items-center justify-center py-4">
@@ -157,7 +157,7 @@
 				{#each loading ? [] : collection.items as item (item.value)}
 					<Combobox.Item
 						{item}
-						class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-2 data-[state=checked]:bg-surface-2"
+						class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-1 data-[state=checked]:bg-surface-1"
 					>
 						<Combobox.ItemText>{item.label}</Combobox.ItemText>
 						<Combobox.ItemIndicator class="absolute right-2 items-center justify-center">

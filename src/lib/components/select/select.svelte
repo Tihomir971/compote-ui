@@ -70,13 +70,13 @@
 	<Portal>
 		<Select.Positioner>
 			<Select.Content
-				class="data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-1 p-1 text-ink shadow-md"
+				class="data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-document p-1 text-ink shadow-md"
 			>
 				<Select.ItemGroup>
 					{#each items as item (item.value)}
 						<Select.Item
 							{item}
-							class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm text-ink select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-2 data-[state=checked]:bg-surface-2"
+							class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm text-ink select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-1 data-[state=checked]:bg-surface-1"
 						>
 							<Select.ItemText>{item.label}</Select.ItemText>
 							<Select.ItemIndicator class="absolute right-2 items-center justify-center">
