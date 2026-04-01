@@ -12,6 +12,7 @@ export { default as Dialog } from './components/dialog/dialog.svelte';
 export { default as AlertDialog } from './components/dialog/alert-dialog.svelte';
 
 export { default as ImageCropper } from './components/image-cropper/image-cropper.svelte';
+export type { ImageCropperProps, ImageCropperCropData } from './components/image-cropper/types';
 
 export { default as Listbox } from './components/listbox/listbox.svelte';
 
@@ -20,6 +21,7 @@ export { default as NumberInput } from './components/number-input/number-input.s
 export { default as Select } from './components/select/select.svelte';
 
 export { default as Splitter } from './components/splitter/splitter.svelte';
+
 export type { SplitterPanelConfig, SplitterProps } from './components/splitter/types';
 
 export { default as Switch } from './components/switch/switch.svelte';

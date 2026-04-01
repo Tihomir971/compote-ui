@@ -1,21 +1,10 @@
-import type {
-	UseImageCropperProps,
-	ImageCropperGetCroppedImageOptions
-} from '@ark-ui/svelte/image-cropper';
+import type { UseImageCropperProps, UseImageCropperReturn } from '@ark-ui/svelte/image-cropper';
 
-export interface CropData {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-	rotate: number;
-	flipX: boolean;
-	flipY: boolean;
-}
+export type ImageCropperCropData = ReturnType<ReturnType<UseImageCropperReturn>['getCropData']>;
 
 export interface ImageCropperProps extends UseImageCropperProps {
 	src: string;
 	alt?: string;
-	getCroppedImage?: (options?: ImageCropperGetCroppedImageOptions) => Promise<string | Blob | null>;
-	getCropData?: () => CropData;
+	getCroppedImage?: ReturnType<UseImageCropperReturn>['getCroppedImage'];
+	getCropData?: ReturnType<UseImageCropperReturn>['getCropData'];
 }

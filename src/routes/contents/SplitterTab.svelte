@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Spliter } from '$lib';
+	import { Splitter } from '$lib';
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -12,7 +12,7 @@
 			{#snippet rightPanel()}
 				<div class="flex h-full items-center justify-center font-medium">Right Panel</div>
 			{/snippet}
-			<Spliter
+			<Splitter
 				panels={[
 					{ id: 'left', minSize: 150, content: leftPanel },
 					{ id: 'right', minSize: 150, content: rightPanel }
@@ -30,7 +30,7 @@
 			{#snippet bottomPanel()}
 				<div class="flex h-full items-center justify-center font-medium">Bottom Panel</div>
 			{/snippet}
-			<Spliter
+			<Splitter
 				orientation="vertical"
 				panels={[
 					{ id: 'top', minSize: 100, content: topPanel },
