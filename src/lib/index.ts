@@ -17,6 +17,7 @@ export type { ImageCropperProps, ImageCropperCropData } from './components/image
 export { default as Listbox } from './components/listbox/listbox.svelte';
 
 export { default as NumberInput } from './components/number-input/number-input.svelte';
+export type { NumberInputProps } from './components/number-input/types';
 
 export { default as Select } from './components/select/select.svelte';
 
