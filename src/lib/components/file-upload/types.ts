@@ -1,5 +1,7 @@
 import type { FileUploadRootProps } from '@ark-ui/svelte/file-upload';
+export type { FileUploadFileChangeDetails } from '@ark-ui/svelte/file-upload';
 import type { FileType } from './utils';
+export type { FileType } from './utils';
 
 export interface FileUploadDropzoneProps extends FileUploadRootProps {
 	fileType: FileType;

@@ -17,8 +17,7 @@ export type { DialogProps, AlertDialogProps } from './components/dialog/dialog.t
 
 export { default as FileUploadDropzone } from './components/file-upload/file-upload-dropzone.svelte';
 export { default as FileUpload } from './components/file-upload/file-upload.svelte';
-export type { FileUploadProps } from './components/file-upload/types';
-export type { FileType } from './components/file-upload/utils';
+export type { FileUploadProps, FileUploadFileChangeDetails, FileType } from './components/file-upload/types';
 
 export { default as ImageCropper } from './components/image-cropper/image-cropper.svelte';
 export type { ImageCropperProps, ImageCropperCropData } from './components/image-cropper/types';
