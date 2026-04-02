@@ -2,7 +2,7 @@
 	import Dialog from '../dialog/dialog.svelte';
 	import ImageCropper from '../image-cropper/image-cropper.svelte';
 	import { Button } from '$lib';
-	import { cropImage, processImage } from '../../utils/image-processing';
+	import { cropImage, processImage } from '$lib/utils/image-processing';
 	import type { ImageCropperCropData } from '../image-cropper/types';
 	import type { ImageCropDialogProps } from './types';
 
@@ -47,7 +47,14 @@
 	}
 </script>
 
-<Dialog bind:open {title} {description} onOpenChange={(details) => { if (!details.open) onCancel(); }}>
+<Dialog
+	bind:open
+	{title}
+	{description}
+	onOpenChange={(details) => {
+		if (!details.open) onCancel();
+	}}
+>
 	<ImageCropper bind:getCropData src={imageSrc} alt="Crop preview" {aspectRatio} />
 	{#snippet footer()}
 		<Button variant="outline" onclick={onCancel} disabled={processing}>Cancel</Button>

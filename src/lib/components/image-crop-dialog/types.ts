@@ -1,4 +1,4 @@
-import type { ProcessImageOptions } from '../../utils/image-processing';
+import type { ProcessImageOptions } from '$lib/utils/image-processing';
 
 export interface ImageCropDialogProps {
 	/** Controls dialog open state */

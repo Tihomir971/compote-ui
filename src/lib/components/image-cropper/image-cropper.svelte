@@ -2,8 +2,8 @@
 	import { ImageCropper, useImageCropper } from '@ark-ui/svelte/image-cropper';
 	import type { ImageCropperProps } from './types';
 	import { Button } from '$lib';
-	import { cropImage } from '../../utils/image-processing';
-	import type { ProcessImageOptions } from '../../utils/image-processing';
+	import { cropImage } from '$lib/utils/image-processing';
+	import type { ProcessImageOptions } from '$lib/utils/image-processing';
 
 	let {
 		src,
@@ -48,7 +48,8 @@
 	// eslint-disable-next-line no-useless-assignment
 	getCropData = () => imageCropper().getCropData();
 	// eslint-disable-next-line no-useless-assignment
-	getProcessedImage = (opts?: ProcessImageOptions) => cropImage(src, imageCropper().getCropData(), opts);
+	getProcessedImage = (opts?: ProcessImageOptions) =>
+		cropImage(src, imageCropper().getCropData(), opts);
 
 	let cropData = $derived(imageCropper().getCropData());
 </script>

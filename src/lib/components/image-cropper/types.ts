@@ -1,5 +1,5 @@
 import type { UseImageCropperProps, UseImageCropperReturn } from '@ark-ui/svelte/image-cropper';
-import type { ProcessImageOptions } from '../../utils/image-processing';
+import type { ProcessImageOptions } from '$lib/utils/image-processing';
 
 export type ImageCropperCropData = ReturnType<ReturnType<UseImageCropperReturn>['getCropData']>;
 
