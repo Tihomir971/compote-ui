@@ -44,6 +44,8 @@ export * as Menu from './components/menu';
 
 export * as Field from './components/field';
 
+export * as Fieldset from './components/fieldset';
+
 export { default as TreeView } from './components/tree-view/tree-view.svelte';
 
 export { createListCollection, createTreeCollection } from './utils/collections';
