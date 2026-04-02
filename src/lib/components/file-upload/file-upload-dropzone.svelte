@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { FileUpload } from '@ark-ui/svelte/file-upload';
 	import { getAcceptAttribute } from './utils';
-	import type { Props } from './types';
+	import type { FileUploadDropzoneProps } from './types';
 	import PhUploadSimple from '$lib/icons/PhUploadSimple.svelte';
 
 	let {
@@ -10,7 +10,7 @@
 		maxFiles = 1,
 		onFileAccept,
 		...restProps
-	}: Props = $props();
+	}: FileUploadDropzoneProps = $props();
 
 	const accept = $derived(getAcceptAttribute(fileType));
 </script>

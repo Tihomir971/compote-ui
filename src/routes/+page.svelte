@@ -15,6 +15,7 @@
 	import MenuTab from './contents/MenuTab.svelte';
 	import FieldTab from './contents/FieldTab.svelte';
 	import TreeViewTab from './contents/TreeViewTab.svelte';
+	import FileUploadTab from './contents/FileUploadTab.svelte';
 </script>
 
 <div class="mx-auto min-h-screen max-w-1/2 p-8">
@@ -35,6 +36,7 @@
 			<Tabs.Trigger value="menu">Menu</Tabs.Trigger>
 			<Tabs.Trigger value="field">Field</Tabs.Trigger>
 			<Tabs.Trigger value="tree-view">Tree View</Tabs.Trigger>
+			<Tabs.Trigger value="file-upload">File Upload</Tabs.Trigger>
 		{/snippet}
 
 		<Tabs.Content value="palette">
@@ -96,6 +98,10 @@
 
 		<Tabs.Content value="tree-view">
 			<TreeViewTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="file-upload">
+			<FileUploadTab />
 		</Tabs.Content>
 	</Tabs.Root>
 </div>

@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { Button, Field } from '$lib';
-	import BasicDocument from '$lib/components/file-upload/basic-document.svelte';
+	import { Field } from '$lib';
 	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
 	import PhX from '$lib/icons/PhX.svelte';
 	let fieldName = $state('');
