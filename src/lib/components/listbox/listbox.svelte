@@ -1,12 +1,13 @@
 <script module>
 	// eslint-disable-next-line no-import-assign
-	export type { ListboxItem, ListboxProps } from './types';
+	export type { ListboxProps } from './types';
 </script>
 
 <script lang="ts" generics="T extends number | string = number | string">
 	import { Listbox, createListCollection } from '@ark-ui/svelte/listbox';
 	import { useFilter } from '@ark-ui/svelte/locale';
-	import type { ListboxItem, ListboxProps } from './types';
+	import type { ListboxProps } from './types';
+	import type { ListItem } from '$lib/utils/collections';
 	import { cn } from 'tailwind-variants';
 	import PhCheck from '$lib/icons/PhCheck.svelte';
 
@@ -33,7 +34,7 @@
 			items,
 			itemToValue: (item) => item.value.toString(),
 			isItemDisabled: (item) => item.disabled === true,
-			...(hasGroups ? { groupBy: (item: ListboxItem<T>) => item.group ?? '' } : {})
+			...(hasGroups ? { groupBy: (item: ListItem<T>) => item.group ?? '' } : {})
 		})
 	);
 

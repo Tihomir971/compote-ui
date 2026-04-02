@@ -45,10 +45,7 @@ export * as Menu from './components/menu';
 export * as Field from './components/field';
 
 export { default as TreeView } from './components/tree-view/tree-view.svelte';
-export type { TreeNode } from './components/tree-view/types';
 
-export { createListCollection } from '@ark-ui/svelte/collection';
-export type { CollectionItem, CollectionOptions, ListCollection } from '@ark-ui/svelte/collection';
-
-export { createTreeCollection } from '@ark-ui/svelte/collection';
-export type { TreeCollection, TreeCollectionOptions } from '@ark-ui/svelte/collection';
+export { createListCollection, createTreeCollection } from './utils/collections';
+export type { ListItem, TreeItem } from './utils/collections';
+export type { ListCollection, TreeCollection } from '@ark-ui/svelte/collection';

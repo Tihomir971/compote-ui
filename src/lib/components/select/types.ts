@@ -1,12 +1,7 @@
 import type { SelectRootBaseProps } from '@ark-ui/svelte/select';
+import type { ListItem } from '$lib/utils/collections';
 
-export interface SelectItem<T = number | string> {
-	value: T;
-	label: string;
-	disabled?: boolean;
-}
-
-export interface SelectProps<T extends SelectItem> extends Omit<
+export interface SelectProps<T extends ListItem> extends Omit<
 	SelectRootBaseProps<T>,
 	'value' | 'collection'
 > {

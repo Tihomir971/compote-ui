@@ -1,9 +1,10 @@
-<script lang="ts" generics="T extends ComboboxItem">
-	import { Combobox, createListCollection } from '@ark-ui/svelte/combobox';
+<script lang="ts" generics="T extends ListItem">
+	import { Combobox } from '@ark-ui/svelte/combobox';
 	import { Field } from '@ark-ui/svelte/field';
 	import { useFilter } from '@ark-ui/svelte/locale';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import type { ComboboxItem, ComboboxProps } from './types';
+	import type { ComboboxProps } from './types';
+	import { createListCollection, type ListItem } from '../../utils/collections';
 	import { cn } from 'tailwind-variants';
 	import PhCaretDown from '$lib/icons/PhCaretDown.svelte';
 	import PhCheck from '$lib/icons/PhCheck.svelte';
@@ -27,13 +28,7 @@
 	const filters = useFilter({ sensitivity: 'base' });
 
 	// Base collection — only rebuilds when items prop changes
-	const baseCollection = $derived(
-		createListCollection({
-			items,
-			itemToString: (item) => item?.label ?? '',
-			itemToValue: (item) => item?.value?.toString() ?? ''
-		})
-	);
+	const baseCollection = $derived(createListCollection(items));
 
 	// Filtered view — lightweight .filter() on keystroke, full collection when empty
 	const collection = $derived(

@@ -1,8 +1,9 @@
-<script lang="ts" generics="T extends SelectItem">
+<script lang="ts" generics="T extends ListItem">
 	import { Field } from '@ark-ui/svelte/field';
 	import { Portal } from '@ark-ui/svelte/portal';
-	import { Select, createListCollection } from '@ark-ui/svelte/select';
-	import type { SelectItem, SelectProps } from './types';
+	import { Select } from '@ark-ui/svelte/select';
+	import type { SelectProps } from './types';
+	import { createListCollection, type ListItem } from '$lib/utils/collections';
 	import { cn } from 'tailwind-variants';
 	import PhCaretDown from '$lib/icons/PhCaretDown.svelte';
 	import PhCheck from '$lib/icons/PhCheck.svelte';
@@ -20,13 +21,7 @@
 		layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5'
 	);
 
-	const collection = $derived(
-		createListCollection<T>({
-			items: items,
-			itemToValue: (item) => item.value.toString(),
-			isItemDisabled: (item) => item.disabled === true
-		})
-	);
+	const collection = $derived(createListCollection(items));
 </script>
 
 <Select.Root

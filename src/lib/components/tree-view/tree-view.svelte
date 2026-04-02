@@ -1,7 +1,8 @@
-<script lang="ts" generics="T extends TreeNode">
-	import { TreeView, createTreeCollection } from '@ark-ui/svelte/tree-view';
+<script lang="ts" generics="T extends TreeItem">
+	import { TreeView } from '@ark-ui/svelte/tree-view';
 	import { useFilter } from '@ark-ui/svelte/locale';
-	import type { TreeNode, TreeViewProps } from './types';
+	import type { TreeViewProps } from './types';
+	import { createTreeCollection, type TreeItem } from '../../utils/collections';
 	import { Debounced } from 'runed';
 	import PhX from '$lib/icons/PhX.svelte';
 	import PhCaretRight from '$lib/icons/PhCaretRight.svelte';
@@ -30,13 +31,7 @@
 	const filterFns = useFilter({ sensitivity: 'base' });
 	let searchTerm: string | undefined = $state();
 	const debouncedSearchTerm = new Debounced(() => searchTerm, 250);
-	const baseCollection = $derived(
-		createTreeCollection<T>({
-			nodeToValue: (node) => node.value.toString(),
-			nodeToString: (node) => node.label,
-			rootNode: { value: 'ROOT', label: '', children: items } as unknown as T
-		})
-	);
+	const baseCollection = $derived(createTreeCollection(items));
 	const collection = $derived.by(() => {
 		const term = debouncedSearchTerm.current ?? '';
 		return term.length > 0

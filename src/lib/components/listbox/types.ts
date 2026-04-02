@@ -1,17 +1,11 @@
 import type { ListboxRootBaseProps } from '@ark-ui/svelte/listbox';
-
-export interface ListboxItem<T = number | string> {
-	value: T;
-	label: string;
-	disabled?: boolean;
-	group?: string;
-}
+import type { ListItem } from '$lib/utils/collections';
 
 export interface ListboxProps<T extends number | string = number | string> extends Omit<
-	ListboxRootBaseProps<ListboxItem<T>>,
+	ListboxRootBaseProps<ListItem<T>>,
 	'collection' | 'value'
 > {
-	items: ListboxItem<T>[];
+	items: ListItem<T>[];
 	value?: T[];
 	label?: string;
 	name?: string;
