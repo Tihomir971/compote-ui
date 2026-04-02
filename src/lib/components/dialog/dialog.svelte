@@ -1,19 +1,9 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from 'tailwind-variants';
 	import PhX from '$lib/icons/PhX.svelte';
-
-	interface Props {
-		open: boolean;
-		title: string;
-		description?: string;
-		children: Snippet;
-		footer?: Snippet;
-		onClose?: () => void;
-		contentClass?: string;
-	}
+	import type { DialogProps } from './dialog.types';
 
 	let {
 		open = $bindable(),
@@ -21,12 +11,14 @@
 		description,
 		children,
 		footer,
-		onClose,
-		contentClass
-	}: Props = $props();
+		contentClass,
+		lazyMount = true,
+		unmountOnExit = true,
+		...restProps
+	}: DialogProps = $props();
 </script>
 
-<Dialog.Root bind:open lazyMount unmountOnExit>
+<Dialog.Root bind:open {lazyMount} {unmountOnExit} {...restProps}>
 	<Portal>
 		<Dialog.Backdrop
 			class="data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 fixed inset-0 z-50 bg-black/50"
@@ -57,7 +49,6 @@
 
 				<Dialog.CloseTrigger
 					class="absolute top-3 right-3 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none active:opacity-50"
-					onclick={onClose}
 				>
 					<PhX class="size-4" />
 					<span class="sr-only">Close</span>

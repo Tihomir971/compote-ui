@@ -2,18 +2,7 @@
 	import PhX from '$lib/icons/PhX.svelte';
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import { Portal } from '@ark-ui/svelte/portal';
-
-	type Variant = 'default' | 'destructive';
-
-	type Props = {
-		open: boolean;
-		title: string;
-		description?: string | string[];
-		confirmLabel?: string;
-		cancelLabel?: string;
-		onConfirm?: () => void;
-		variant?: Variant;
-	};
+	import type { AlertDialogProps } from './dialog.types';
 
 	let {
 		open = $bindable(),
@@ -22,8 +11,12 @@
 		confirmLabel = 'Confirm',
 		cancelLabel = 'Cancel',
 		onConfirm,
-		variant = 'default'
-	}: Props = $props();
+		onCancel,
+		variant = 'default',
+		lazyMount = true,
+		unmountOnExit = true,
+		...restProps
+	}: AlertDialogProps = $props();
 
 	const confirmClass = $derived(
 		variant === 'destructive'
@@ -32,7 +25,7 @@
 	);
 </script>
 
-<Dialog.Root role="alertdialog" bind:open>
+<Dialog.Root role="alertdialog" bind:open {lazyMount} {unmountOnExit} {...restProps}>
 	<Portal>
 		<Dialog.Backdrop
 			class="data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 fixed inset-0 z-50 bg-black/50"
@@ -54,6 +47,7 @@
 				<div class="mt-6 flex justify-end gap-3">
 					<Dialog.CloseTrigger
 						class="inline-flex h-9 items-center justify-center rounded-md border bg-surface-1 px-4 text-sm font-medium shadow-sm transition-colors hover:bg-surface-2 hover:text-ink focus-visible:ring-1 focus-visible:ring-primary focus-visible:outline-none"
+						onclick={onCancel}
 					>
 						{cancelLabel}
 					</Dialog.CloseTrigger>
