@@ -18,10 +18,10 @@
 			: ''} data-focus-visible:outline-ring flex size-5 shrink-0 items-center justify-center rounded-sm border bg-transparent transition-colors hover:border-primary/50 data-disabled:pointer-events-none data-disabled:opacity-50 data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-invalid:border-danger data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary"
 	>
 		<Checkbox.Indicator>
-			<PhCheck class="size-3.5 text-white" />
+			<PhCheck class="size-3.5 text-ink-inverse" />
 		</Checkbox.Indicator>
 		<Checkbox.Indicator indeterminate>
-			<PhMinus class="size-3.5 text-white" />
+			<PhMinus class="size-3.5 text-ink-inverse" />
 		</Checkbox.Indicator>
 	</Checkbox.Control>
 	{#if label}

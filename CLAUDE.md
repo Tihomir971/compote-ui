@@ -46,6 +46,38 @@ bun run <script>
 - Tailwind classes are auto-sorted by `prettier-plugin-tailwindcss` on format.
 - Run `bun run format` to fix formatting; `bun run lint` checks both Prettier and ESLint.
 
+## Theming System
+
+The theme lives in `src/lib/theme.css` (published as `dist/theme.css`).
+
+### CSS variables
+
+Semantic variables (all prefixed `--compote-`) are defined in `:root` and exposed to Tailwind via `@theme inline` (without the prefix, e.g. `--color-ink`, `bg-primary`).
+
+| Variable | Tailwind utility | Purpose |
+|---|---|---|
+| `--compote-ink` | `text-ink` | Primary text |
+| `--compote-ink-dim` | `text-ink-dim` | Secondary/muted text |
+| `--compote-ink-inverse` | `text-ink-inverse` | Text on colored backgrounds |
+| `--compote-surface-{1,2,3}` | `bg-surface-{1,2,3}` | Surface layers (1=lightest) |
+| `--compote-surface-document` | `bg-surface-document` | Page background |
+| `--compote-well` | `bg-well` | Inset/recessed backgrounds |
+| `--compote-primary` | `bg-primary`, `text-primary` | Accent color (orange hue) |
+| `--compote-border` | `border-border` | Default border color |
+| `--compote-ring` | `ring-ring` | Focus ring color |
+
+### Dark mode
+
+Uses `light-dark()` CSS function — no `@media` block or duplicate variable declarations needed. `color-scheme: light dark` on `:root` auto-follows system preference. `.dark` / `.light` classes on `<html>` override it.
+
+- Do **not** add a `@media (prefers-color-scheme: dark)` block — use `light-dark(lightVal, darkVal)` inline.
+- Status colors (`--compote-primary`, `--compote-danger`, etc.) are the same in both modes — no `light-dark()` needed for them.
+
+### Focus rings and colored-background text
+
+- All focus rings use `ring-ring` (not `ring-primary`) so consumers can restyle via `--compote-ring`.
+- Text on primary/colored backgrounds uses `text-ink-inverse` (not `text-white`) so consumers can restyle via `--compote-ink-inverse`.
+
 ## Svelte Component Authoring
 
 - Always use the Svelte MCP server when creating or editing `.svelte` files.

@@ -67,7 +67,6 @@
 			contextNode = nodeId ?? null;
 		}
 	}
-	$inspect('searchTerm:', searchTerm);
 </script>
 
 <div class="flex h-full flex-col" role="none" oncontextmenu={handleContextMenu}>
@@ -146,7 +145,7 @@
 
 {#snippet nodeCheckbox()}
 	<TreeView.NodeCheckbox
-		class="border-input bg-background text-primary-foreground inline-flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-sm border data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary"
+		class="inline-flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-sm border bg-transparent text-ink-inverse data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary"
 	>
 		<TreeView.NodeCheckboxIndicator>
 			{#snippet indeterminate()}
@@ -181,7 +180,7 @@
 					</TreeView.BranchText>
 				</TreeView.BranchControl>
 				<TreeView.BranchContent class="relative">
-					<TreeView.BranchIndentGuide class="bg-border absolute inset-y-0 w-px" />
+					<TreeView.BranchIndentGuide class="absolute inset-y-0 w-px bg-border" />
 					{#each node.children as child, childIndex (child.value)}
 						{@render renderNode(child as T, [...indexPath, childIndex])}
 					{/each}

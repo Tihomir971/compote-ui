@@ -6,7 +6,6 @@
 	let {
 		form,
 		field,
-		label,
 		helperText,
 		class: className,
 		invalid,
@@ -26,9 +25,6 @@
 	required={isRequired}
 	class={cn('group flex flex-col gap-1.5', className)}
 >
-	{#if label}
-		<Field.Label>{label}<Field.RequiredIndicator /></Field.Label>
-	{/if}
 	{@render children?.()}
 	{#if errorText}
 		<Field.ErrorText>{errorText}</Field.ErrorText>

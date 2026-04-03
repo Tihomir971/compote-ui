@@ -48,7 +48,7 @@
 				{/if}
 
 				<Dialog.CloseTrigger
-					class="absolute top-3 right-3 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none active:opacity-50"
+					class="absolute top-3 right-3 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none active:opacity-50"
 				>
 					<PhX class="size-4" />
 					<span class="sr-only">Close</span>

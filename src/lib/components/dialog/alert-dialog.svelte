@@ -20,8 +20,8 @@
 
 	const confirmClass = $derived(
 		variant === 'destructive'
-			? 'inline-flex h-9 items-center justify-center rounded-md bg-red-600 px-4 text-sm font-medium text-white shadow-sm transition-colors hover:bg-red-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary'
-			: 'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary'
+			? 'inline-flex h-9 items-center justify-center rounded-md bg-red-600 px-4 text-sm font-medium text-ink-inverse shadow-sm transition-colors hover:bg-red-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+			: 'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-ink-inverse shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
 	);
 </script>
 
@@ -46,7 +46,7 @@
 				{/if}
 				<div class="mt-6 flex justify-end gap-3">
 					<Dialog.CloseTrigger
-						class="inline-flex h-9 items-center justify-center rounded-md border bg-surface-1 px-4 text-sm font-medium shadow-sm transition-colors hover:bg-surface-2 hover:text-ink focus-visible:ring-1 focus-visible:ring-primary focus-visible:outline-none"
+						class="inline-flex h-9 items-center justify-center rounded-md border bg-surface-1 px-4 text-sm font-medium shadow-sm transition-colors hover:bg-surface-2 hover:text-ink focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
 						onclick={onCancel}
 					>
 						{cancelLabel}
@@ -56,7 +56,7 @@
 					</button>
 				</div>
 				<Dialog.CloseTrigger
-					class="absolute top-3 right-3 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
+					class="absolute top-3 right-3 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none"
 				>
 					<PhX class="h-4 w-4" />
 					<span class="sr-only">Close</span>

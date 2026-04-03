@@ -66,7 +66,7 @@
 		<Listbox.Input
 			placeholder={filterPlaceholder}
 			oninput={(e) => (filterText = e.currentTarget.value)}
-			class="h-8 w-full rounded-xs border border-surface-3 bg-transparent px-2.5 text-sm outline-none placeholder:text-ink-dim focus-visible:ring-1 focus-visible:ring-primary"
+			class="h-8 w-full rounded-xs border border-surface-3 bg-transparent px-2.5 text-sm outline-none placeholder:text-ink-dim focus-visible:ring-1 focus-visible:ring-ring"
 		/>
 	{/if}
 	<Listbox.Content class="flex min-h-0 w-full flex-1 flex-col gap-1 overflow-y-auto outline-none">

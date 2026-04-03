@@ -47,7 +47,7 @@
 	{/if}
 	<NumberInput.Control class="relative isolate">
 		<NumberInput.Input
-			class="h-9 w-full rounded-md border bg-surface-1 px-3 pr-8 text-right text-sm font-medium tabular-nums shadow-sm focus-visible:ring-1 focus-visible:ring-primary focus-visible:outline-none data-invalid:border-danger data-invalid:focus-visible:ring-danger"
+			class="h-9 w-full rounded-md border bg-surface-1 px-3 pr-8 text-right text-sm font-medium tabular-nums shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-invalid:border-danger data-invalid:focus-visible:ring-danger"
 		/>
 		<div
 			class="absolute top-px right-px bottom-px z-10 flex w-6 flex-col overflow-hidden rounded-r border-l"

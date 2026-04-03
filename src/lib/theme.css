@@ -5,6 +5,8 @@
 @source './components/**/*.svelte';
 
 :root {
+	color-scheme: light dark;
+
 	--dim: 0.3;
 	--radius: 6px;
 	--font-sans: 'Wix Madefor Text Variable', sans-serif;
@@ -14,42 +16,32 @@
 	--color-hue: var(--hue-orange);
 	--gray-hue: 250;
 
-	--compote-ink: var(--gray-15);
-	--compote-ink-dim: var(--gray-11);
-	--compote-surface-3: var(--gray-5);
-	--compote-surface-2: var(--gray-4);
-	--compote-surface-1: var(--gray-3);
-	--compote-surface-document: var(--gray-2);
-	--compote-well: var(--gray-1);
+	--compote-ink: light-dark(var(--gray-15), var(--gray-1));
+	--compote-ink-dim: light-dark(var(--gray-11), var(--gray-5));
+	--compote-ink-inverse: white;
+	--compote-surface-3: light-dark(var(--gray-5), var(--gray-11));
+	--compote-surface-2: light-dark(var(--gray-4), var(--gray-12));
+	--compote-surface-1: light-dark(var(--gray-3), var(--gray-13));
+	--compote-surface-document: light-dark(var(--gray-2), var(--gray-14));
+	--compote-well: light-dark(var(--gray-1), var(--gray-15));
 
 	--compote-primary: oklch(from var(--color-7) l c var(--hue-orange));
 	--compote-danger: oklch(from var(--color-7) l c var(--hue-red));
 	--compote-warning: oklch(from var(--color-7) l c var(--hue-yellow));
 	--compote-success: oklch(from var(--color-7) l c var(--hue-green));
 	--compote-info: oklch(from var(--color-7) l c var(--hue-blue));
+
+	--compote-border: var(--compote-surface-3);
+	--compote-ring: var(--compote-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--compote-ink: var(--gray-1);
-		--compote-ink-dim: var(--gray-5);
-		--compote-surface-3: var(--gray-11);
-		--compote-surface-2: var(--gray-12);
-		--compote-surface-1: var(--gray-13);
-		--compote-surface-document: var(--gray-14);
-		--compote-well: var(--gray-15);
-
-		--compote-primary: oklch(from var(--color-7) l c var(--hue-orange));
-		--compote-danger: oklch(from var(--color-7) l c var(--hue-red));
-		--compote-warning: oklch(from var(--color-7) l c var(--hue-yellow));
-		--compote-success: oklch(from var(--color-7) l c var(--hue-green));
-		--compote-info: oklch(from var(--color-7) l c var(--hue-blue));
-	}
-}
+.dark  { color-scheme: dark; }
+.light { color-scheme: light; }
 
 @theme inline {
 	--color-ink: var(--compote-ink);
 	--color-ink-dim: var(--compote-ink-dim);
+	--color-ink-inverse: var(--compote-ink-inverse);
 	--color-surface-3: var(--compote-surface-3);
 	--color-surface-2: var(--compote-surface-2);
 	--color-surface-1: var(--compote-surface-1);
@@ -61,6 +53,9 @@
 	--color-warning: var(--compote-warning);
 	--color-success: var(--compote-success);
 	--color-info: var(--compote-info);
+
+	--color-border: var(--compote-border);
+	--color-ring: var(--compote-ring);
 
 	--font-sans: var(--font-sans);
 	--font-mono: var(--font-mono);

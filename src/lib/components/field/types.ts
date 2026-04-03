@@ -18,7 +18,6 @@ export interface FieldRootProps extends FieldRootBaseProps {
 	class?: string;
 	form?: FormAdapter;
 	field?: string;
-	label?: string;
 	helperText?: string;
 }
 

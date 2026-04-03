@@ -24,7 +24,7 @@
 		{...rest}
 		bind:value
 		class={cn(
-			'flex h-9 w-full rounded-md border bg-surface-1 px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-ink-dim focus-visible:ring-1 focus-visible:ring-primary focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-invalid:border-danger data-invalid:focus-visible:ring-danger data-readonly:cursor-default data-readonly:opacity-70',
+			'flex h-9 w-full rounded-md border bg-surface-1 px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-ink-dim focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-invalid:border-danger data-invalid:focus-visible:ring-danger data-readonly:cursor-default data-readonly:opacity-70',
 			startIcon && 'pl-9',
 			endIcon && 'pr-9',
 			className

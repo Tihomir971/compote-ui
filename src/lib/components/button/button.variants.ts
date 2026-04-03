@@ -4,7 +4,7 @@ export const button = tv({
 	base: 'focus-visible:outline-ring inline-flex cursor-pointer items-center justify-center rounded bg-transparent text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50',
 	variants: {
 		variant: {
-			default: 'bg-primary text-white hover:bg-primary/90 active:bg-primary/80',
+			default: 'bg-primary text-ink-inverse hover:bg-primary/90 active:bg-primary/80',
 			outline: 'border text-ink hover:bg-surface-2',
 			ghost: 'text-ink hover:bg-surface-2'
 		},
