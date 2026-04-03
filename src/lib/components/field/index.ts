@@ -5,6 +5,7 @@ export { default as Textarea } from './field-textarea.svelte';
 export { default as HelperText } from './field-helper-text.svelte';
 export { default as ErrorText } from './field-error-text.svelte';
 export type {
+	FormAdapter,
 	FieldRootProps,
 	FieldLabelProps,
 	FieldInputProps,

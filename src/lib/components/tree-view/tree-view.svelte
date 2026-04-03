@@ -8,7 +8,6 @@
 	import PhCaretRight from '$lib/icons/PhCaretRight.svelte';
 	import PhMinus from '$lib/icons/PhMinus.svelte';
 	import PhCheck from '$lib/icons/PhCheck.svelte';
-	import PhListMagnifyingGlass from '$lib/icons/PhListMagnifyingGlass.svelte';
 	import PhArrowsInSimple from '$lib/icons/PhArrowsInSimple.svelte';
 	import { Button, Field } from '$lib';
 	import { SvelteSet } from 'svelte/reactivity';

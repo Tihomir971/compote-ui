@@ -7,8 +7,19 @@ import type {
 	FieldHelperTextBaseProps,
 	FieldErrorTextBaseProps
 } from '@ark-ui/svelte/field';
+
+export interface FormAdapter {
+	invalid(field: string): boolean;
+	isRequired(field: string): boolean;
+	errors: Record<string, string[]>;
+}
+
 export interface FieldRootProps extends FieldRootBaseProps {
 	class?: string;
+	form?: FormAdapter;
+	field?: string;
+	label?: string;
+	helperText?: string;
 }
 
 export interface FieldLabelProps extends FieldLabelBaseProps {

@@ -17,7 +17,7 @@
 				step={0.01}
 				formatOptions={{ minimumFractionDigits: 2 }}
 			/>
-			<!--
+
 			<NumberInput
 				label="Custom step"
 				bind:value={numberCurrency}
@@ -26,7 +26,6 @@
 				locale="sr-Latn-RS"
 				formatOptions={{ minimumFractionDigits: 2, style: 'currency', currency: 'RSD' }}
 			/>
-			 -->
 		</div>
 	</section>
 </div>

@@ -17,9 +17,6 @@
 		name,
 		...restProps
 	}: SelectProps<T> = $props();
-	const rootClass = $derived(
-		layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5'
-	);
 
 	const collection = $derived(createListCollection(items));
 </script>
@@ -30,7 +27,7 @@
 	deselectable
 	value={value ? [value.toString()] : []}
 	onValueChange={(valueChangeDetails) => {
-		if (valueChangeDetails.items.length === 0 || valueChangeDetails.items == null) {
+		if (valueChangeDetails.items == null || valueChangeDetails.items.length === 0) {
 			value = null;
 		} else {
 			value = valueChangeDetails.items[0].value;
@@ -39,7 +36,7 @@
 			restProps.onValueChange(valueChangeDetails);
 		}
 	}}
-	class={rootClass}
+	class={cn(layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5')}
 >
 	{#if label}
 		<Select.Label>
@@ -53,7 +50,7 @@
 		>
 			<div class="flex items-center gap-2">
 				<Select.ValueText
-					placeholder={placeholder ?? 'Select a item'}
+					placeholder={placeholder ?? 'Select an item'}
 					class={cn('text-nowrap', value ? '' : 'text-ink-dim')}
 				/>
 			</div>
@@ -84,5 +81,4 @@
 		</Select.Positioner>
 	</Portal>
 	<input type="hidden" {name} value={value ?? ''} />
-	<Select.HiddenSelect />
 </Select.Root>
