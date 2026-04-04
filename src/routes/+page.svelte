@@ -2,6 +2,7 @@
 	import { Tabs } from '$lib';
 	import PaletteTab from './contents/PaletteTab.svelte';
 	import ButtonTab from './contents/ButtonTab.svelte';
+	import CardTab from './contents/CardTab.svelte';
 	import CarouselTab from './contents/CarouselTab.svelte';
 	import CheckboxTab from './contents/CheckboxTab.svelte';
 	import ComboboxTab from './contents/ComboboxTab.svelte';
@@ -24,6 +25,7 @@
 		{#snippet triggers()}
 			<Tabs.Trigger value="palette">Palette</Tabs.Trigger>
 			<Tabs.Trigger value="button">Button</Tabs.Trigger>
+			<Tabs.Trigger value="card">Card</Tabs.Trigger>
 			<Tabs.Trigger value="carousel">Carousel</Tabs.Trigger>
 			<Tabs.Trigger value="checkbox">Checkbox</Tabs.Trigger>
 			<Tabs.Trigger value="combobox">Combobox</Tabs.Trigger>
@@ -47,6 +49,10 @@
 
 		<Tabs.Content value="button">
 			<ButtonTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="card">
+			<CardTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="carousel">

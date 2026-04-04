@@ -54,17 +54,17 @@ The theme lives in `src/lib/theme.css` (published as `dist/theme.css`).
 
 Semantic variables (all prefixed `--compote-`) are defined in `:root` and exposed to Tailwind via `@theme inline` (without the prefix, e.g. `--color-ink`, `bg-primary`).
 
-| Variable | Tailwind utility | Purpose |
-|---|---|---|
-| `--compote-ink` | `text-ink` | Primary text |
-| `--compote-ink-dim` | `text-ink-dim` | Secondary/muted text |
-| `--compote-ink-inverse` | `text-ink-inverse` | Text on colored backgrounds |
-| `--compote-surface-{1,2,3}` | `bg-surface-{1,2,3}` | Surface layers (1=lightest) |
-| `--compote-surface-document` | `bg-surface-document` | Page background |
-| `--compote-well` | `bg-well` | Inset/recessed backgrounds |
-| `--compote-primary` | `bg-primary`, `text-primary` | Accent color (orange hue) |
-| `--compote-border` | `border-border` | Default border color |
-| `--compote-ring` | `ring-ring` | Focus ring color |
+| Variable                     | Tailwind utility             | Purpose                     |
+| ---------------------------- | ---------------------------- | --------------------------- |
+| `--compote-ink`              | `text-ink`                   | Primary text                |
+| `--compote-ink-dim`          | `text-ink-dim`               | Secondary/muted text        |
+| `--compote-ink-inverse`      | `text-ink-inverse`           | Text on colored backgrounds |
+| `--compote-surface-{1,2,3}`  | `bg-surface-{1,2,3}`         | Surface layers (1=lightest) |
+| `--compote-surface-document` | `bg-surface-document`        | Page background             |
+| `--compote-well`             | `bg-well`                    | Inset/recessed backgrounds  |
+| `--compote-primary`          | `bg-primary`, `text-primary` | Accent color (orange hue)   |
+| `--compote-border`           | `border-border`              | Default border color        |
+| `--compote-ring`             | `ring-ring`                  | Focus ring color            |
 
 ### Dark mode
 
@@ -77,6 +77,14 @@ Uses `light-dark()` CSS function — no `@media` block or duplicate variable dec
 
 - All focus rings use `ring-ring` (not `ring-primary`) so consumers can restyle via `--compote-ring`.
 - Text on primary/colored backgrounds uses `text-ink-inverse` (not `text-white`) so consumers can restyle via `--compote-ink-inverse`.
+
+## After Adding or Modifying a Component
+
+When you add a new component or make significant changes to an existing one:
+
+1. **Add a playground tab** — create `src/routes/contents/<ComponentName>Tab.svelte` with examples covering the component's key features, then register it in `src/routes/+page.svelte` (import + `Tabs.Trigger` + `Tabs.Content`), keeping entries in alphabetical order.
+
+2. **Update the compote-ui skill** — the skill lives at `~/.claude/skills/compote-ui/references/`. Add or update the relevant reference file (e.g. `display.md`, `form.md`, `layout.md`). Document the component anatomy, props, and a minimal usage example.
 
 ## Svelte Component Authoring
 
