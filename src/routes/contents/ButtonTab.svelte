@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from '$lib';
+	import { Button, LinkButton } from '$lib';
 
 	const variants = ['default', 'outline', 'ghost'] as const;
 	const sizes = ['sm', 'default', 'lg'] as const;
@@ -15,6 +15,22 @@
 					<div class="flex items-center gap-3">
 						{#each sizes as size (size)}
 							<Button {variant} {size}>Button</Button>
+						{/each}
+					</div>
+				</div>
+			{/each}
+		</div>
+	</section>
+
+	<section>
+		<h2 class="mb-4 text-lg font-semibold">LinkButton</h2>
+		<div class="flex flex-col gap-6">
+			{#each variants as variant (variant)}
+				<div class="flex items-center gap-2">
+					<span class="w-16 text-sm capitalize">{variant}</span>
+					<div class="flex items-center gap-3">
+						{#each sizes as size (size)}
+							<LinkButton href="#" {variant} {size}>Link</LinkButton>
 						{/each}
 					</div>
 				</div>
