@@ -1,5 +1,6 @@
 // Reexport your entry components here
 export { default as Button } from './components/button/button.svelte';
+export { default as LinkButton } from './components/button/link-button.svelte';
 
 export { loadImage, fileToDataUrl, cropImage, processImage } from './utils/image-processing';
 export type { ProcessImageOptions, CropRegion } from './utils/image-processing';
