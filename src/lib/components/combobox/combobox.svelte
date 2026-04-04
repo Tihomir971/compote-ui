@@ -100,8 +100,8 @@
 
 	<Combobox.Control
 		class={cn(
-			'flex min-h-9 items-center gap-1 rounded border px-3 shadow-sm',
-			'focus-within:ring-1 focus-within:ring-primary',
+			'flex min-h-9 items-center gap-1 rounded border bg-surface-1 px-3 shadow-sm',
+			'focus-within:ring-1 focus-within:ring-ring',
 			'data-invalid:border-danger data-invalid:focus-within:ring-danger',
 			multiple && 'flex-wrap py-1'
 		)}
