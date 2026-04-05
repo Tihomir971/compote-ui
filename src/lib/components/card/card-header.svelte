@@ -5,6 +5,6 @@
 	let { class: className, children, ...rest }: HTMLAttributes<HTMLDivElement> = $props();
 </script>
 
-<div class={cn('flex flex-col gap-1.5 p-6', className)} {...rest}>
+<div class={cn('flex flex-col gap-1.5 pb-4', className)} {...rest}>
 	{@render children?.()}
 </div>
