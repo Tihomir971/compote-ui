@@ -15,66 +15,87 @@
 			alt: 'Misty forest'
 		}
 	];
+
+	const indices3 = [0, 1, 2];
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Image Carousel</h2>
-		<Carousel slideCount={images.length} slidesPerPage={1.5} indicator>
-			{#snippet slide(index)}
-				<img
-					src={images[index].src}
-					alt={images[index].alt}
-					class="w-full rounded-lg bg-surface-2 object-contain"
-				/>
-			{/snippet}
-		</Carousel>
+		<Carousel.Root slideCount={images.length} slidesPerPage={1.5}>
+			<Carousel.Control>
+				<Carousel.PrevTrigger />
+				<Carousel.ItemGroup>
+					{#each images as img, i (i)}
+						<Carousel.Item index={i}>
+							<img
+								src={img.src}
+								alt={img.alt}
+								class="w-full rounded-lg bg-surface-2 object-contain"
+							/>
+						</Carousel.Item>
+					{/each}
+				</Carousel.ItemGroup>
+				<Carousel.NextTrigger />
+			</Carousel.Control>
+			<Carousel.IndicatorGroup>
+				{#each images as img, i (i)}
+					<Carousel.Indicator index={i} aria-label={img.alt} />
+				{/each}
+			</Carousel.IndicatorGroup>
+		</Carousel.Root>
 	</section>
 
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Custom Content Carousel</h2>
-		<Carousel slideCount={3}>
-			{#snippet slide(index)}
-				<div
-					class="flex aspect-video w-full items-center justify-center rounded-lg bg-surface-2 text-2xl font-bold text-ink-dim"
-				>
-					Slide {index + 1}
-				</div>
-			{/snippet}
-		</Carousel>
+		<Carousel.Root slideCount={3}>
+			<Carousel.Control>
+				<Carousel.PrevTrigger />
+				<Carousel.ItemGroup>
+					{#each indices3 as i (i)}
+						<Carousel.Item index={i}>
+							<div
+								class="flex aspect-video w-full items-center justify-center rounded-lg bg-surface-2 text-2xl font-bold text-ink-dim"
+							>
+								Slide {i + 1}
+							</div>
+						</Carousel.Item>
+					{/each}
+				</Carousel.ItemGroup>
+				<Carousel.NextTrigger />
+			</Carousel.Control>
+		</Carousel.Root>
 	</section>
+
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>Thumbnail Indicator Carousel</Card.Title>
 		</Card.Header>
 		<Card.Content class="p-0">
-			<Carousel slideCount={images.length}>
-				{#snippet slide(index)}
-					<img
-						src={images[index].src}
-						alt={images[index].alt}
-						class="w-full rounded-lg bg-surface-2 object-contain"
-					/>
-				{/snippet}
-				{#snippet indicator(index)}
-					<img src={images[index].src} alt={images[index].alt} class="h-full w-full object-cover" />
-				{/snippet}
-			</Carousel>
+			<Carousel.Root slideCount={images.length}>
+				<Carousel.Control>
+					<Carousel.PrevTrigger />
+					<Carousel.ItemGroup>
+						{#each images as img, i (i)}
+							<Carousel.Item index={i}>
+								<img
+									src={img.src}
+									alt={img.alt}
+									class="w-full rounded-lg bg-surface-2 object-contain"
+								/>
+							</Carousel.Item>
+						{/each}
+					</Carousel.ItemGroup>
+					<Carousel.NextTrigger />
+				</Carousel.Control>
+				<Carousel.IndicatorGroup>
+					{#each images as img, i (i)}
+						<Carousel.Indicator index={i} thumbnail>
+							<img src={img.src} alt={img.alt} />
+						</Carousel.Indicator>
+					{/each}
+				</Carousel.IndicatorGroup>
+			</Carousel.Root>
 		</Card.Content>
 	</Card.Root>
-	<section>
-		<h2 class="mb-4 text-lg font-semibold">Thumbnail Indicator Carousel</h2>
-		<Carousel slideCount={images.length}>
-			{#snippet slide(index)}
-				<img
-					src={images[index].src}
-					alt={images[index].alt}
-					class="w-full rounded-lg bg-surface-2 object-contain"
-				/>
-			{/snippet}
-			{#snippet indicator(index)}
-				<img src={images[index].src} alt={images[index].alt} class="h-full w-full object-cover" />
-			{/snippet}
-		</Carousel>
-	</section>
 </div>

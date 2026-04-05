@@ -7,7 +7,7 @@ export * as Card from './components/card';
 export { loadImage, fileToDataUrl, cropImage, processImage } from './utils/image-processing';
 export type { ProcessImageOptions, CropRegion } from './utils/image-processing';
 
-export { default as Carousel } from './components/carousel/carousel.svelte';
+export * as Carousel from './components/carousel';
 
 export { default as Checkbox } from './components/checkbox/checkbox.svelte';
 export { default as CheckboxGroup } from './components/checkbox/checkbox-group.svelte';
