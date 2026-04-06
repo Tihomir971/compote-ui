@@ -7,7 +7,7 @@ export interface ProcessImageOptions {
 	maxWidth?: number;
 	maxHeight?: number;
 	quality?: number;
-	format?: 'image/webp' | 'image/jpeg' | 'image/png';
+	format?: 'image/webp' | 'image/jpeg' | 'image/png' | 'image/avif';
 }
 
 export interface CropRegion {
