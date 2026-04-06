@@ -8,6 +8,6 @@ export interface ImageCropperProps extends UseImageCropperProps {
 	alt?: string;
 	getCroppedImage?: ReturnType<UseImageCropperReturn>['getCroppedImage'];
 	getCropData?: ReturnType<UseImageCropperReturn>['getCropData'];
-	/** Bindable: returns a processed (cropped + resized + converted) data URL in one call */
-	getProcessedImage?: (opts?: ProcessImageOptions) => Promise<string>;
+	/** Bindable: returns a processed (cropped + resized + converted) Blob in one call */
+	getProcessedImage?: (opts?: ProcessImageOptions) => Promise<Blob>;
 }

@@ -7,7 +7,7 @@ export interface ProcessImageOptions {
 	maxWidth?: number;
 	maxHeight?: number;
 	quality?: number;
-	format?: 'image/webp' | 'image/jpeg' | 'image/png' | 'image/avif';
+	format?: 'image/webp' | 'image/jpeg' | 'image/png';
 }
 
 export interface CropRegion {
@@ -23,6 +23,19 @@ const defaults: Required<ProcessImageOptions> = {
 	quality: 0.85,
 	format: 'image/webp'
 };
+
+function canvasToBlob(canvas: HTMLCanvasElement, format: string, quality: number): Promise<Blob> {
+	return new Promise((resolve, reject) => {
+		canvas.toBlob(
+			(blob) => {
+				if (blob) resolve(blob);
+				else reject(new Error('canvas.toBlob failed'));
+			},
+			format,
+			quality
+		);
+	});
+}
 
 /** Load an image element from a src URL (data URL, blob URL, or regular URL) */
 export function loadImage(src: string): Promise<HTMLImageElement> {
@@ -53,7 +66,7 @@ export async function cropImage(
 	src: string,
 	crop: CropRegion,
 	opts?: ProcessImageOptions
-): Promise<string> {
+): Promise<Blob> {
 	const { maxWidth, maxHeight, quality, format } = { ...defaults, ...opts };
 	const img = await loadImage(src);
 
@@ -69,11 +82,11 @@ export async function cropImage(
 	canvas.height = height;
 	const ctx = canvas.getContext('2d')!;
 	ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, width, height);
-	return canvas.toDataURL(format, quality);
+	return canvasToBlob(canvas, format, quality);
 }
 
-/** Resize and convert an image without cropping, returns a base64 data URL */
-export async function processImage(src: string, opts?: ProcessImageOptions): Promise<string> {
+/** Resize and convert an image without cropping, returns a Blob */
+export async function processImage(src: string, opts?: ProcessImageOptions): Promise<Blob> {
 	const { maxWidth, maxHeight, quality, format } = { ...defaults, ...opts };
 	const img = await loadImage(src);
 
@@ -90,5 +103,5 @@ export async function processImage(src: string, opts?: ProcessImageOptions): Pro
 	canvas.height = height;
 	const ctx = canvas.getContext('2d')!;
 	ctx.drawImage(img, 0, 0, width, height);
-	return canvas.toDataURL(format, quality);
+	return canvasToBlob(canvas, format, quality);
 }

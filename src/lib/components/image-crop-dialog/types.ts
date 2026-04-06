@@ -5,8 +5,8 @@ export interface ImageCropDialogProps {
 	open: boolean;
 	/** Source image (data URL, blob URL, or regular URL) */
 	imageSrc: string;
-	/** Called with the processed data URL on crop or skip */
-	onConfirm: (processedDataUrl: string) => void;
+	/** Called with the processed Blob on crop or skip */
+	onConfirm: (blob: Blob) => void;
 	/** Called when the user cancels (Cancel button or clicking outside/Escape) */
 	onCancel: () => void;
 	/** Dialog title */
