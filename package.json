@@ -67,6 +67,7 @@
 	"dependencies": {
 		"@ark-ui/svelte": "^5.20.0",
 		"@fontsource-variable/wix-madefor-text": "^5.2.8",
+		"@iconify/svelte": "^5.2.1",
 		"runed": "^0.37.1",
 		"tailwind-merge": "^3.5.0",
 		"tailwind-variants": "^3.2.2"

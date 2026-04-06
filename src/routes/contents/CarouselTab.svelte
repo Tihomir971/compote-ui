@@ -16,7 +16,10 @@
 		}
 	];
 
-	const indices3 = [0, 1, 2];
+	const slideCount10 = 10;
+	const slidesPerPage4 = 4;
+	const indices10 = Array.from({ length: slideCount10 }, (_, i) => i);
+	const pageIndices10 = Array.from({ length: Math.ceil(slideCount10 / slidesPerPage4) }, (_, i) => i);
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -48,11 +51,11 @@
 
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Custom Content Carousel</h2>
-		<Carousel.Root slideCount={3}>
+		<Carousel.Root slideCount={slideCount10} slidesPerPage={slidesPerPage4}>
 			<Carousel.Control>
 				<Carousel.PrevTrigger />
 				<Carousel.ItemGroup>
-					{#each indices3 as i (i)}
+					{#each indices10 as i (i)}
 						<Carousel.Item index={i}>
 							<div
 								class="flex aspect-video w-full items-center justify-center rounded-lg bg-surface-2 text-2xl font-bold text-ink-dim"
@@ -64,6 +67,11 @@
 				</Carousel.ItemGroup>
 				<Carousel.NextTrigger />
 			</Carousel.Control>
+			<Carousel.IndicatorGroup>
+				{#each pageIndices10 as i (i)}
+					<Carousel.Indicator index={i} aria-label={`Page ${i + 1}`} />
+				{/each}
+			</Carousel.IndicatorGroup>
 		</Carousel.Root>
 	</section>
 

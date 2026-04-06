@@ -12,6 +12,7 @@
 	import { Button, Field } from '$lib';
 	import { SvelteSet } from 'svelte/reactivity';
 	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
+	import Icon from '@iconify/svelte';
 
 	let {
 		items = [],
@@ -171,10 +172,11 @@
 						{@render nodeCheckbox()}
 					{/if}
 					<TreeView.BranchIndicator
-						class="text-muted-foreground inline-flex items-center justify-center transition-transform duration-150 data-[state=open]:rotate-90"
+						class="text-muted-foreground inline-flex w-(--tree-icon) shrink-0 items-center justify-center transition-transform duration-150 data-[state=open]:rotate-90"
 					>
 						<PhCaretRight class="size-3.5" />
 					</TreeView.BranchIndicator>
+					{#if node.icon}<Icon icon={node.icon} class="size-4 shrink-0" />{/if}
 					<TreeView.BranchText class="flex-1 truncate">
 						{node.label}
 					</TreeView.BranchText>
@@ -194,6 +196,7 @@
 				{#if selectionMode === 'multiple'}
 					{@render nodeCheckbox()}
 				{/if}
+				{#if node.icon}<Icon icon={node.icon} class="size-4 shrink-0" />{/if}
 				<TreeView.ItemText class="flex-1 truncate">
 					{node.label}
 				</TreeView.ItemText>

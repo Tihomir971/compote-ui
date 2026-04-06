@@ -5,15 +5,17 @@
 		{
 			value: 'folder-1',
 			label: 'src',
+			icon: 'ph:file-html',
 			children: [
-				{ value: 'file-1', label: 'App.svelte' },
-				{ value: 'file-2', label: 'main.ts' },
+				{ value: 'file-1', label: 'App.svelte', icon: 'ph:file-html' },
+				{ value: 'file-2', label: 'main.ts', icon: 'ph:file-ts' },
 				{
 					value: 'folder-2',
 					label: 'components',
+					icon: 'ph:folder',
 					children: [
-						{ value: 'file-3', label: 'Button.svelte' },
-						{ value: 'file-4', label: 'Card.svelte' }
+						{ value: 'file-3', label: 'Button.svelte', icon: 'ph:file-html' },
+						{ value: 'file-4', label: 'Card.svelte', icon: 'ph:file-html' }
 					]
 				}
 			]
@@ -21,12 +23,13 @@
 		{
 			value: 'folder-3',
 			label: 'public',
+			icon: 'ph:folder',
 			children: [
-				{ value: 'file-5', label: 'favicon.png' },
-				{ value: 'file-6', label: 'logo.svg' }
+				{ value: 'file-5', label: 'favicon.png', icon: 'ph:file-image' },
+				{ value: 'file-6', label: 'logo.svg', icon: 'ph:file-svg' }
 			]
 		},
-		{ value: 'file-7', label: 'package.json' },
+		{ value: 'file-7', label: 'package.json', icon: 'ph:file-js' },
 		{ value: 'file-8', label: 'README.md' }
 	];
 
