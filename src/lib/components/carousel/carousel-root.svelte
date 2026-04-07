@@ -12,7 +12,7 @@
 </script>
 
 <Carousel.Root
-	class={cn('flex flex-col gap-2 data-[orientation=vertical]:flex-row', className)}
+	class={cn('flex flex-col gap-2 data-[orientation=vertical]:flex-row data-[orientation=vertical]:h-80', className)}
 	{...rest}
 >
 	{@render children?.()}
