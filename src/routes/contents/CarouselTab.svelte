@@ -19,7 +19,10 @@
 	const slideCount10 = 10;
 	const slidesPerPage4 = 4;
 	const indices10 = Array.from({ length: slideCount10 }, (_, i) => i);
-	const pageIndices10 = Array.from({ length: Math.ceil(slideCount10 / slidesPerPage4) }, (_, i) => i);
+	const pageIndices10 = Array.from(
+		{ length: Math.ceil(slideCount10 / slidesPerPage4) },
+		(_, i) => i
+	);
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -34,7 +37,7 @@
 							<img
 								src={img.src}
 								alt={img.alt}
-								class="w-full rounded-lg bg-surface-2 object-contain"
+								class="h-full w-full rounded-lg bg-surface-2 object-contain"
 							/>
 						</Carousel.Item>
 					{/each}
