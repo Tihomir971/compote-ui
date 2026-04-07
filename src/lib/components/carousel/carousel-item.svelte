@@ -11,6 +11,6 @@
 	}: CarouselItemProps & { children?: Snippet } = $props();
 </script>
 
-<Carousel.Item class={cn('min-w-0 flex-[0_0_100%] data-[orientation=vertical]:min-h-0', className)} {...rest}>
+<Carousel.Item class={cn('min-w-0 flex-[0_0_100%] data-[orientation=vertical]:min-h-0 data-[orientation=vertical]:h-full', className)} {...rest}>
 	{@render children?.()}
 </Carousel.Item>
