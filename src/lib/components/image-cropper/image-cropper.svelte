@@ -74,22 +74,23 @@
 
 	<ImageCropper.RootProvider value={imageCropper}>
 		<ImageCropper.Viewport
-			class="relative overflow-hidden rounded-lg bg-surface-2"
+			class="relative overflow-hidden rounded-lg bg-surface-2 max-h-[60vh]"
 			style={imageAspectRatio ? `aspect-ratio: ${imageAspectRatio}` : 'aspect-ratio: 1'}
 		>
 			<ImageCropper.Image
 				{src}
 				{alt}
 				crossorigin="anonymous"
-				class="pointer-events-none absolute inset-0 h-full w-full object-fill select-none"
+				class="pointer-events-none absolute inset-0 h-full w-full object-contain select-none"
 			/>
 			<ImageCropper.Selection
 				class="cursor-move border-2 border-white/50 [box-shadow:0_0_0_9999px_rgb(0_0_0/0.5)] outline-none focus-visible:border-primary data-dragging:cursor-grabbing data-dragging:border-white/80"
 			>
 				{#each ImageCropper.handles as position (position)}
+					{@const isCorner = ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(position)}
 					<ImageCropper.Handle
 						{position}
-						class="absolute flex touch-none items-center justify-center
+						class="group absolute flex size-5 touch-none items-center justify-center
               data-[position=bottom]:cursor-ns-resize
               data-[position=bottom-left]:cursor-nesw-resize
               data-[position=bottom-right]:cursor-nwse-resize
@@ -99,7 +100,20 @@
               data-[position=top-left]:cursor-nwse-resize
               data-[position=top-right]:cursor-nesw-resize"
 					>
-						<div class="size-2 rounded-full bg-white shadow-md"></div>
+						{#if isCorner}
+							<div
+								class="size-2 shadow-sm transition-transform group-hover:scale-110
+                  group-data-[position=top-left]:border-l-2 group-data-[position=top-left]:border-t-2
+                  group-data-[position=top-right]:border-r-2 group-data-[position=top-right]:border-t-2
+                  group-data-[position=bottom-right]:border-r-2 group-data-[position=bottom-right]:border-b-2
+                  group-data-[position=bottom-left]:border-l-2 group-data-[position=bottom-left]:border-b-2
+                  border-white"
+							></div>
+						{:else}
+							<div
+								class="size-1.5 rounded-full bg-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100"
+							></div>
+						{/if}
 					</ImageCropper.Handle>
 				{/each}
 				<ImageCropper.Grid
