@@ -6,7 +6,7 @@
 
 	let {
 		fileType,
-		label = 'Drag & drop or click to browse',
+		label = 'Drag and drop images here or click to upload.',
 		maxFiles = 1,
 		onFileAccept,
 		...restProps
