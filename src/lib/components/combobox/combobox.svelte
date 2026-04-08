@@ -6,9 +6,7 @@
 	import type { ComboboxProps } from './types';
 	import { createListCollection, type ListItem } from '../../utils/collections';
 	import { cn } from 'tailwind-variants';
-	import PhCaretDown from '$lib/icons/PhCaretDown.svelte';
-	import PhCheck from '$lib/icons/PhCheck.svelte';
-	import PhX from '$lib/icons/PhX.svelte';
+	import { PhCaretDown, PhCheck, PhX } from '$lib/icons';
 
 	let {
 		value = $bindable(),

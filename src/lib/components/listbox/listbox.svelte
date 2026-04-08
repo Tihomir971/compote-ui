@@ -9,7 +9,7 @@
 	import type { ListboxProps } from './types';
 	import type { ListItem } from '$lib/utils/collections';
 	import { cn } from 'tailwind-variants';
-	import PhCheck from '$lib/icons/PhCheck.svelte';
+	import { PhCheck } from '$lib/icons';
 
 	type Props = ListboxProps<T>;
 

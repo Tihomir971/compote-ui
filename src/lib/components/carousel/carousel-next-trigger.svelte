@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PhArrowRight from '$lib/icons/PhArrowRight.svelte';
+	import { PhArrowRight } from '$lib/icons';
 	import { Carousel } from '@ark-ui/svelte/carousel';
 	import type { CarouselNextTriggerProps } from '@ark-ui/svelte/carousel';
 	import { cn } from 'tailwind-variants';

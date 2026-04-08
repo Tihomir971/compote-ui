@@ -5,8 +5,7 @@
 	import type { SelectProps } from './types';
 	import { createListCollection, type ListItem } from '$lib/utils/collections';
 	import { cn } from 'tailwind-variants';
-	import PhCaretDown from '$lib/icons/PhCaretDown.svelte';
-	import PhCheck from '$lib/icons/PhCheck.svelte';
+	import { PhCaretDown, PhCheck } from '$lib/icons';
 
 	let {
 		value = $bindable(),

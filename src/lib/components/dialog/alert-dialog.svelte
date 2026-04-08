@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PhX from '$lib/icons/PhX.svelte';
+	import { PhX } from '$lib/icons';
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import type { AlertDialogProps } from './dialog.types';

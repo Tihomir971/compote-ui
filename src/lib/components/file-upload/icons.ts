@@ -1,10 +1,12 @@
-import PhFile from '$lib/icons/PhFile.svelte';
-import PhFileArchive from '$lib/icons/PhFileArchive.svelte';
-import PhFileText from '$lib/icons/PhFileText.svelte';
-import PhImage from '$lib/icons/PhImage.svelte';
-import PhMicrosoftExcelLogo from '$lib/icons/PhMicrosoftExcelLogo.svelte';
-import PhVideoCamera from '$lib/icons/PhVideoCamera.svelte';
-import PhHeadphones from '$lib/icons/PhHeadphones.svelte';
+import {
+	PhFile,
+	PhFileArchive,
+	PhFileText,
+	PhHeadphones,
+	PhImage,
+	PhMicrosoftExcelLogo,
+	PhVideoCamera
+} from '$lib/icons';
 
 export const getFileIcon = (file: File) => {
 	const fileType = file.type;

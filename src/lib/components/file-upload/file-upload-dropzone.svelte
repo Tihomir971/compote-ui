@@ -2,7 +2,7 @@
 	import { FileUpload } from '@ark-ui/svelte/file-upload';
 	import { getAcceptAttribute } from './utils';
 	import type { FileUploadDropzoneProps } from './types';
-	import PhUploadSimple from '$lib/icons/PhUploadSimple.svelte';
+	import { PhUploadSimple } from '$lib/icons';
 
 	let {
 		fileType,

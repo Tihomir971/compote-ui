@@ -2,7 +2,7 @@
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from 'tailwind-variants';
-	import PhX from '$lib/icons/PhX.svelte';
+	import { PhX } from '$lib/icons';
 	import type { DialogProps } from './dialog.types';
 
 	let {

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Checkbox } from '@ark-ui/svelte/checkbox';
 	import type { CheckboxProps as Props } from './checkbox.types.ts';
-	import PhCheck from '$lib/icons/PhCheck.svelte';
-	import PhMinus from '$lib/icons/PhMinus.svelte';
+	import { PhCheck, PhMinus } from '$lib/icons';
 
 	let { checked = $bindable(), label, children, ...rest }: Props = $props();
 </script>

@@ -4,11 +4,14 @@
 	import { Button } from '$lib';
 	import { cropImage } from '$lib/utils/image-processing';
 	import type { ProcessImageOptions } from '$lib/utils/image-processing';
+	import { PhArrowClockwise, PhArrowCounterClockwise } from '$lib/icons';
 
 	let {
 		src,
 		alt = 'Image',
 		aspectRatio = $bindable(),
+		rotation = $bindable(0),
+		onRotationChange,
 		// eslint-disable-next-line no-useless-assignment
 		getCroppedImage = $bindable(),
 		// eslint-disable-next-line no-useless-assignment
@@ -41,7 +44,15 @@
 		};
 	});
 
-	const imageCropper = useImageCropper(() => ({ ...cropperProps, aspectRatio }));
+	const imageCropper = useImageCropper(() => ({
+		...cropperProps,
+		aspectRatio,
+		rotation,
+		onRotationChange: (e) => {
+			rotation = e.rotation;
+			onRotationChange?.(e);
+		}
+	}));
 
 	// eslint-disable-next-line no-useless-assignment
 	getCroppedImage = (options) => imageCropper().getCroppedImage(options);
@@ -56,25 +67,47 @@
 
 <div>
 	<div class="mb-2 flex flex-wrap items-center justify-between gap-1.5">
-		<div>
-			{#each ASPECT_RATIO_OPTIONS as option (option.label)}
+		<div class="flex flex-wrap items-center gap-1.5">
+			<div>
+				{#each ASPECT_RATIO_OPTIONS as option (option.label)}
+					<Button
+						variant={aspectRatio === option.value ? 'default' : 'outline'}
+						size="sm"
+						onclick={() => {
+							aspectRatio = option.value;
+						}}
+					>
+						{option.label}
+					</Button>
+				{/each}
+			</div>
+			<div class="flex gap-1">
 				<Button
-					variant={aspectRatio === option.value ? 'default' : 'outline'}
+					variant="outline"
 					size="sm"
 					onclick={() => {
-						aspectRatio = option.value;
+						rotation -= 90;
 					}}
 				>
-					{option.label}
+					<PhArrowCounterClockwise class="size-4" />
 				</Button>
-			{/each}
+				<Button
+					variant="outline"
+					size="sm"
+					onclick={() => {
+						rotation += 90;
+					}}
+				>
+					<PhArrowClockwise class="size-4" />
+				</Button>
+			</div>
 		</div>
 		<p>Width: {cropData.width}px / Height: {cropData.height}px</p>
 	</div>
 
 	<ImageCropper.RootProvider value={imageCropper}>
 		<ImageCropper.Viewport
-			class="relative overflow-hidden rounded-lg bg-surface-2 max-h-[60vh]"
+			class="relative max-h-[60vh] overflow-hidden rounded-lg bg-surface-2"
 			style={imageAspectRatio ? `aspect-ratio: ${imageAspectRatio}` : 'aspect-ratio: 1'}
 		>
 			<ImageCropper.Image
@@ -87,7 +120,9 @@
 				class="cursor-move border-2 border-white/50 [box-shadow:0_0_0_9999px_rgb(0_0_0/0.5)] outline-none focus-visible:border-primary data-dragging:cursor-grabbing data-dragging:border-white/80"
 			>
 				{#each ImageCropper.handles as position (position)}
-					{@const isCorner = ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(position)}
+					{@const isCorner = ['top-left', 'top-right', 'bottom-left', 'bottom-right'].includes(
+						position
+					)}
 					<ImageCropper.Handle
 						{position}
 						class="group absolute flex size-5 touch-none items-center justify-center
@@ -102,12 +137,12 @@
 					>
 						{#if isCorner}
 							<div
-								class="size-2 shadow-sm transition-transform group-hover:scale-110
-                  group-data-[position=top-left]:border-l-2 group-data-[position=top-left]:border-t-2
-                  group-data-[position=top-right]:border-r-2 group-data-[position=top-right]:border-t-2
-                  group-data-[position=bottom-right]:border-r-2 group-data-[position=bottom-right]:border-b-2
-                  group-data-[position=bottom-left]:border-l-2 group-data-[position=bottom-left]:border-b-2
-                  border-white"
+								class="size-2 border-white shadow-sm transition-transform
+	                  group-hover:scale-110 group-data-[position=bottom-left]:border-b-2
+	                  group-data-[position=bottom-left]:border-l-2 group-data-[position=bottom-right]:border-r-2
+	                  group-data-[position=bottom-right]:border-b-2 group-data-[position=top-left]:border-t-2
+	                  group-data-[position=top-left]:border-l-2 group-data-[position=top-right]:border-t-2
+	                  group-data-[position=top-right]:border-r-2"
 							></div>
 						{:else}
 							<div

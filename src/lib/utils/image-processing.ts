@@ -64,40 +64,54 @@ function getTrimBounds(
 	let top = 0;
 	outer: for (let y = 0; y < height; y++) {
 		for (let x = 0; x < width; x++) {
-			if (!isBackground((y * width + x) * 4)) { top = y; break outer; }
+			if (!isBackground((y * width + x) * 4)) {
+				top = y;
+				break outer;
+			}
 		}
 	}
 
 	let bottom = height - 1;
 	outer: for (let y = height - 1; y >= 0; y--) {
 		for (let x = 0; x < width; x++) {
-			if (!isBackground((y * width + x) * 4)) { bottom = y; break outer; }
+			if (!isBackground((y * width + x) * 4)) {
+				bottom = y;
+				break outer;
+			}
 		}
 	}
 
 	let left = 0;
 	outer: for (let x = 0; x < width; x++) {
 		for (let y = top; y <= bottom; y++) {
-			if (!isBackground((y * width + x) * 4)) { left = x; break outer; }
+			if (!isBackground((y * width + x) * 4)) {
+				left = x;
+				break outer;
+			}
 		}
 	}
 
 	let right = width - 1;
 	outer: for (let x = width - 1; x >= 0; x--) {
 		for (let y = top; y <= bottom; y++) {
-			if (!isBackground((y * width + x) * 4)) { right = x; break outer; }
+			if (!isBackground((y * width + x) * 4)) {
+				right = x;
+				break outer;
+			}
 		}
 	}
 
 	return { x: left, y: top, width: right - left + 1, height: bottom - top + 1 };
 }
 
-function applyTrim(
-	sourceCanvas: HTMLCanvasElement,
-	threshold: number
-): HTMLCanvasElement {
+function applyTrim(sourceCanvas: HTMLCanvasElement, threshold: number): HTMLCanvasElement {
 	const ctx = sourceCanvas.getContext('2d')!;
-	const { x, y, width, height } = getTrimBounds(ctx, sourceCanvas.width, sourceCanvas.height, threshold);
+	const { x, y, width, height } = getTrimBounds(
+		ctx,
+		sourceCanvas.width,
+		sourceCanvas.height,
+		threshold
+	);
 	const trimmed = document.createElement('canvas');
 	trimmed.width = width;
 	trimmed.height = height;
@@ -105,7 +119,11 @@ function applyTrim(
 	return trimmed;
 }
 
-function scaleCanvas(src: HTMLCanvasElement, maxWidth: number, maxHeight: number): HTMLCanvasElement {
+function scaleCanvas(
+	src: HTMLCanvasElement,
+	maxWidth: number,
+	maxHeight: number
+): HTMLCanvasElement {
 	let { width, height } = src;
 	if (width > maxWidth || height > maxHeight) {
 		const ratio = Math.min(maxWidth / width, maxHeight / height);
@@ -156,7 +174,9 @@ export async function cropImage(
 	let canvas = document.createElement('canvas');
 	canvas.width = crop.width;
 	canvas.height = crop.height;
-	canvas.getContext('2d')!.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+	canvas
+		.getContext('2d')!
+		.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
 
 	if (trim) canvas = applyTrim(canvas, trimThreshold);
 	canvas = scaleCanvas(canvas, maxWidth, maxHeight);

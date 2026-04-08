@@ -3,7 +3,7 @@
 	import type { MenuIndicatorBaseProps } from '@ark-ui/svelte/menu';
 	import type { Snippet } from 'svelte';
 	import { cn } from 'tailwind-variants';
-	import PhCaretDown from '$lib/icons/PhCaretDown.svelte';
+	import { PhCaretDown } from '$lib/icons';
 
 	type Props = MenuIndicatorBaseProps & { class?: string; children?: Snippet };
 

@@ -4,14 +4,17 @@
 	import type { TreeViewProps } from './types';
 	import { createTreeCollection, type TreeItem } from '../../utils/collections';
 	import { Debounced } from 'runed';
-	import PhX from '$lib/icons/PhX.svelte';
-	import PhCaretRight from '$lib/icons/PhCaretRight.svelte';
-	import PhMinus from '$lib/icons/PhMinus.svelte';
-	import PhCheck from '$lib/icons/PhCheck.svelte';
-	import PhArrowsInSimple from '$lib/icons/PhArrowsInSimple.svelte';
+	import {
+		PhArrowsInSimple,
+		PhCaretRight,
+		PhCheck,
+		PhMagnifyingGlass,
+		PhMinus,
+		PhX
+	} from '$lib/icons';
 	import { Button, Field } from '$lib';
 	import { SvelteSet } from 'svelte/reactivity';
-	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
+
 	import Icon from '@iconify/svelte';
 
 	let {
@@ -165,7 +168,7 @@
 		{#if node.children}
 			<TreeView.Branch class="relative">
 				<TreeView.BranchControl
-					class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:pointer-events-none flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none"
+					class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50"
 					style="padding-inline-start: calc(var(--tree-px) + (var(--depth) - 1) * (var(--tree-indent) + var(--tree-icon) * 0.5))"
 				>
 					{#if selectionMode === 'multiple'}
@@ -190,7 +193,7 @@
 			</TreeView.Branch>
 		{:else}
 			<TreeView.Item
-				class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:pointer-events-none flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none"
+				class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50"
 				style="padding-inline-start: calc(var(--tree-px) + (var(--depth) - 1) * (var(--tree-indent) + var(--tree-icon) * 0.5) + var(--tree-icon) + var(--tree-gap))"
 			>
 				{#if selectionMode === 'multiple'}

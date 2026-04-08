@@ -4,7 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import { cn } from 'tailwind-variants';
 	import MenuItemIndicator from './menu-item-indicator.svelte';
-	import PhCheck from '$lib/icons/PhCheck.svelte';
+	import { PhCheck } from '$lib/icons';
 
 	type IndicatorSnippet = { indicator?: Snippet };
 

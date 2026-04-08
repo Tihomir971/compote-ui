@@ -2,8 +2,7 @@
 	import { Field } from '@ark-ui/svelte/field';
 	import { NumberInput } from '@ark-ui/svelte/number-input';
 	import type { NumberInputProps } from './types';
-	import PhCaretDown from '$lib/icons/PhCaretDown.svelte';
-	import PhCaretUp from '$lib/icons/PhCaretUp.svelte';
+	import { PhCaretDown, PhCaretUp } from '$lib/icons';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
 
 	let {
