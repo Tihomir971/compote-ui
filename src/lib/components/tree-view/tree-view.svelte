@@ -165,7 +165,7 @@
 		{#if node.children}
 			<TreeView.Branch class="relative">
 				<TreeView.BranchControl
-					class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none"
+					class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:pointer-events-none flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none"
 					style="padding-inline-start: calc(var(--tree-px) + (var(--depth) - 1) * (var(--tree-indent) + var(--tree-icon) * 0.5))"
 				>
 					{#if selectionMode === 'multiple'}
@@ -190,7 +190,7 @@
 			</TreeView.Branch>
 		{:else}
 			<TreeView.Item
-				class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none"
+				class="hover:bg-accent data-selected:bg-accent data-selected:text-accent-foreground data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:pointer-events-none flex w-full cursor-pointer items-center gap-2 rounded-md py-1.5 pr-3 text-sm select-none"
 				style="padding-inline-start: calc(var(--tree-px) + (var(--depth) - 1) * (var(--tree-indent) + var(--tree-icon) * 0.5) + var(--tree-icon) + var(--tree-gap))"
 			>
 				{#if selectionMode === 'multiple'}
