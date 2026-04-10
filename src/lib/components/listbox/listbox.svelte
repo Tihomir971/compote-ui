@@ -45,17 +45,15 @@
 	);
 
 	const stringValue = $derived(value?.map(String) ?? []);
-
-	function handleValueChange(details: Parameters<NonNullable<Props['onValueChange']>>[0]) {
-		value = details.value as unknown as T[];
-		onValueChange?.(details);
-	}
 </script>
 
 <Listbox.Root
 	value={stringValue}
 	{collection}
-	onValueChange={handleValueChange}
+	onValueChange={(details) => {
+		value = details.value as unknown as T[];
+		onValueChange?.(details);
+	}}
 	{...restProps}
 	class={cn('flex h-full w-full flex-col gap-1.5 overflow-hidden p-0.5', className)}
 >
