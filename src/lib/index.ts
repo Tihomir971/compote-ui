@@ -4,6 +4,10 @@ export { default as LinkButton } from './components/button/link-button.svelte';
 
 export * as Card from './components/card';
 
+export * as Collapsible from './components/collapsible';
+
+export * as ScrollArea from './components/scroll-area';
+
 export { loadImage, fileToDataUrl, cropImage, processImage } from './utils/image-processing';
 export type { ProcessImageOptions, CropRegion } from './utils/image-processing';
 

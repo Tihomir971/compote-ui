@@ -52,7 +52,7 @@
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Cards Grid</h2>
 		<div class="grid grid-cols-3 gap-4">
-			{#each ['Design', 'Engineering', 'Marketing'] as team}
+			{#each ['Design', 'Engineering', 'Marketing'] as team (team)}
 				<Card.Root>
 					<Card.Header>
 						<Card.Title>{team}</Card.Title>

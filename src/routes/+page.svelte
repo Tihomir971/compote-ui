@@ -4,6 +4,7 @@
 	import ButtonTab from './contents/ButtonTab.svelte';
 	import CardTab from './contents/CardTab.svelte';
 	import CarouselTab from './contents/CarouselTab.svelte';
+	import CollapsibleTab from './contents/CollapsibleTab.svelte';
 	import CheckboxTab from './contents/CheckboxTab.svelte';
 	import ComboboxTab from './contents/ComboboxTab.svelte';
 	import DialogTab from './contents/DialogTab.svelte';
@@ -14,6 +15,7 @@
 	import ListboxTab from './contents/ListboxTab.svelte';
 	import MenuTab from './contents/MenuTab.svelte';
 	import NumberInputTab from './contents/NumberInputTab.svelte';
+	import ScrollAreaTab from './contents/ScrollAreaTab.svelte';
 	import SelectTab from './contents/SelectTab.svelte';
 	import SplitterTab from './contents/SplitterTab.svelte';
 	import SwitchTab from './contents/SwitchTab.svelte';
@@ -27,6 +29,7 @@
 			<Tabs.Trigger value="button">Button</Tabs.Trigger>
 			<Tabs.Trigger value="card">Card</Tabs.Trigger>
 			<Tabs.Trigger value="carousel">Carousel</Tabs.Trigger>
+			<Tabs.Trigger value="collapsible">Collapsible</Tabs.Trigger>
 			<Tabs.Trigger value="checkbox">Checkbox</Tabs.Trigger>
 			<Tabs.Trigger value="combobox">Combobox</Tabs.Trigger>
 			<Tabs.Trigger value="dialog">Dialog</Tabs.Trigger>
@@ -37,6 +40,7 @@
 			<Tabs.Trigger value="listbox">Listbox</Tabs.Trigger>
 			<Tabs.Trigger value="menu">Menu</Tabs.Trigger>
 			<Tabs.Trigger value="number-input">Number Input</Tabs.Trigger>
+			<Tabs.Trigger value="scroll-area">Scroll Area</Tabs.Trigger>
 			<Tabs.Trigger value="select">Select</Tabs.Trigger>
 			<Tabs.Trigger value="splitter">Splitter</Tabs.Trigger>
 			<Tabs.Trigger value="switch">Switch</Tabs.Trigger>
@@ -57,6 +61,10 @@
 
 		<Tabs.Content value="carousel">
 			<CarouselTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="collapsible">
+			<CollapsibleTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="checkbox">
@@ -97,6 +105,10 @@
 
 		<Tabs.Content value="number-input">
 			<NumberInputTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="scroll-area">
+			<ScrollAreaTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="select">
