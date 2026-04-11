@@ -67,21 +67,23 @@
 			class="h-8 w-full rounded-xs border border-surface-3 bg-transparent px-2.5 text-sm outline-none placeholder:text-ink-dim focus-visible:ring-1 focus-visible:ring-ring"
 		/>
 	{/if}
-	<Listbox.Content class="flex min-h-0 w-full flex-1 flex-col gap-1 overflow-y-auto outline-none">
+	<Listbox.Content class="flex min-h-0 w-full flex-1 flex-col overflow-y-auto outline-none">
 		{#if hasGroups}
 			{#each collection.group() as [type, group] (type)}
-				<Listbox.ItemGroup class="flex flex-col gap-1 px-1 py-1">
-					<Listbox.ItemGroupLabel class="flex h-10 items-center text-sm font-medium text-ink-dim">
+				<Listbox.ItemGroup class="flex flex-col">
+					<Listbox.ItemGroupLabel
+						class="px-2 py-1.5 text-xs font-semibold tracking-wide text-ink-dim uppercase"
+					>
 						{type}
 					</Listbox.ItemGroupLabel>
 					{#each group as item (item.value)}
 						<Listbox.Item
 							{item}
-							class="flex cursor-pointer items-center justify-between rounded-xs px-2.5 py-1.5 text-sm font-medium transition-all duration-150 hover:bg-surface-2 data-disabled:opacity-50 data-highlighted:bg-surface-2"
+							class="flex min-h-8 cursor-pointer items-center justify-between gap-2 rounded-xs px-2 text-sm transition-colors outline-none select-none hover:bg-surface-2 data-disabled:opacity-50 data-highlighted:bg-surface-2 data-[state=checked]:text-primary"
 						>
 							<Listbox.ItemText class="flex-1 truncate">{item.label}</Listbox.ItemText>
 							<Listbox.ItemIndicator
-								class="h-5 w-5 text-primary data-[state=checked]:flex data-[state=unchecked]:hidden"
+								class="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-primary data-[state=unchecked]:hidden"
 							>
 								<PhCheck />
 							</Listbox.ItemIndicator>
@@ -93,11 +95,11 @@
 			{#each collection.items as item (item.value)}
 				<Listbox.Item
 					{item}
-					class="flex cursor-pointer items-center justify-between rounded-xs px-2.5 py-1.5 text-sm font-medium transition-all duration-150 hover:bg-surface-2 data-disabled:opacity-50 data-highlighted:bg-surface-2"
+					class="flex min-h-8 cursor-pointer items-center justify-between gap-2 rounded-xs px-2 text-sm transition-colors outline-none select-none hover:bg-surface-2 data-disabled:opacity-50 data-highlighted:bg-surface-2 data-[state=checked]:text-primary"
 				>
 					<Listbox.ItemText class="flex-1 truncate">{item.label}</Listbox.ItemText>
 					<Listbox.ItemIndicator
-						class="h-5 w-5 text-primary data-[state=checked]:flex data-[state=unchecked]:hidden"
+						class="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-primary data-[state=unchecked]:hidden"
 					>
 						<PhCheck />
 					</Listbox.ItemIndicator>
