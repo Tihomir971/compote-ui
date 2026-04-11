@@ -36,7 +36,7 @@ export type { ImageCropperProps, ImageCropperCropData } from './components/image
 export { default as ImageCropDialog } from './components/image-crop-dialog/image-crop-dialog.svelte';
 export type { ImageCropDialogProps } from './components/image-crop-dialog/types';
 
-export { default as Listbox } from './components/listbox/listbox.svelte';
+export * as Listbox from './components/listbox';
 
 export { default as NumberInput } from './components/number-input/number-input.svelte';
 export type { NumberInputProps } from './components/number-input/types';
