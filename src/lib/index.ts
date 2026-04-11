@@ -59,6 +59,8 @@ export * as Fieldset from './components/fieldset';
 
 export { default as TreeView } from './components/tree-view/tree-view.svelte';
 
+export { LocaleProvider, useLocaleContext } from '@ark-ui/svelte/locale';
+
 export { createListCollection, createTreeCollection } from './utils/collections';
 export type { ListItem, TreeItem } from './utils/collections';
 export type { ListCollection, TreeCollection } from '@ark-ui/svelte/collection';
