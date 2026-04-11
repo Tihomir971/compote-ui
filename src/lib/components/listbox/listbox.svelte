@@ -55,7 +55,7 @@
 		onValueChange?.(details);
 	}}
 	{...restProps}
-	class={cn('flex h-full w-full flex-col gap-1.5 overflow-hidden p-0.5', className)}
+	class={cn('flex h-full w-full flex-col gap-1.5 overflow-hidden', className)}
 >
 	{#if label}
 		<Listbox.Label>{label}</Listbox.Label>
