@@ -15,7 +15,7 @@
 <Carousel.Indicator
 	class={cn(
 		thumbnail
-			? 'size-16 cursor-pointer overflow-hidden rounded-md border-2 border-transparent opacity-60 transition-all data-current:border-primary data-current:opacity-100 [&_img]:h-full [&_img]:w-full [&_img]:object-contain [&_img]:p-1'
+			? 'flex size-16 cursor-pointer items-center justify-center overflow-hidden rounded-md border-2 border-transparent opacity-60 transition-all data-current:border-primary data-current:opacity-100 [&_img]:size-14 [&_img]:max-w-full [&_img]:object-contain'
 			: 'size-2 cursor-pointer rounded-full border-0 bg-surface-3 p-0 data-current:bg-primary',
 		className
 	)}
