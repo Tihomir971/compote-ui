@@ -30,7 +30,6 @@
 	value={value?.toString()}
 	readOnly={readonly}
 	onValueChange={(valueChangeDetails) => {
-		console.log(valueChangeDetails);
 		if (isNaN(valueChangeDetails.valueAsNumber)) {
 			return;
 		}

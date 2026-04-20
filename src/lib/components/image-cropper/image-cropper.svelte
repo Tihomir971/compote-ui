@@ -7,7 +7,7 @@
 	import { PhArrowClockwise, PhArrowCounterClockwise } from '$lib/icons';
 
 	let {
-		src,
+		src = $bindable(),
 		alt = 'Image',
 		aspectRatio = $bindable(),
 		rotation = $bindable(0),
@@ -30,6 +30,7 @@
 	];
 
 	let imageAspectRatio = $state<number | undefined>(undefined);
+	let trimming = $state(false);
 
 	$effect(() => {
 		if (!src) return;
@@ -63,6 +64,17 @@
 		cropImage(src, imageCropper().getCropData(), opts);
 
 	let cropData = $derived(imageCropper().getCropData());
+
+	async function handleTrim() {
+		trimming = true;
+		try {
+			const blob = await cropImage(src, imageCropper().getCropData(), { trim: true });
+			src = URL.createObjectURL(blob);
+			rotation = 0;
+		} finally {
+			trimming = false;
+		}
+	}
 </script>
 
 <div>
@@ -99,6 +111,9 @@
 					}}
 				>
 					<PhArrowClockwise class="size-4" />
+				</Button>
+				<Button variant="outline" size="sm" onclick={handleTrim} disabled={trimming}>
+					Trim
 				</Button>
 			</div>
 		</div>
