@@ -6,7 +6,7 @@
       "name": "compote-ui",
       "dependencies": {
         "@ark-ui/svelte": "^5.21.1",
-        "@fontsource-variable/wix-madefor-text": "^5.2.8",
+        "@fontsource-variable/nunito-sans": "^5.2.7",
         "@iconify/svelte": "^5.2.1",
         "runed": "^0.37.1",
         "tailwind-merge": "^3.5.0",
@@ -125,7 +125,7 @@
 
     "@floating-ui/utils": ["@floating-ui/utils@0.2.11", "", {}, "sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg=="],
 
-    "@fontsource-variable/wix-madefor-text": ["@fontsource-variable/wix-madefor-text@5.2.8", "", {}, "sha512-scv5ezeqFgktPBEOzvHh885qsMZ8IrGeERgLjpLGwLiAtUbNSfGzpfEU7boggnMlHKFmH48mDXIe4OWBR5xz8Q=="],
+    "@fontsource-variable/nunito-sans": ["@fontsource-variable/nunito-sans@5.2.7", "", {}, "sha512-rflH5HeAoNjIkwftStzQvxqCJhIS+usMr/lfslWg/RCa499B5qxyjo+74R/QMM0geQt4AY1URlG7wAR1iq6KPQ=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 
