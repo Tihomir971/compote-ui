@@ -19,6 +19,7 @@
 	import SelectTab from './contents/SelectTab.svelte';
 	import SplitterTab from './contents/SplitterTab.svelte';
 	import SwitchTab from './contents/SwitchTab.svelte';
+	import ToggleGroupTab from './contents/ToggleGroupTab.svelte';
 	import TreeViewTab from './contents/TreeViewTab.svelte';
 </script>
 
@@ -44,6 +45,7 @@
 			<Tabs.Trigger value="select">Select</Tabs.Trigger>
 			<Tabs.Trigger value="splitter">Splitter</Tabs.Trigger>
 			<Tabs.Trigger value="switch">Switch</Tabs.Trigger>
+			<Tabs.Trigger value="toggle-group">Toggle Group</Tabs.Trigger>
 			<Tabs.Trigger value="tree-view">Tree View</Tabs.Trigger>
 		{/snippet}
 
@@ -121,6 +123,10 @@
 
 		<Tabs.Content value="switch">
 			<SwitchTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="toggle-group">
+			<ToggleGroupTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="tree-view">

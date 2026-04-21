@@ -51,6 +51,8 @@ export { default as Switch } from './components/switch/switch.svelte';
 
 export * as Tabs from './components/tabs';
 
+export * as ToggleGroup from './components/toggle-group';
+
 export * as Menu from './components/menu';
 
 export * as Field from './components/field';
