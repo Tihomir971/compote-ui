@@ -1,3 +1,2 @@
 @import 'tailwindcss';
 @import '../lib/theme.css';
-@source '../lib/components/**/*.{svelte,ts}';
