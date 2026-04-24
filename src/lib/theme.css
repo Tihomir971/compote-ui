@@ -2,8 +2,6 @@
 @import './open-props/props.colors-oklch.css';
 @import './open-props/props.gray-oklch.css';
 
-@source './components/**/*.js';
-
 :root {
 	color-scheme: light dark;
 
