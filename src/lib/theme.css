@@ -2,6 +2,8 @@
 @import './open-props/props.colors-oklch.css';
 @import './open-props/props.gray-oklch.css';
 
+@source './components/**/*.svelte';
+
 :root {
 	color-scheme: light dark;
 
