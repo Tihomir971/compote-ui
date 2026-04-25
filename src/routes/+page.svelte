@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Tabs } from '$lib';
+	import AvatarTab from './contents/AvatarTab.svelte';
 	import PaletteTab from './contents/PaletteTab.svelte';
 	import ButtonTab from './contents/ButtonTab.svelte';
 	import CardTab from './contents/CardTab.svelte';
@@ -26,6 +27,7 @@
 <div class="mx-auto min-h-screen max-w-1/2 p-8">
 	<Tabs.Root defaultValue="button" indicator orientation="vertical">
 		{#snippet triggers()}
+			<Tabs.Trigger value="avatar">Avatar</Tabs.Trigger>
 			<Tabs.Trigger value="palette">Palette</Tabs.Trigger>
 			<Tabs.Trigger value="button">Button</Tabs.Trigger>
 			<Tabs.Trigger value="card">Card</Tabs.Trigger>
@@ -48,6 +50,10 @@
 			<Tabs.Trigger value="toggle-group">Toggle Group</Tabs.Trigger>
 			<Tabs.Trigger value="tree-view">Tree View</Tabs.Trigger>
 		{/snippet}
+
+		<Tabs.Content value="avatar">
+			<AvatarTab />
+		</Tabs.Content>
 
 		<Tabs.Content value="palette">
 			<PaletteTab />

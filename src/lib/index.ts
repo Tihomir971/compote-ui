@@ -1,4 +1,7 @@
 // Reexport your entry components here
+export { default as Avatar } from './components/avatar/avatar.svelte';
+export type { AvatarProps, AvatarSize } from './components/avatar/avatar.types';
+
 export { default as Button } from './components/button/button.svelte';
 export { default as LinkButton } from './components/button/link-button.svelte';
 
