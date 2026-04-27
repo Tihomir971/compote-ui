@@ -20,14 +20,21 @@
 			.toUpperCase();
 	}
 
-	let { src, alt, fallback, size = 'md', class: className, ...rest }: AvatarProps & { class?: string } = $props();
+	let {
+		src,
+		alt,
+		fallback,
+		size = 'md',
+		class: className,
+		...rest
+	}: AvatarProps & { class?: string } = $props();
 
 	const displayFallback = $derived(fallback ? getInitials(fallback) : '');
 </script>
 
 <Avatar.Root
 	class={cn(
-		'inline-flex items-center justify-center relative overflow-hidden rounded-full select-none shrink-0 bg-surface-2 font-medium text-ink',
+		'relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface-2 font-medium text-ink select-none',
 		sizeClasses[size],
 		className
 	)}
@@ -36,7 +43,7 @@
 	<Avatar.Image
 		{src}
 		{alt}
-		class="object-cover w-full h-full rounded-[inherit] data-[state=hidden]:hidden"
+		class="h-full w-full rounded-[inherit] object-cover data-[state=hidden]:hidden"
 	/>
 	<Avatar.Fallback class="data-[state=hidden]:hidden">
 		{displayFallback}

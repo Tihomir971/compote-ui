@@ -13,7 +13,10 @@
 <ToggleGroup.Root
 	{...rootProps}
 	bind:value
-	class={cn('inline-flex gap-1 rounded-lg border border-border bg-surface-1 p-1 data-[orientation=vertical]:flex-col', className)}
+	class={cn(
+		'inline-flex gap-1 rounded-lg border border-border bg-surface-1 p-1 data-[orientation=vertical]:flex-col',
+		className
+	)}
 >
 	{@render children?.()}
 </ToggleGroup.Root>

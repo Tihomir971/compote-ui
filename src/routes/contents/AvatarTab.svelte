@@ -31,8 +31,15 @@
 			<Avatar src="https://broken.url/image.png" fallback="Jane Doe" alt="Jane Doe" size="sm" />
 			<Avatar src="https://broken.url/image.png" fallback="Anna Brown" alt="Anna Brown" size="md" />
 			<Avatar src="https://broken.url/image.png" fallback="Tom Clark" alt="Tom Clark" size="lg" />
-			<Avatar src="https://broken.url/image.png" fallback="Xavier Young" alt="Xavier Young" size="xl" />
+			<Avatar
+				src="https://broken.url/image.png"
+				fallback="Xavier Young"
+				alt="Xavier Young"
+				size="xl"
+			/>
 		</div>
-		<p class="mt-2 text-sm text-ink-dim">Broken src — Ark UI detects load failure, shows fallback</p>
+		<p class="mt-2 text-sm text-ink-dim">
+			Broken src — Ark UI detects load failure, shows fallback
+		</p>
 	</section>
 </div>

@@ -112,9 +112,7 @@
 				>
 					<PhArrowClockwise class="size-4" />
 				</Button>
-				<Button variant="outline" size="sm" onclick={handleTrim} disabled={trimming}>
-					Trim
-				</Button>
+				<Button variant="outline" size="sm" onclick={handleTrim} disabled={trimming}>Trim</Button>
 			</div>
 		</div>
 		<p>Width: {cropData.width}px / Height: {cropData.height}px</p>

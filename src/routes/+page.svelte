@@ -25,8 +25,8 @@
 </script>
 
 <div class="mx-auto min-h-screen max-w-1/2 p-8">
-	<Tabs.Root defaultValue="button" indicator orientation="vertical">
-		{#snippet triggers()}
+	<Tabs.Root defaultValue="button" orientation="vertical">
+		<Tabs.List>
 			<Tabs.Trigger value="avatar">Avatar</Tabs.Trigger>
 			<Tabs.Trigger value="palette">Palette</Tabs.Trigger>
 			<Tabs.Trigger value="button">Button</Tabs.Trigger>
@@ -49,7 +49,8 @@
 			<Tabs.Trigger value="switch">Switch</Tabs.Trigger>
 			<Tabs.Trigger value="toggle-group">Toggle Group</Tabs.Trigger>
 			<Tabs.Trigger value="tree-view">Tree View</Tabs.Trigger>
-		{/snippet}
+			<Tabs.Indicator />
+		</Tabs.List>
 
 		<Tabs.Content value="avatar">
 			<AvatarTab />

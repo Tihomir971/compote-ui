@@ -12,7 +12,7 @@
 <Tabs.Content
 	{...rest}
 	class={className ??
-		'flex-1 pt-4 outline-none data-[orientation=vertical]:pt-0 data-[orientation=vertical]:pl-4'}
+		'flex-1 pt-4 outline-none focus-visible:rounded-sm focus-visible:outline-2 focus-visible:-outline-offset-2 data-[orientation=vertical]:pt-0 data-[orientation=vertical]:pl-4'}
 >
 	{@render children?.()}
 </Tabs.Content>
