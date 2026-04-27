@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { Button, LinkButton } from '$lib';
+	import PhCheck from '$lib/icons/PhCheck.svelte';
+	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
 
-	const variants = ['default', 'outline', 'ghost'] as const;
+	const variants = ['default', 'outline', 'ghost', 'destructive'] as const;
 	const sizes = ['sm', 'default', 'lg'] as const;
+	const iconSizes = ['icon-sm', 'icon', 'icon-lg'] as const;
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -11,7 +14,7 @@
 		<div class="flex flex-col gap-6">
 			{#each variants as variant (variant)}
 				<div class="flex items-center gap-2">
-					<span class="w-16 text-sm capitalize">{variant}</span>
+					<span class="w-20 text-sm capitalize">{variant}</span>
 					<div class="flex items-center gap-3">
 						{#each sizes as size (size)}
 							<Button {variant} {size}>Button</Button>
@@ -27,7 +30,7 @@
 		<div class="flex flex-col gap-6">
 			{#each variants as variant (variant)}
 				<div class="flex items-center gap-2">
-					<span class="w-16 text-sm capitalize">{variant}</span>
+					<span class="w-20 text-sm capitalize">{variant}</span>
 					<div class="flex items-center gap-3">
 						{#each sizes as size (size)}
 							<LinkButton href="#" {variant} {size}>Link</LinkButton>
@@ -35,6 +38,30 @@
 					</div>
 				</div>
 			{/each}
+		</div>
+	</section>
+
+	<section>
+		<h2 class="mb-4 text-lg font-semibold">Icon Buttons</h2>
+		<div class="flex flex-col gap-6">
+			{#each variants as variant (variant)}
+				<div class="flex items-center gap-2">
+					<span class="w-20 text-sm capitalize">{variant}</span>
+					<div class="flex items-center gap-3">
+						{#each iconSizes as size (size)}
+							<Button {variant} {size}><PhCheck /></Button>
+						{/each}
+					</div>
+				</div>
+			{/each}
+			<div class="flex items-center gap-2">
+				<span class="w-20 text-sm">Text + Icon</span>
+				<div class="flex items-center gap-3">
+					{#each sizes as size (size)}
+						<Button {size}><PhMagnifyingGlass />Search</Button>
+					{/each}
+				</div>
+			</div>
 		</div>
 	</section>
 </div>

@@ -25,6 +25,8 @@ export { default as Dialog } from './components/dialog/dialog.svelte';
 export { default as AlertDialog } from './components/dialog/alert-dialog.svelte';
 export type { DialogProps, AlertDialogProps } from './components/dialog/dialog.types';
 
+export * as Drawer from './components/drawer';
+
 export { default as FileUploadDropzone } from './components/file-upload/file-upload-dropzone.svelte';
 export { default as FileUpload } from './components/file-upload/file-upload.svelte';
 export type {

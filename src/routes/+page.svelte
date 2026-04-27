@@ -9,6 +9,7 @@
 	import CheckboxTab from './contents/CheckboxTab.svelte';
 	import ComboboxTab from './contents/ComboboxTab.svelte';
 	import DialogTab from './contents/DialogTab.svelte';
+	import DrawerTab from './contents/DrawerTab.svelte';
 	import FieldTab from './contents/FieldTab.svelte';
 	import FieldsetTab from './contents/FieldsetTab.svelte';
 	import FileUploadTab from './contents/FileUploadTab.svelte';
@@ -36,6 +37,7 @@
 			<Tabs.Trigger value="checkbox">Checkbox</Tabs.Trigger>
 			<Tabs.Trigger value="combobox">Combobox</Tabs.Trigger>
 			<Tabs.Trigger value="dialog">Dialog</Tabs.Trigger>
+			<Tabs.Trigger value="drawer">Drawer</Tabs.Trigger>
 			<Tabs.Trigger value="field">Field</Tabs.Trigger>
 			<Tabs.Trigger value="fieldset">Fieldset</Tabs.Trigger>
 			<Tabs.Trigger value="file-upload">File Upload</Tabs.Trigger>
@@ -86,6 +88,10 @@
 
 		<Tabs.Content value="dialog">
 			<DialogTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="drawer">
+			<DrawerTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="field">
