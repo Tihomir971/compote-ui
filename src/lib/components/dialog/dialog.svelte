@@ -2,15 +2,11 @@
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from 'tailwind-variants';
-	import { PhX } from '$lib/icons';
 	import type { DialogProps } from './dialog.types';
 
 	let {
 		open = $bindable(),
-		title,
-		description,
 		children,
-		footer,
 		contentClass,
 		lazyMount = true,
 		unmountOnExit = true,
@@ -30,29 +26,7 @@
 					contentClass
 				)}
 			>
-				<Dialog.Title class="text-lg font-semibold">{title}</Dialog.Title>
-				{#if description}
-					<Dialog.Description class="mt-1 text-sm text-ink-dim">
-						{description}
-					</Dialog.Description>
-				{/if}
-
-				<div class="mt-4">
-					{@render children()}
-				</div>
-
-				{#if footer}
-					<div class="mt-4 flex justify-end gap-3">
-						{@render footer()}
-					</div>
-				{/if}
-
-				<Dialog.CloseTrigger
-					class="absolute top-3 right-3 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none active:opacity-50"
-				>
-					<PhX class="size-4" />
-					<span class="sr-only">Close</span>
-				</Dialog.CloseTrigger>
+				{@render children()}
 			</Dialog.Content>
 		</Dialog.Positioner>
 	</Portal>

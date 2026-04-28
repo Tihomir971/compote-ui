@@ -10,10 +10,7 @@ type DialogSharedProps = Pick<
 
 export interface DialogProps extends DialogSharedProps {
 	open: boolean;
-	title: string;
-	description?: string;
 	children: Snippet;
-	footer?: Snippet;
 	contentClass?: string;
 	initialFocusEl?: DialogRootBaseProps['initialFocusEl'];
 }

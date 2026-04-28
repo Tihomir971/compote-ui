@@ -11,7 +11,7 @@
 
 <Drawer.CloseTrigger
 	{...rest}
-	onclick={()=>console.log("Click:")}
+	onclick={() => console.log('Click:')}
 	class={className ??
 		'absolute top-12 right-4 flex h-7 w-7 cursor-pointer items-center justify-center rounded border-none bg-transparent text-ink-dim hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-1px]'}
 >

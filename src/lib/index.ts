@@ -21,9 +21,9 @@ export { default as CheckboxGroup } from './components/checkbox/checkbox-group.s
 
 export { default as Combobox } from './components/combobox/combobox.svelte';
 
-export { default as Dialog } from './components/dialog/dialog.svelte';
+export * as Dialog from './components/dialog';
 export { default as AlertDialog } from './components/dialog/alert-dialog.svelte';
-export type { DialogProps, AlertDialogProps } from './components/dialog/dialog.types';
+export type { AlertDialogProps } from './components/dialog/dialog.types';
 
 export * as Drawer from './components/drawer';
 
