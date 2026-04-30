@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import type { DialogTitleBaseProps } from '@ark-ui/svelte/dialog';
+	import type { ClassValue } from 'svelte/elements';
 
 	interface Props extends DialogTitleBaseProps {
-		class?: string;
+		class?: ClassValue;
 	}
 
 	let { class: className, children, ...rest }: Props = $props();

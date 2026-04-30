@@ -5,9 +5,10 @@
 	import type { ListItem } from '$lib/utils/collections';
 	import { cn } from 'tailwind-variants';
 	import { getListboxContext } from './listbox-context';
+	import type { ClassValue } from 'svelte/elements';
 
 	type Props = ListboxContentBaseProps & {
-		class?: string;
+		class?: ClassValue;
 		items?: Snippet<[{ items: ListItem[]; group: [string, ListItem[]][] }]>;
 	};
 

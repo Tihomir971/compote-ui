@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { Drawer } from '@ark-ui/svelte/drawer';
 	import type { DrawerContentBaseProps } from '@ark-ui/svelte/drawer';
+	import type { ClassValue } from 'svelte/elements';
+	import { cn } from 'tailwind-variants';
 
 	interface Props extends DrawerContentBaseProps {
-		class?: string;
+		class?: ClassValue;
 	}
 
 	let { class: className, children, ...rest }: Props = $props();
@@ -11,8 +13,13 @@
 
 <Drawer.Content
 	{...rest}
-	class={className ??
-		'relative flex h-full max-h-[96svh] w-full flex-col rounded-t-2xl bg-surface-1 px-5 shadow-xl outline-none data-[swipe-direction=left]:rounded-none data-[swipe-direction=left]:rounded-r-2xl data-[swipe-direction=right]:rounded-none data-[swipe-direction=right]:rounded-l-2xl data-[swipe-direction=up]:rounded-none data-[swipe-direction=up]:rounded-b-2xl'}
+	class={cn(
+		'relative flex h-full max-h-[96svh] w-full flex-col rounded-t-2xl bg-surface-1 px-5 shadow-xl outline-none',
+		'data-[swipe-direction=left]:rounded-none data-[swipe-direction=left]:rounded-r-2xl',
+		'data-[swipe-direction=right]:rounded-none data-[swipe-direction=right]:rounded-l-2xl',
+		'data-[swipe-direction=up]:rounded-none data-[swipe-direction=up]:rounded-b-2xl',
+		className
+	)}
 >
 	{@render children?.()}
 </Drawer.Content>

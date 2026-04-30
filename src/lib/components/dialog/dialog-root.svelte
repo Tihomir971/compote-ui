@@ -17,12 +17,12 @@
 <Dialog.Root bind:open {lazyMount} {unmountOnExit} {...restProps}>
 	<Portal>
 		<Dialog.Backdrop
-			class="data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 fixed inset-0 z-50 bg-black/50"
+			class="fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0"
 		/>
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center p-4">
 			<Dialog.Content
 				class={cn(
-					'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 relative w-full max-w-2xl rounded-lg border bg-surface-1 p-6 shadow-xl',
+					'relative w-full max-w-2xl rounded-lg border bg-surface-1 p-6 shadow-xl data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
 					contentClass
 				)}
 			>

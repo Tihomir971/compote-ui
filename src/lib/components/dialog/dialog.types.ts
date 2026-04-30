@@ -1,5 +1,6 @@
 import type { DialogRootBaseProps } from '@ark-ui/svelte/dialog';
 import type { Snippet } from 'svelte';
+import type { ClassValue } from 'svelte/elements';
 
 export type { DialogRootBaseProps };
 
@@ -11,7 +12,7 @@ type DialogSharedProps = Pick<
 export interface DialogProps extends DialogSharedProps {
 	open: boolean;
 	children: Snippet;
-	contentClass?: string;
+	contentClass?: ClassValue;
 	initialFocusEl?: DialogRootBaseProps['initialFocusEl'];
 }
 

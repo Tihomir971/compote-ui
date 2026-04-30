@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { ClassValue } from 'svelte/elements';
 
 	interface Props {
-		class?: string;
+		class?: ClassValue;
 		children: Snippet;
 	}
 

@@ -4,19 +4,20 @@ import type {
 	FieldsetHelperTextBaseProps,
 	FieldsetErrorTextBaseProps
 } from '@ark-ui/svelte/fieldset';
+import type { ClassValue } from 'svelte/elements';
 
 export interface FieldsetRootProps extends FieldsetRootBaseProps {
-	class?: string;
+	class?: ClassValue;
 }
 
 export interface FieldsetLegendProps extends FieldsetLegendBaseProps {
-	class?: string;
+	class?: ClassValue;
 }
 
 export interface FieldsetHelperTextProps extends FieldsetHelperTextBaseProps {
-	class?: string;
+	class?: ClassValue;
 }
 
 export interface FieldsetErrorTextProps extends FieldsetErrorTextBaseProps {
-	class?: string;
+	class?: ClassValue;
 }

@@ -7,6 +7,7 @@ import type {
 	FieldHelperTextBaseProps,
 	FieldErrorTextBaseProps
 } from '@ark-ui/svelte/field';
+import type { ClassValue } from 'svelte/elements';
 
 export interface FormAdapter {
 	invalid(field: string): boolean;
@@ -15,30 +16,30 @@ export interface FormAdapter {
 }
 
 export interface FieldRootProps extends FieldRootBaseProps {
-	class?: string;
+	class?: ClassValue;
 	form?: FormAdapter;
 	field?: string;
 	helperText?: string;
 }
 
 export interface FieldLabelProps extends FieldLabelBaseProps {
-	class?: string;
+	class?: ClassValue;
 }
 
 export interface FieldInputProps extends ArkFieldInputProps {
-	class?: string;
+	class?: ClassValue;
 	startIcon?: Snippet;
 	endIcon?: Snippet;
 }
 
 export interface FieldTextareaProps extends ArkFieldTextareaProps {
-	class?: string;
+	class?: ClassValue;
 }
 
 export interface FieldHelperTextProps extends FieldHelperTextBaseProps {
-	class?: string;
+	class?: ClassValue;
 }
 
 export interface FieldErrorTextProps extends FieldErrorTextBaseProps {
-	class?: string;
+	class?: ClassValue;
 }

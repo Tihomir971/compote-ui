@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { Collapsible } from '@ark-ui/svelte/collapsible';
 	import type { CollapsibleTriggerBaseProps } from '@ark-ui/svelte/collapsible';
+	import type { ClassValue } from 'svelte/elements';
 	import { cn } from 'tailwind-variants';
 
 	interface Props extends CollapsibleTriggerBaseProps {
-		class?: string;
+		class?: ClassValue;
 	}
 
 	let { class: className, children, ...rest }: Props = $props();

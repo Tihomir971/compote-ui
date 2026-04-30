@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Tabs } from '$lib';
-	import TestTab from './contents/TestTab.svelte';
 	import AvatarTab from './contents/AvatarTab.svelte';
 	import PaletteTab from './contents/PaletteTab.svelte';
 	import ButtonTab from './contents/ButtonTab.svelte';
@@ -57,10 +56,6 @@
 			<Tabs.Trigger value="tree-view">Tree View</Tabs.Trigger>
 			<Tabs.Indicator />
 		</Tabs.List>
-
-		<Tabs.Content value="test">
-			<TestTab />
-		</Tabs.Content>
 
 		<Tabs.Content value="avatar">
 			<AvatarTab />

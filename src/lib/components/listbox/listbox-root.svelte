@@ -7,12 +7,13 @@
 	import type { ListItem } from '$lib/utils/collections';
 	import { cn } from 'tailwind-variants';
 	import { setListboxContext } from './listbox-context';
+	import type { ClassValue } from 'svelte/elements';
 
 	type Props = Omit<ListboxRootBaseProps<ListItem<T>>, 'collection' | 'value'> & {
 		items: ListItem<T>[];
 		value?: T[];
 		name?: string;
-		class?: string;
+		class?: ClassValue;
 		children?: Snippet;
 	};
 

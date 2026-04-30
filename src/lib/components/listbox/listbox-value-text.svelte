@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { Listbox } from '@ark-ui/svelte/listbox';
 	import type { ListboxValueTextBaseProps } from '@ark-ui/svelte/listbox';
+	import type { ClassValue } from 'svelte/elements';
 	import { cn } from 'tailwind-variants';
 
 	type Props = ListboxValueTextBaseProps & {
-		class?: string;
+		class?: ClassValue;
 	};
 
 	let { class: className, ...restProps }: Props = $props();

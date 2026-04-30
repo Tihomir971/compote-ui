@@ -12,7 +12,9 @@
 			<Button onclick={() => (dialogOpen = true)}>Open Dialog</Button>
 			<Dialog.Root bind:open={dialogOpen}>
 				<Dialog.Title>Confirm Action</Dialog.Title>
-				<Dialog.Description>Are you sure you want to proceed with this action? This cannot be undone.</Dialog.Description>
+				<Dialog.Description>
+					Are you sure you want to proceed with this action? This cannot be undone.
+				</Dialog.Description>
 				<p class="text-sm">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
 					ut labore et dolore magna aliqua.

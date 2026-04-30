@@ -28,11 +28,11 @@
 <Dialog.Root role="alertdialog" bind:open {lazyMount} {unmountOnExit} {...restProps}>
 	<Portal>
 		<Dialog.Backdrop
-			class="data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 fixed inset-0 z-50 bg-black/50"
+			class="fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0"
 		/>
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
 			<Dialog.Content
-				class="data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 relative w-full max-w-md rounded-lg border bg-surface-1 p-6 shadow-xl"
+				class="relative w-full max-w-md rounded-lg border bg-surface-1 p-6 shadow-xl data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
 			>
 				<Dialog.Title class="text-lg leading-none font-semibold tracking-tight">
 					{title}

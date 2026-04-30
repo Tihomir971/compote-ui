@@ -2,10 +2,11 @@
 	import { Listbox } from '@ark-ui/svelte/listbox';
 	import type { ListboxItemTextBaseProps } from '@ark-ui/svelte/listbox';
 	import type { Snippet } from 'svelte';
+	import type { ClassValue } from 'svelte/elements';
 	import { cn } from 'tailwind-variants';
 
 	type Props = ListboxItemTextBaseProps & {
-		class?: string;
+		class?: ClassValue;
 		children?: Snippet;
 	};
 

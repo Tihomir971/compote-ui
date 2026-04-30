@@ -3,9 +3,10 @@
 	import type { ListboxInputBaseProps } from '@ark-ui/svelte/listbox';
 	import { cn } from 'tailwind-variants';
 	import { getListboxContext } from './listbox-context';
+	import type { ClassValue } from 'svelte/elements';
 
 	type Props = ListboxInputBaseProps & {
-		class?: string;
+		class?: ClassValue;
 		placeholder?: string;
 		oninput?: (event: Event & { currentTarget: HTMLInputElement }) => void;
 	};

@@ -2,9 +2,10 @@
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import type { DialogCloseTriggerBaseProps } from '@ark-ui/svelte/dialog';
 	import { PhX } from '$lib/icons';
+	import type { ClassValue } from 'svelte/elements';
 
 	interface Props extends DialogCloseTriggerBaseProps {
-		class?: string;
+		class?: ClassValue;
 	}
 
 	let { class: className, children, ...rest }: Props = $props();

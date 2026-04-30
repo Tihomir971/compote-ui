@@ -19,13 +19,13 @@
 		<Tooltip.Content
 			{...restProps}
 			class={cn(
-				'z-50 max-w-80 rounded-md border bg-surface-1 px-2.5 py-1.5 text-xs font-medium text-ink shadow-md outline-none [--arrow-background:var(--compote-surface-1)] [--arrow-size:10px]',
+				'z-50 max-w-80 rounded-md border bg-well px-2.5 py-1.5 text-xs font-medium text-ink shadow-md outline-none [--arrow-background:var(--compote-well)] [--arrow-size:10px]',
 				className
 			)}
 		>
 			{#if showArrow}
 				<Tooltip.Arrow>
-					<Tooltip.ArrowTip class="border-l border-t" />
+					<Tooltip.ArrowTip class="border-t border-l" />
 				</Tooltip.Arrow>
 			{/if}
 			{@render children()}

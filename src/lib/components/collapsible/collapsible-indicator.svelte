@@ -4,9 +4,10 @@
 	import type { Snippet } from 'svelte';
 	import { cn } from 'tailwind-variants';
 	import PhCaretRight from '../../icons/PhCaretRight.svelte';
+	import type { ClassValue } from 'svelte/elements';
 
 	interface Props extends CollapsibleIndicatorBaseProps {
-		class?: string;
+		class?: ClassValue;
 		children?: Snippet;
 	}
 

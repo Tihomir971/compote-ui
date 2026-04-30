@@ -1,4 +1,4 @@
-export { default as Root } from './dialog.svelte';
+export { default as Root } from './dialog-root.svelte';
 export { default as Title } from './dialog-title.svelte';
 export { default as Description } from './dialog-description.svelte';
 export { default as Trigger } from './dialog-trigger.svelte';
