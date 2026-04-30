@@ -20,6 +20,13 @@
 				bind:value={selectedSelectValue}
 				placeholder="Select a fruit"
 			/>
+			<Select
+				items={selectItems}
+				label="Choose a fruit"
+				bind:value={selectedSelectValue}
+				placeholder="Select a fruit"
+				size="sm"
+			/>
 			<p class="text-sm text-ink-dim">
 				Selected: <strong>{selectedSelectValue}</strong>
 			</p>

@@ -13,6 +13,7 @@
 		label,
 		placeholder,
 		layout = 'vertical',
+		size = 'default',
 		name,
 		...restProps
 	}: SelectProps<T> = $props();
@@ -45,7 +46,10 @@
 	{/if}
 	<Select.Control>
 		<Select.Trigger
-			class="flex h-9 w-full cursor-pointer items-center justify-between rounded-md border bg-surface-1 px-3 text-sm shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none active:bg-surface-2 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-invalid:border-danger data-invalid:focus-visible:ring-danger"
+			class={cn(
+				'flex w-full cursor-pointer items-center justify-between rounded-md border bg-surface-1 px-3 text-sm shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none active:bg-surface-2 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-invalid:border-danger data-invalid:focus-visible:ring-danger',
+				size === 'sm' ? 'h-8' : 'h-9'
+			)}
 		>
 			<div class="flex items-center gap-2">
 				<Select.ValueText

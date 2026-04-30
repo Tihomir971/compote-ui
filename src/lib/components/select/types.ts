@@ -10,4 +10,5 @@ export interface SelectProps<T extends ListItem> extends Omit<
 	label?: string;
 	placeholder?: string;
 	layout?: 'vertical' | 'horizontal';
+	size?: 'default' | 'sm';
 }

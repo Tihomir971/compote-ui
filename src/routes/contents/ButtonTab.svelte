@@ -5,7 +5,7 @@
 
 	const variants = ['default', 'outline', 'ghost', 'destructive'] as const;
 	const sizes = ['sm', 'default', 'lg'] as const;
-	const iconSizes = ['icon-sm', 'icon', 'icon-lg'] as const;
+	const iconSizes = ['icon-xs', 'icon-sm', 'icon', 'icon-lg'] as const;
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">

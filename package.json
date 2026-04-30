@@ -3,7 +3,7 @@
 	"version": "0.29.0",
 	"license": "MIT",
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --open",
 		"build": "vite build && npm run prepack",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
@@ -50,7 +50,7 @@
 		"globals": "^17.5.0",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^3.4.1",
-		"prettier-plugin-tailwindcss": "^0.7.4",
+		"prettier-plugin-tailwindcss": "^0.8.0",
 		"publint": "^0.3.17",
 		"svelte": "^5.55.4",
 		"svelte-check": "^4.4.6",

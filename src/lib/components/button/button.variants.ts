@@ -13,10 +13,10 @@ export const button = tv({
 			sm: 'h-8 gap-1.5 px-2',
 			default: 'h-9 gap-2 px-3',
 			lg: 'h-10 gap-2.5 px-4',
-			icon: 'size-9',
+			icon: 'size-8',
 			'icon-xs': 'size-6',
-			'icon-sm': 'size-8',
-			'icon-lg': 'size-10'
+			'icon-sm': 'size-7',
+			'icon-lg': 'size-9'
 		}
 	},
 	defaultVariants: { variant: 'default', size: 'default' }
