@@ -2,9 +2,10 @@
 	import { ToggleGroup } from '@ark-ui/svelte/toggle-group';
 	import type { ToggleGroupItemBaseProps } from '@ark-ui/svelte/toggle-group';
 	import { cn } from 'tailwind-variants';
+	import type { ClassValue } from 'svelte/elements';
 
 	interface Props extends ToggleGroupItemBaseProps {
-		class?: string;
+		class?: ClassValue | null;
 	}
 
 	let { class: className, children, ...rest }: Props = $props();
@@ -14,7 +15,7 @@
 	{...rest}
 	class={cn(
 		'inline-flex h-8 min-w-8 items-center justify-center rounded-md text-sm text-ink-dim transition-colors select-none hover:bg-surface-2 hover:text-ink focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-[state=on]:bg-surface-2 data-[state=on]:text-ink data-[state=on]:shadow-sm',
-		className
+		className as never
 	)}
 >
 	{@render children?.()}

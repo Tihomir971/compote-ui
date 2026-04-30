@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ToggleGroup } from '$lib';
+	import { ToggleGroup, Tooltip } from '$lib';
 
 	import PhTextBolder from '~icons/ph/text-bolder';
 	import PhTextItalic from '~icons/ph/text-italic';
@@ -18,9 +18,16 @@
 	<div class="flex flex-col gap-2">
 		<p class="text-sm font-medium text-ink">Alignment (single)</p>
 		<ToggleGroup.Root bind:value={alignment}>
-			<ToggleGroup.Item value="left">
-				<PhTextAlignLeft />
-			</ToggleGroup.Item>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					{#snippet asChild(props)}
+						<ToggleGroup.Item {...props()} value="left">
+							<PhTextAlignLeft />
+						</ToggleGroup.Item>
+					{/snippet}
+				</Tooltip.Trigger>
+				<Tooltip.Content>Align left</Tooltip.Content>
+			</Tooltip.Root>
 			<ToggleGroup.Item value="center">
 				<PhTextAlignCenter />
 			</ToggleGroup.Item>

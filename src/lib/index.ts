@@ -60,6 +60,8 @@ export * as ToggleGroup from './components/toggle-group';
 
 export * as Menu from './components/menu';
 
+export * as Tooltip from './components/tooltip';
+
 export * as Field from './components/field';
 
 export * as Fieldset from './components/fieldset';

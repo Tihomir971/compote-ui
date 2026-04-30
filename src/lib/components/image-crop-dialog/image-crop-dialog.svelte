@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Dialog from '../dialog/dialog.svelte';
+	import * as Dialog from '../dialog';
 	import ImageCropper from '../image-cropper/image-cropper.svelte';
 	import { Button } from '$lib';
 	import { cropImage, processImage } from '$lib/utils/image-processing';
@@ -47,16 +47,17 @@
 	}
 </script>
 
-<Dialog
+<Dialog.Root
 	bind:open
-	{title}
-	{description}
 	onOpenChange={(details) => {
 		if (!details.open) onCancel();
 	}}
 >
+	<Dialog.Title>{title}</Dialog.Title>
+	<Dialog.Description>{description}</Dialog.Description>
+
 	<ImageCropper bind:getCropData src={imageSrc} alt="Crop preview" {aspectRatio} />
-	{#snippet footer()}
+	<Dialog.Footer>
 		<Button variant="outline" onclick={onCancel} disabled={processing}>Cancel</Button>
 		{#if showSkipCrop}
 			<Button variant="outline" onclick={handleSkipCrop} disabled={processing}>
@@ -66,5 +67,5 @@
 		<Button onclick={handleCrop} disabled={processing}>
 			{processing ? 'Processing...' : confirmLabel}
 		</Button>
-	{/snippet}
-</Dialog>
+	</Dialog.Footer>
+</Dialog.Root>
