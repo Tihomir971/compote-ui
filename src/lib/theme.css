@@ -19,7 +19,7 @@
 	--compote-ink: light-dark(var(--gray-15), var(--gray-1));
 	--compote-ink-dim: light-dark(var(--gray-11), var(--gray-5));
 	--compote-ink-inverse: white;
-	--compote-surface-3: light-dark(var(--gray-5), var(--gray-11));
+	--compote-surface-3: light-dark(var(--gray-5), var(--gray-10));
 	--compote-surface-2: light-dark(var(--gray-4), var(--gray-12));
 	--compote-surface-1: light-dark(var(--gray-3), var(--gray-13));
 	--compote-surface-document: light-dark(var(--gray-2), var(--gray-14));

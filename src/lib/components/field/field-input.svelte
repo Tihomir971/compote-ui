@@ -14,10 +14,10 @@
 
 <div class="relative w-full">
 	{#if startIcon}
-		<div
-			class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-ink-dim"
-		>
-			{@render startIcon()}
+		<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center p-0.5 text-ink-dim">
+			<div class="flex h-full min-w-8 items-center justify-center">
+				{@render startIcon()}
+			</div>
 		</div>
 	{/if}
 	<Field.Input
@@ -31,8 +31,10 @@
 		)}
 	/>
 	{#if endIcon}
-		<div class="absolute inset-y-0 right-0 flex items-center pr-2.5">
-			{@render endIcon()}
+		<div class="absolute inset-y-0 right-0 flex items-center justify-end p-0.5">
+			<div class="flex h-full min-w-8 items-center justify-center">
+				{@render endIcon()}
+			</div>
 		</div>
 	{/if}
 </div>

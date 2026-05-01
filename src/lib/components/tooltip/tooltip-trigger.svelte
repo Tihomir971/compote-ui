@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { Tooltip } from '@ark-ui/svelte/tooltip';
-	import type { TooltipTriggerBaseProps } from '@ark-ui/svelte/tooltip';
-	import type { Snippet } from 'svelte';
+	import type { TooltipTriggerProps } from '@ark-ui/svelte/tooltip';
 	import { button, type ButtonSize, type ButtonVariant } from '../button/button.variants';
 
-	type Props = TooltipTriggerBaseProps & {
+	type Props = Omit<TooltipTriggerProps, 'class'> & {
 		variant?: ButtonVariant;
 		size?: ButtonSize;
 		class?: string;
-		children?: Snippet;
 	};
 
 	const {

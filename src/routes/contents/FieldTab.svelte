@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Field } from '$lib';
+	import { Field, ToggleGroup } from '$lib';
 	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
 	import PhX from '$lib/icons/PhX.svelte';
 	let fieldName = $state('');
@@ -32,10 +32,25 @@
 				<Field.Input bind:value={fieldUsername} placeholder="johndoe">
 					{#snippet endIcon()}
 						{#if fieldUsername}
-							<button onclick={() => (fieldUsername = '')} class="text-ink-dim hover:text-ink">
+							<button
+								onclick={() => (fieldUsername = '')}
+								class="flex aspect-square h-full items-center justify-center rounded-sm text-ink-dim hover:text-ink"
+							>
 								<PhX class="size-4" />
 							</button>
 						{/if}
+					{/snippet}
+				</Field.Input>
+			</Field.Root>
+			<Field.Root>
+				<Field.Label>With Select</Field.Label>
+				<Field.Input bind:value={fieldUsername} placeholder="johndoe">
+					{#snippet endIcon()}
+						<ToggleGroup.Root>
+							<ToggleGroup.Item value="x">
+								<PhX class="size-4" />
+							</ToggleGroup.Item>
+						</ToggleGroup.Root>
 					{/snippet}
 				</Field.Input>
 			</Field.Root>

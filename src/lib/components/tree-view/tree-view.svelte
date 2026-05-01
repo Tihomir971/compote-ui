@@ -112,7 +112,7 @@
 				{#snippet render(tree)}
 					<Button
 						variant="outline"
-						size="icon"
+						size="icon-lg"
 						title="Collapse all"
 						onclick={() => tree().collapse()}
 					>
