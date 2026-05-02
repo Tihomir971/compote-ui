@@ -37,7 +37,7 @@ export type DataTableCellConfig<TData extends RowData = RowData, TValue = unknow
 	  }
 	| {
 			type: 'link';
-			href: string | ((value: TValue, row: TData) => string);
+			href?: string | ((value: TValue, row: TData) => string);
 			target?: HTMLAnchorElement['target'];
 			fallback?: string;
 	  };
@@ -48,12 +48,16 @@ export type DataTableCellType<TData extends RowData = RowData, TValue = unknown>
 
 export type DataTableColumnMeta<TData extends RowData = RowData, TValue = unknown> = {
 	dataTable?: {
+		align?: DataTableColumnAlign;
 		cell?: DataTableCellConfig<TData, TValue>;
 		hasCustomCell?: boolean;
 	};
 };
 
+export type DataTableColumnAlign = 'left' | 'center' | 'right';
+
 type DataTableColumnDefOptions<TData extends RowData, TValue> = {
+	align?: DataTableColumnAlign;
 	cellType?: DataTableCellType<TData, TValue>;
 };
 
@@ -96,6 +100,7 @@ export function normalizeDataTableColumns<TData extends RowData>(
 	return columns.map((columnDef) => {
 		const {
 			cellType,
+			align,
 			columns: childColumns,
 			meta,
 			...column
@@ -104,16 +109,18 @@ export function normalizeDataTableColumns<TData extends RowData>(
 		};
 		const cell = normalizeDataTableCellType(cellType);
 		const hasCustomCell = 'cell' in column;
-		const nextMeta = cell
-			? {
-					...(meta ?? {}),
-					dataTable: {
-						...((meta as DataTableColumnMeta<TData> | undefined)?.dataTable ?? {}),
-						cell,
-						hasCustomCell
+		const nextMeta =
+			cell || align
+				? {
+						...(meta ?? {}),
+						dataTable: {
+							...((meta as DataTableColumnMeta<TData> | undefined)?.dataTable ?? {}),
+							...(align ? { align } : {}),
+							...(cell ? { cell } : {}),
+							hasCustomCell
+						}
 					}
-				}
-			: meta;
+				: meta;
 
 		return {
 			...column,

@@ -7,6 +7,7 @@ export {
 	type DataTableCell,
 	type DataTableCellConfig,
 	type DataTableCellType,
+	type DataTableColumnAlign,
 	type DataTableColumnDef,
 	type DataTableColumnMeta
 } from './cells';

@@ -112,9 +112,9 @@
 		{
 			accessorKey: 'url',
 			header: 'Link',
+			align: 'center',
 			cellType: {
 				type: 'link',
-				href: (_, row) => row.url,
 				target: '_blank',
 				fallback: 'Open'
 			}

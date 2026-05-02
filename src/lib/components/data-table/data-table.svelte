@@ -4,13 +4,16 @@
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhArrowSquareOut } from '$lib/icons';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import type { RowData } from '@tanstack/svelte-table';
+	import type { Header, RowData } from '@tanstack/svelte-table';
 	import {
 		getDataTableCellConfig,
 		hasCustomDataTableCell,
 		type DataTable,
 		type DataTableCell,
-		type DataTableCellConfig
+		type DataTableCellConfig,
+		type DataTableColumnAlign,
+		type DataTableColumnMeta,
+		type DataTableFeatures
 	} from './core';
 
 	type Props = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
@@ -49,7 +52,7 @@
 		};
 	}
 
-	function isNumericCell(cellConfig: DataTableCellConfig<TData> | undefined) {
+	function isNumericCellConfig(cellConfig: DataTableCellConfig<TData> | undefined) {
 		return (
 			cellConfig?.type === 'number' ||
 			cellConfig?.type === 'currency' ||
@@ -59,14 +62,39 @@
 
 	function getLinkHref<TValue>(
 		cell: DataTableCell<TData, TValue>,
-		href: string | ((value: TValue, row: TData) => string)
+		href: string | ((value: TValue, row: TData) => string) | undefined
 	) {
 		const value = cell.getValue();
+		if (!href) return formatTextValue(value);
 		return typeof href === 'function' ? href(value, cell.row.original) : href;
 	}
 
 	function getLinkLabel(value: unknown, fallback = 'Open link') {
 		return formatTextValue(value, fallback);
+	}
+
+	function getCellMeta<TValue>(cell: DataTableCell<TData, TValue>) {
+		return (cell.column.columnDef.meta as DataTableColumnMeta<TData, TValue> | undefined)
+			?.dataTable;
+	}
+
+	function getHeaderMeta(header: Header<DataTableFeatures, TData, unknown>) {
+		return header.column.columnDef.meta as DataTableColumnMeta<TData> | undefined;
+	}
+
+	function getColumnAlign(
+		align: DataTableColumnAlign | undefined,
+		cellConfig: DataTableCellConfig<TData> | undefined
+	) {
+		return align ?? (isNumericCellConfig(cellConfig) ? 'right' : 'left');
+	}
+
+	function alignClass(align: DataTableColumnAlign | undefined) {
+		return {
+			left: 'text-left',
+			center: 'text-center',
+			right: 'text-right'
+		}[align ?? 'left'];
 	}
 </script>
 
@@ -76,7 +104,12 @@
 			{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 				<tr>
 					{#each headerGroup.headers as header (header.id)}
-						<th class="border-b border-surface-3 px-3 py-2 font-medium" colspan={header.colSpan}>
+						{@const headerMeta = getHeaderMeta(header)?.dataTable}
+						{@const headerAlign = getColumnAlign(headerMeta?.align, headerMeta?.cell)}
+						<th
+							class={cn('border-b border-surface-3 px-3 py-2 font-medium', alignClass(headerAlign))}
+							colspan={header.colSpan}
+						>
 							{#if !header.isPlaceholder}
 								<FlexRender {header} />
 							{/if}
@@ -89,8 +122,16 @@
 			{#each table.getRowModel().rows as row (row.id)}
 				<tr class="border-b border-surface-3 last:border-b-0">
 					{#each row.getAllCells() as cell (cell.id)}
+						{@const cellMeta = getCellMeta(cell)}
 						{@const cellConfig = getDataTableCellConfig(cell)}
-						<td class={cn('px-3 py-2', isNumericCell(cellConfig) && 'text-right tabular-nums')}>
+						{@const cellAlign = getColumnAlign(cellMeta?.align, cellConfig)}
+						<td
+							class={cn(
+								'px-3 py-2',
+								alignClass(cellAlign),
+								isNumericCellConfig(cellConfig) && 'tabular-nums'
+							)}
+						>
 							{#if cellConfig && !hasCustomDataTableCell(cell)}
 								{@const value = cell.getValue()}
 								{#if cellConfig.type === 'number'}
