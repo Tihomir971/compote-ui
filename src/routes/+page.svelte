@@ -8,6 +8,7 @@
 	import CollapsibleTab from './contents/CollapsibleTab.svelte';
 	import CheckboxTab from './contents/CheckboxTab.svelte';
 	import ComboboxTab from './contents/ComboboxTab.svelte';
+	import DataTableTab from './contents/DataTableTab.svelte';
 	import DialogTab from './contents/DialogTab.svelte';
 	import DrawerTab from './contents/DrawerTab.svelte';
 	import FieldTab from './contents/FieldTab.svelte';
@@ -38,6 +39,7 @@
 			<Tabs.Trigger value="collapsible">Collapsible</Tabs.Trigger>
 			<Tabs.Trigger value="checkbox">Checkbox</Tabs.Trigger>
 			<Tabs.Trigger value="combobox">Combobox</Tabs.Trigger>
+			<Tabs.Trigger value="data-table">Data Table</Tabs.Trigger>
 			<Tabs.Trigger value="dialog">Dialog</Tabs.Trigger>
 			<Tabs.Trigger value="drawer">Drawer</Tabs.Trigger>
 			<Tabs.Trigger value="field">Field</Tabs.Trigger>
@@ -87,6 +89,10 @@
 
 		<Tabs.Content value="combobox">
 			<ComboboxTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="data-table">
+			<DataTableTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="dialog">
