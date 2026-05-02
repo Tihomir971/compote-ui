@@ -1,6 +1,8 @@
 <script lang="ts" generics="TData extends RowData, TSelected = object">
+	import { useLocaleContext } from '@ark-ui/svelte/locale';
 	import { FlexRender } from '@tanstack/svelte-table';
 	import { cn, type ClassValue } from 'tailwind-variants';
+	import { PhArrowSquareOut } from '$lib/icons';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { RowData } from '@tanstack/svelte-table';
 	import {
@@ -19,6 +21,7 @@
 
 	let { table, class: className, tableClass, ...rest }: Props = $props();
 
+	const locale = useLocaleContext();
 	const columnCount = $derived(table.getLeafHeaders().length);
 
 	function formatNumericValue(
@@ -26,7 +29,10 @@
 		options: Intl.NumberFormatOptions & { locale?: string }
 	) {
 		if (typeof value !== 'number') return formatTextValue(value);
-		return new Intl.NumberFormat(options.locale, options).format(value);
+		const { locale: optionLocale, ...numberFormatOptions } = options;
+		return new Intl.NumberFormat(optionLocale ?? locale().locale, numberFormatOptions).format(
+			value
+		);
 	}
 
 	function formatTextValue(value: unknown, fallback = '') {
@@ -57,6 +63,10 @@
 	) {
 		const value = cell.getValue();
 		return typeof href === 'function' ? href(value, cell.row.original) : href;
+	}
+
+	function getLinkLabel(value: unknown, fallback = 'Open link') {
+		return formatTextValue(value, fallback);
 	}
 </script>
 
@@ -107,14 +117,21 @@
 											? (cellConfig.falseLabel ?? 'No')
 											: (cellConfig.nullLabel ?? '')}
 								{:else if cellConfig.type === 'link'}
-									<a
-										class="font-medium text-primary underline-offset-4 hover:underline"
-										href={getLinkHref(cell, cellConfig.href)}
-										target={cellConfig.target}
-										rel="external noreferrer"
-									>
+									{@const href = getLinkHref(cell, cellConfig.href)}
+									{#if href}
+										<a
+											class="inline-flex size-7 items-center justify-center rounded-md text-primary hover:bg-surface-2"
+											{href}
+											target={cellConfig.target ?? '_blank'}
+											rel="external noreferrer"
+											aria-label={getLinkLabel(value, cellConfig.fallback)}
+											title={getLinkLabel(value, cellConfig.fallback)}
+										>
+											<PhArrowSquareOut class="size-4" />
+										</a>
+									{:else}
 										{formatTextValue(value, cellConfig.fallback)}
-									</a>
+									{/if}
 								{:else}
 									{formatTextValue(value, cellConfig.fallback)}
 								{/if}

@@ -2,6 +2,7 @@ export { default as PhArrowClockwise } from './PhArrowClockwise.svelte';
 export { default as PhArrowCounterClockwise } from './PhArrowCounterClockwise.svelte';
 export { default as PhArrowLeft } from './PhArrowLeft.svelte';
 export { default as PhArrowRight } from './PhArrowRight.svelte';
+export { default as PhArrowSquareOut } from './PhArrowSquareOut.svelte';
 export { default as PhArrowsInSimple } from './PhArrowsInSimple.svelte';
 export { default as PhCaretDown } from './PhCaretDown.svelte';
 export { default as PhCaretRight } from './PhCaretRight.svelte';
