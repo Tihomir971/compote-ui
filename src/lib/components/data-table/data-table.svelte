@@ -3,6 +3,7 @@
 	import { FlexRender } from '@tanstack/svelte-table';
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhArrowSquareOut } from '$lib/icons';
+	import Checkbox from '../checkbox/checkbox.svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { Header, RowData } from '@tanstack/svelte-table';
 	import {
@@ -26,6 +27,15 @@
 
 	const locale = useLocaleContext();
 	const columnCount = $derived(table.getLeafHeaders().length);
+	const headerGroupCount = $derived(table.getHeaderGroups().length);
+	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
+	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
+	const tableColumnCount = $derived(columnCount + (isRowSelectionEnabled ? 1 : 0));
+	const allRowsSelected = $derived(table.getIsAllRowsSelected());
+	const someRowsSelected = $derived(table.getIsSomeRowsSelected());
+	const allRowsSelectionState = $derived(
+		allRowsSelected ? true : someRowsSelected ? 'indeterminate' : false
+	);
 
 	function formatNumericValue(
 		value: unknown,
@@ -101,8 +111,23 @@
 <div class={cn('overflow-hidden rounded-lg border border-surface-3', className)} {...rest}>
 	<table class={cn('w-full border-collapse text-sm', tableClass)}>
 		<thead class="bg-surface-2 text-left text-ink-dim">
-			{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+			{#each table.getHeaderGroups() as headerGroup, headerGroupIndex (headerGroup.id)}
 				<tr>
+					{#if isRowSelectionEnabled && headerGroupIndex === 0}
+						<th
+							class="w-10 border-b border-surface-3 px-3 py-2 text-center align-middle font-medium"
+							rowspan={headerGroupCount}
+						>
+							{#if isMultiRowSelectionEnabled}
+								<Checkbox
+									aria-label="Select all rows"
+									class="h-5 items-center justify-center align-middle"
+									checked={allRowsSelectionState}
+									onCheckedChange={({ checked }) => table.toggleAllRowsSelected(checked === true)}
+								/>
+							{/if}
+						</th>
+					{/if}
 					{#each headerGroup.headers as header (header.id)}
 						{@const headerMeta = getHeaderMeta(header)?.dataTable}
 						{@const headerAlign = getColumnAlign(headerMeta?.align, headerMeta?.cell)}
@@ -121,6 +146,17 @@
 		<tbody>
 			{#each table.getRowModel().rows as row (row.id)}
 				<tr class="border-b border-surface-3 last:border-b-0">
+					{#if isRowSelectionEnabled}
+						<td class="w-10 px-3 py-2 text-center align-middle">
+							<Checkbox
+								aria-label="Select row"
+								class="h-5 items-center justify-center align-middle"
+								checked={row.getIsSelected()}
+								disabled={!row.getCanSelect()}
+								onCheckedChange={({ checked }) => row.toggleSelected(checked === true)}
+							/>
+						</td>
+					{/if}
 					{#each row.getAllCells() as cell (cell.id)}
 						{@const cellMeta = getCellMeta(cell)}
 						{@const cellConfig = getDataTableCellConfig(cell)}
@@ -184,7 +220,9 @@
 				</tr>
 			{:else}
 				<tr>
-					<td class="px-3 py-6 text-center text-ink-dim" colspan={columnCount}> No results. </td>
+					<td class="px-3 py-6 text-center text-ink-dim" colspan={tableColumnCount}>
+						No results.
+					</td>
 				</tr>
 			{/each}
 		</tbody>

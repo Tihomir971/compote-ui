@@ -2,6 +2,7 @@ import {
 	createCoreRowModel,
 	createTable as createTanStackTable,
 	functionalUpdate,
+	rowSelectionFeature,
 	tableFeatures
 } from '@tanstack/svelte-table';
 
@@ -17,7 +18,7 @@ import type {
 
 import { normalizeDataTableColumns, type DataTableColumnDef } from './cells';
 
-const dataTableFeatures = tableFeatures({});
+const dataTableFeatures = tableFeatures({ rowSelectionFeature });
 
 export type DataTableFeatures = typeof dataTableFeatures;
 
@@ -57,6 +58,7 @@ class DataTableState<TData extends RowData, TSelected = object> {
 			{
 				...options,
 				columns: this.#columns,
+				enableRowSelection: options.enableRowSelection ?? false,
 				get data() {
 					return getData();
 				},

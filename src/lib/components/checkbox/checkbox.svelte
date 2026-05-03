@@ -1,14 +1,19 @@
 <script lang="ts">
 	import { Checkbox } from '@ark-ui/svelte/checkbox';
+	import { cn } from 'tailwind-variants';
 	import type { CheckboxProps as Props } from './checkbox.types.ts';
 	import { PhCheck, PhMinus } from '$lib/icons';
 
-	let { checked = $bindable(), label, children, ...rest }: Props = $props();
+	let { checked = $bindable(), label, children, class: className, ...rest }: Props = $props();
 </script>
 
 <Checkbox.Root
 	bind:checked
-	class="inline-flex cursor-pointer gap-2 {children ? 'items-start' : 'items-center'}"
+	class={cn(
+		'inline-flex cursor-pointer gap-2 leading-none',
+		children ? 'items-start' : 'items-center',
+		className
+	)}
 	{...rest}
 >
 	<Checkbox.Control

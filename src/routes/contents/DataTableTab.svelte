@@ -123,8 +123,12 @@
 
 	const table = createDataTable({
 		data: () => data,
+		enableRowSelection: true,
+		enableMultiRowSelection: false,
 		columns
 	});
+
+	const selectedIds = $derived(table.getSelectedRowModel().rows.map((row) => row.original.id));
 
 	function addInvoice() {
 		data = [
@@ -157,5 +161,9 @@
 		</div>
 
 		<DataTable {table} />
+
+		<div class="mt-4 text-sm text-ink-dim">
+			Selected ids: {selectedIds.length > 0 ? selectedIds.join(', ') : 'None'}
+		</div>
 	</section>
 </div>
