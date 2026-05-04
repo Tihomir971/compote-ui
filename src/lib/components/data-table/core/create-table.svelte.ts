@@ -1,4 +1,5 @@
 import {
+	columnVisibilityFeature,
 	columnResizingFeature,
 	columnSizingFeature,
 	createCoreRowModel,
@@ -24,6 +25,7 @@ import type {
 import { normalizeDataTableColumns, type DataTableColumnDef } from './cells';
 
 const dataTableFeatures = tableFeatures({
+	columnVisibilityFeature,
 	columnSizingFeature,
 	columnResizingFeature,
 	rowSelectionFeature,

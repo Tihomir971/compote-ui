@@ -26,7 +26,7 @@
 	let { table, class: className, tableClass, ...rest }: Props = $props();
 
 	const locale = useLocaleContext();
-	const columnCount = $derived(table.getAllLeafColumns().length);
+	const columnCount = $derived(table.getVisibleLeafColumns().length);
 	const headerGroupCount = $derived(table.getHeaderGroups().length);
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
@@ -173,7 +173,7 @@
 			{#if isRowSelectionEnabled}
 				<col style={columnSizeStyle(rowSelectionColumnSize)} />
 			{/if}
-			{#each table.getAllLeafColumns() as column (column.id)}
+			{#each table.getVisibleLeafColumns() as column (column.id)}
 				<col style={columnSizeStyle(column.getSize())} />
 			{/each}
 		</colgroup>
@@ -269,7 +269,7 @@
 							/>
 						</td>
 					{/if}
-					{#each row.getAllCells() as cell (cell.id)}
+					{#each row.getVisibleCells() as cell (cell.id)}
 						{@const cellMeta = getCellMeta(cell)}
 						{@const cellConfig = getDataTableCellConfig(cell)}
 						{@const cellAlign = getColumnAlign(cellMeta?.align, cellConfig)}
