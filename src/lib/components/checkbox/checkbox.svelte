@@ -4,7 +4,25 @@
 	import type { CheckboxProps as Props } from './checkbox.types.ts';
 	import { PhCheck, PhMinus } from '$lib/icons';
 
-	let { checked = $bindable(), label, children, class: className, ...rest }: Props = $props();
+	let {
+		checked = $bindable(),
+		label,
+		children,
+		size = 'md',
+		class: className,
+		...rest
+	}: Props = $props();
+
+	const checkboxSize = {
+		sm: {
+			control: 'size-4',
+			icon: 'size-3'
+		},
+		md: {
+			control: 'size-5',
+			icon: 'size-3.5'
+		}
+	};
 </script>
 
 <Checkbox.Root
@@ -17,15 +35,17 @@
 	{...rest}
 >
 	<Checkbox.Control
-		class="{children
-			? 'mt-0.5'
-			: ''} flex size-5 shrink-0 items-center justify-center rounded-sm border bg-transparent transition-colors hover:border-primary/50 data-disabled:pointer-events-none data-disabled:opacity-50 data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-focus-visible:outline-ring data-invalid:border-danger data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary"
+		class={cn(
+			children ? 'mt-0.5' : '',
+			checkboxSize[size].control,
+			'relative grid shrink-0 place-items-center rounded-sm border bg-transparent transition-colors hover:border-primary/50 data-disabled:pointer-events-none data-disabled:opacity-50 data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-focus-visible:outline-ring data-invalid:border-danger data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary'
+		)}
 	>
-		<Checkbox.Indicator>
-			<PhCheck class="size-3.5 text-ink-inverse" />
+		<Checkbox.Indicator class="absolute inset-0 grid place-items-center leading-none">
+			<PhCheck class={cn(checkboxSize[size].icon, 'block text-ink-inverse')} />
 		</Checkbox.Indicator>
-		<Checkbox.Indicator indeterminate>
-			<PhMinus class="size-3.5 text-ink-inverse" />
+		<Checkbox.Indicator indeterminate class="absolute inset-0 grid place-items-center leading-none">
+			<PhMinus class={cn(checkboxSize[size].icon, 'block text-ink-inverse')} />
 		</Checkbox.Indicator>
 	</Checkbox.Control>
 	{#if label}

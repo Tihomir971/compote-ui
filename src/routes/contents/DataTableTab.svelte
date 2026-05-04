@@ -61,58 +61,82 @@
 
 	const columns = [
 		{
-			accessorKey: 'id',
-			header: 'Invoice'
+			header: 'Invoice',
+			columns: [
+				{
+					accessorKey: 'id',
+					header: 'Number',
+					size: 100,
+					enableResizing: false
+				},
+				{
+					accessorKey: 'customer',
+					header: 'Customer',
+					cellType: 'text',
+					size: 180,
+					minSize: 140
+				},
+				{
+					accessorKey: 'status',
+					header: 'Status',
+					size: 120
+				}
+			]
 		},
 		{
-			accessorKey: 'customer',
-			header: 'Customer',
-			cellType: 'text'
-		},
-		{
-			accessorKey: 'status',
-			header: 'Status'
-		},
-		{
-			accessorKey: 'items',
-			header: 'Items',
-			cellType: {
-				type: 'number',
-				maximumFractionDigits: 0
-			}
-		},
-		{
-			accessorKey: 'paid',
-			header: 'Paid',
-			cellType: {
-				type: 'boolean',
-				trueLabel: 'Paid',
-				falseLabel: 'Open'
-			}
-		},
-		{
-			accessorKey: 'discountRate',
-			header: 'Discount',
-			cellType: {
-				type: 'percentage',
-				minimumFractionDigits: 1,
-				maximumFractionDigits: 1
-			}
-		},
-		{
-			accessorKey: 'total',
-			header: 'Total',
-			cellType: {
-				type: 'currency',
-				currency: 'rsd',
-				minimumFractionDigits: 2,
-				maximumFractionDigits: 2
-			}
+			header: 'Payment',
+			columns: [
+				{
+					accessorKey: 'items',
+					header: 'Items',
+					size: 90,
+					minSize: 72,
+					cellType: {
+						type: 'number',
+						maximumFractionDigits: 0
+					}
+				},
+				{
+					accessorKey: 'paid',
+					header: 'Paid',
+					size: 100,
+					cellType: {
+						type: 'boolean',
+						trueLabel: 'Paid',
+						falseLabel: 'Open'
+					}
+				},
+				{
+					accessorKey: 'discountRate',
+					header: 'Discount',
+					size: 120,
+					cellType: {
+						type: 'percentage',
+						minimumFractionDigits: 1,
+						maximumFractionDigits: 1
+					}
+				},
+				{
+					accessorKey: 'total',
+					header: 'Total',
+					size: 140,
+					minSize: 110,
+					cellType: {
+						type: 'currency',
+						currency: 'rsd',
+						minimumFractionDigits: 2,
+						maximumFractionDigits: 2
+					}
+				}
+			]
 		},
 		{
 			accessorKey: 'url',
 			header: 'Link',
 			align: 'center',
+			size: 80,
+			minSize: 64,
+			enableResizing: false,
 			cellType: {
 				type: 'link',
 				target: '_blank',
@@ -123,8 +147,13 @@
 
 	const table = createDataTable({
 		data: () => data,
+		defaultColumn: {
+			minSize: 64,
+			maxSize: 360
+		},
+		columnResizeMode: 'onChange',
 		enableRowSelection: true,
-		enableMultiRowSelection: false,
+		enableMultiRowSelection: true,
 		columns
 	});
 
@@ -160,7 +189,9 @@
 			</button>
 		</div>
 
-		<DataTable {table} />
+		<div class="h-96 min-h-0">
+			<DataTable {table} />
+		</div>
 
 		<div class="mt-4 text-sm text-ink-dim">
 			Selected ids: {selectedIds.length > 0 ? selectedIds.join(', ') : 'None'}

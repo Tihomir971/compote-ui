@@ -8,5 +8,6 @@ export interface CheckboxProps extends Omit<
 > {
 	class?: ClassValue;
 	label?: string;
+	size?: 'sm' | 'md';
 	children?: Snippet;
 }

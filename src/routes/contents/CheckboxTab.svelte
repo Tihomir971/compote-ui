@@ -19,6 +19,7 @@
 		<div class="flex flex-col gap-4">
 			<Checkbox label="I agree to the terms and conditions" bind:checked />
 			<Checkbox label="Subscribe to newsletter" bind:checked />
+			<Checkbox label="Compact checkbox" bind:checked size="sm" />
 			<p>Checked: {checked}</p>
 		</div>
 	</section>

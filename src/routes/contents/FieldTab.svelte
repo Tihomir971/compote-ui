@@ -46,10 +46,9 @@
 				<Field.Label>With Select</Field.Label>
 				<Field.Input bind:value={fieldUsername} placeholder="johndoe">
 					{#snippet endIcon()}
-						<ToggleGroup.Root>
-							<ToggleGroup.Item value="x">
-								<PhX class="size-4" />
-							</ToggleGroup.Item>
+						<ToggleGroup.Root class="border-none">
+							<ToggleGroup.Item value="x" class="border-l">Variant</ToggleGroup.Item>
+							<ToggleGroup.Item value="Y">Contact</ToggleGroup.Item>
 						</ToggleGroup.Root>
 					{/snippet}
 				</Field.Input>

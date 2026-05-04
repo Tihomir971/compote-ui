@@ -1,4 +1,6 @@
 import {
+	columnResizingFeature,
+	columnSizingFeature,
 	createCoreRowModel,
 	createTable as createTanStackTable,
 	functionalUpdate,
@@ -18,7 +20,11 @@ import type {
 
 import { normalizeDataTableColumns, type DataTableColumnDef } from './cells';
 
-const dataTableFeatures = tableFeatures({ rowSelectionFeature });
+const dataTableFeatures = tableFeatures({
+	columnSizingFeature,
+	columnResizingFeature,
+	rowSelectionFeature
+});
 
 export type DataTableFeatures = typeof dataTableFeatures;
 

@@ -26,7 +26,7 @@
 	let { table, class: className, tableClass, ...rest }: Props = $props();
 
 	const locale = useLocaleContext();
-	const columnCount = $derived(table.getLeafHeaders().length);
+	const columnCount = $derived(table.getAllLeafColumns().length);
 	const headerGroupCount = $derived(table.getHeaderGroups().length);
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
@@ -36,6 +36,11 @@
 	const allRowsSelectionState = $derived(
 		allRowsSelected ? true : someRowsSelected ? 'indeterminate' : false
 	);
+	const rowSelectionColumnSize = 40;
+	const tableSize = $derived(
+		table.getTotalSize() + (isRowSelectionEnabled ? rowSelectionColumnSize : 0)
+	);
+	const isColumnResizing = $derived(table.store.state.columnResizing.isResizingColumn !== false);
 
 	function formatNumericValue(
 		value: unknown,
@@ -106,22 +111,53 @@
 			right: 'text-right'
 		}[align ?? 'left'];
 	}
+
+	function columnSizeStyle(size: number) {
+		return `width: ${size}px`;
+	}
+
+	function tableSizeStyle() {
+		return `width: max(100%, ${tableSize}px)`;
+	}
+
+	function resizeHandleStyle(header: Header<DataTableFeatures, TData, unknown>) {
+		if (table.options.columnResizeMode !== 'onEnd') return undefined;
+		const deltaOffset = table.store.state.columnResizing.deltaOffset;
+		if (!header.column.getIsResizing() || deltaOffset === null) return undefined;
+		return `transform: translateX(${deltaOffset}px)`;
+	}
 </script>
 
-<div class={cn('overflow-hidden rounded-lg border border-surface-3', className)} {...rest}>
-	<table class={cn('w-full border-collapse text-sm', tableClass)}>
-		<thead class="bg-surface-2 text-left text-ink-dim">
+<div
+	class={cn('max-h-full min-h-0 overflow-auto rounded-lg border border-surface-3', className)}
+	{...rest}
+>
+	{#if isColumnResizing}
+		<div aria-hidden="true" class="fixed inset-0 z-50 cursor-col-resize select-none"></div>
+	{/if}
+
+	<table class={cn('table-fixed border-collapse text-sm', tableClass)} style={tableSizeStyle()}>
+		<colgroup>
+			{#if isRowSelectionEnabled}
+				<col style={columnSizeStyle(rowSelectionColumnSize)} />
+			{/if}
+			{#each table.getAllLeafColumns() as column (column.id)}
+				<col style={columnSizeStyle(column.getSize())} />
+			{/each}
+		</colgroup>
+		<thead class="sticky top-0 z-20 bg-surface-2 text-left text-ink-dim">
 			{#each table.getHeaderGroups() as headerGroup, headerGroupIndex (headerGroup.id)}
 				<tr>
 					{#if isRowSelectionEnabled && headerGroupIndex === 0}
 						<th
-							class="w-10 border-b border-surface-3 px-3 py-2 text-center align-middle font-medium"
+							class="border-b border-surface-3 bg-surface-2 px-3 py-2 text-center align-middle font-medium"
 							rowspan={headerGroupCount}
 						>
 							{#if isMultiRowSelectionEnabled}
 								<Checkbox
+									size="sm"
 									aria-label="Select all rows"
-									class="h-5 items-center justify-center align-middle"
+									class="mx-auto size-4"
 									checked={allRowsSelectionState}
 									onCheckedChange={({ checked }) => table.toggleAllRowsSelected(checked === true)}
 								/>
@@ -132,11 +168,26 @@
 						{@const headerMeta = getHeaderMeta(header)?.dataTable}
 						{@const headerAlign = getColumnAlign(headerMeta?.align, headerMeta?.cell)}
 						<th
-							class={cn('border-b border-surface-3 px-3 py-2 font-medium', alignClass(headerAlign))}
+							class={cn(
+								'relative border-b border-surface-3 bg-surface-2 px-3 py-2 font-medium',
+								alignClass(headerAlign)
+							)}
 							colspan={header.colSpan}
 						>
 							{#if !header.isPlaceholder}
 								<FlexRender {header} />
+							{/if}
+							{#if header.column.getCanResize()}
+								<div
+									aria-hidden="true"
+									class={cn(
+										'absolute top-0 -right-1 z-10 flex h-full w-2 cursor-col-resize touch-none items-center justify-center select-none before:h-4 before:w-px before:bg-border before:content-[""]'
+									)}
+									style={resizeHandleStyle(header)}
+									ondblclick={() => header.column.resetSize()}
+									onmousedown={header.getResizeHandler()}
+									ontouchstart={header.getResizeHandler()}
+								></div>
 							{/if}
 						</th>
 					{/each}
@@ -147,10 +198,11 @@
 			{#each table.getRowModel().rows as row (row.id)}
 				<tr class="border-b border-surface-3 last:border-b-0">
 					{#if isRowSelectionEnabled}
-						<td class="w-10 px-3 py-2 text-center align-middle">
+						<td class="px-3 py-2 text-center align-middle">
 							<Checkbox
+								size="sm"
 								aria-label="Select row"
-								class="h-5 items-center justify-center align-middle"
+								class="mx-auto size-4"
 								checked={row.getIsSelected()}
 								disabled={!row.getCanSelect()}
 								onCheckedChange={({ checked }) => row.toggleSelected(checked === true)}
