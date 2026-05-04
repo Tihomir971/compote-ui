@@ -1,12 +1,7 @@
 <script lang="ts">
-	import {
-		createDataTable,
-		Root as DataTable,
-		type Column,
-		type DataTableFeatures,
-		type DataTableColumnDef
-	} from '$lib/components/data-table';
-	import Checkbox from '$lib/components/checkbox/checkbox.svelte';
+	import Button from '$lib/components/button/button.svelte';
+	import * as DataTable from '$lib/components/data-table';
+	import { createDataTable, type DataTableColumnDef } from '$lib/components/data-table';
 
 	type Invoice = {
 		id: string;
@@ -172,25 +167,11 @@
 
 	const selectedIds = $derived(table.getSelectedRowModel().rows.map((row) => row.original.id));
 	const sorting = $derived(table.store.state.sorting);
-	const columnVisibility = $derived(table.store.state.columnVisibility);
-	const allColumnsVisible = $derived(table.getIsAllColumnsVisible());
 	const sortingLabel = $derived(
 		sorting.length > 0
 			? sorting.map((sort) => `${sort.id} ${sort.desc ? 'desc' : 'asc'}`).join(', ')
 			: 'None'
 	);
-
-	function getColumnLabel(column: Column<DataTableFeatures, Invoice, unknown>) {
-		return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
-	}
-
-	function getColumnIsVisible(
-		column: Column<DataTableFeatures, Invoice, unknown>,
-		visibilityState: unknown
-	) {
-		void visibilityState;
-		return column.getIsVisible();
-	}
 
 	function addInvoice() {
 		data = [
@@ -211,44 +192,23 @@
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
-		<div class="mb-4 flex items-center justify-between gap-3">
-			<h2 class="text-lg font-semibold">Data Table</h2>
-			<button
-				class="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-ink-inverse"
-				onclick={addInvoice}
-				type="button"
-			>
-				Add invoice
-			</button>
-		</div>
+		<DataTable.Toolbar>
+			<DataTable.Title>Data Table</DataTable.Title>
+
+			<div class="flex items-center gap-2">
+				<DataTable.ColumnVisibility {table} />
+				<Button variant="default" onclick={addInvoice}>Add invoice</Button>
+			</div>
+		</DataTable.Toolbar>
 
 		<div class="h-96 min-h-0">
-			<DataTable {table} />
+			<DataTable.Root {table} />
 		</div>
 
 		<div class="mt-4 space-y-3 text-sm text-ink-dim">
 			<div class="flex flex-wrap items-center gap-x-6 gap-y-2">
 				<div>Selected ids: {selectedIds.length > 0 ? selectedIds.join(', ') : 'None'}</div>
 				<div>Sorting: {sortingLabel}</div>
-			</div>
-
-			<div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-				<Checkbox
-					size="sm"
-					label="All columns"
-					checked={allColumnsVisible}
-					onCheckedChange={({ checked }) => table.toggleAllColumnsVisible(checked === true)}
-				/>
-
-				{#each table.getAllLeafColumns() as column (column.id)}
-					<Checkbox
-						size="sm"
-						label={getColumnLabel(column)}
-						checked={getColumnIsVisible(column, columnVisibility)}
-						disabled={!column.getCanHide()}
-						onCheckedChange={({ checked }) => column.toggleVisibility(checked === true)}
-					/>
-				{/each}
 			</div>
 		</div>
 	</section>
