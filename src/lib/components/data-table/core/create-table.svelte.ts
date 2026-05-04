@@ -2,9 +2,12 @@ import {
 	columnResizingFeature,
 	columnSizingFeature,
 	createCoreRowModel,
+	createSortedRowModel,
 	createTable as createTanStackTable,
 	functionalUpdate,
+	rowSortingFeature,
 	rowSelectionFeature,
+	sortFns,
 	tableFeatures
 } from '@tanstack/svelte-table';
 
@@ -23,7 +26,8 @@ import { normalizeDataTableColumns, type DataTableColumnDef } from './cells';
 const dataTableFeatures = tableFeatures({
 	columnSizingFeature,
 	columnResizingFeature,
-	rowSelectionFeature
+	rowSelectionFeature,
+	rowSortingFeature
 });
 
 export type DataTableFeatures = typeof dataTableFeatures;
@@ -71,6 +75,7 @@ class DataTableState<TData extends RowData, TSelected = object> {
 				_features: options._features ?? dataTableFeatures,
 				_rowModels: {
 					coreRowModel: createCoreRowModel(),
+					sortedRowModel: createSortedRowModel(sortFns),
 					...options._rowModels
 				}
 			},

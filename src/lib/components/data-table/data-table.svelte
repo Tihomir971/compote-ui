@@ -2,7 +2,7 @@
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
 	import { FlexRender } from '@tanstack/svelte-table';
 	import { cn, type ClassValue } from 'tailwind-variants';
-	import { PhArrowSquareOut } from '$lib/icons';
+	import { PhArrowSquareOut, PhCaretDown, PhCaretUp } from '$lib/icons';
 	import Checkbox from '../checkbox/checkbox.svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { Header, RowData } from '@tanstack/svelte-table';
@@ -112,6 +112,18 @@
 		}[align ?? 'left'];
 	}
 
+	function justifyClass(align: DataTableColumnAlign | undefined) {
+		return {
+			left: 'justify-start',
+			center: 'justify-center',
+			right: 'justify-end'
+		}[align ?? 'left'];
+	}
+
+	function sortButtonDirectionClass(align: DataTableColumnAlign | undefined) {
+		return align === 'right' ? 'flex-row-reverse' : 'flex-row';
+	}
+
 	function columnSizeStyle(size: number) {
 		return `width: ${size}px`;
 	}
@@ -125,6 +137,26 @@
 		const deltaOffset = table.store.state.columnResizing.deltaOffset;
 		if (!header.column.getIsResizing() || deltaOffset === null) return undefined;
 		return `transform: translateX(${deltaOffset}px)`;
+	}
+
+	function getHeaderSortDirection(
+		header: Header<DataTableFeatures, TData, unknown>,
+		sortingState: unknown
+	) {
+		void sortingState;
+		return header.column.getIsSorted();
+	}
+
+	function getHeaderSortLabel(sortDirection: false | 'asc' | 'desc') {
+		if (sortDirection === 'asc') return 'Sorted ascending';
+		if (sortDirection === 'desc') return 'Sorted descending';
+		return 'Not sorted';
+	}
+
+	function getHeaderAriaSort(sortDirection: false | 'asc' | 'desc') {
+		if (sortDirection === 'asc') return 'ascending';
+		if (sortDirection === 'desc') return 'descending';
+		return 'none';
 	}
 </script>
 
@@ -167,15 +199,43 @@
 					{#each headerGroup.headers as header (header.id)}
 						{@const headerMeta = getHeaderMeta(header)?.dataTable}
 						{@const headerAlign = getColumnAlign(headerMeta?.align, headerMeta?.cell)}
+						{@const sortDirection = getHeaderSortDirection(header, table.store.state.sorting)}
 						<th
 							class={cn(
 								'relative border-b border-surface-3 bg-surface-2 px-3 py-2 font-medium',
 								alignClass(headerAlign)
 							)}
 							colspan={header.colSpan}
+							aria-sort={header.column.getCanSort() ? getHeaderAriaSort(sortDirection) : undefined}
 						>
 							{#if !header.isPlaceholder}
-								<FlexRender {header} />
+								{#if header.column.getCanSort()}
+									<button
+										type="button"
+										class={cn(
+											'inline-flex max-w-full items-center gap-1 rounded-sm outline-none hover:text-ink data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-focus-visible:outline-ring',
+											justifyClass(headerAlign),
+											sortButtonDirectionClass(headerAlign)
+										)}
+										aria-label={`${getHeaderSortLabel(sortDirection)}. Toggle sorting.`}
+										onclick={header.column.getToggleSortingHandler()}
+									>
+										<span class="min-w-0 truncate">
+											<FlexRender {header} />
+										</span>
+										<span
+											class="inline-flex size-3.5 shrink-0 items-center justify-center text-ink-dim"
+										>
+											{#if sortDirection === 'asc'}
+												<PhCaretUp class="size-3.5" />
+											{:else if sortDirection === 'desc'}
+												<PhCaretDown class="size-3.5" />
+											{/if}
+										</span>
+									</button>
+								{:else}
+									<FlexRender {header} />
+								{/if}
 							{/if}
 							{#if header.column.getCanResize()}
 								<div

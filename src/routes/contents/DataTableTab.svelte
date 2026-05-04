@@ -67,14 +67,16 @@
 					accessorKey: 'id',
 					header: 'Number',
 					size: 100,
-					enableResizing: false
+					enableResizing: false,
+					sortDescFirst: false
 				},
 				{
 					accessorKey: 'customer',
 					header: 'Customer',
 					cellType: 'text',
 					size: 180,
-					minSize: 140
+					minSize: 140,
+					sortDescFirst: false
 				},
 				{
 					accessorKey: 'status',
@@ -91,6 +93,7 @@
 					header: 'Items',
 					size: 90,
 					minSize: 72,
+					sortDescFirst: true,
 					cellType: {
 						type: 'number',
 						maximumFractionDigits: 0
@@ -121,6 +124,7 @@
 					header: 'Total',
 					size: 140,
 					minSize: 110,
+					sortDescFirst: true,
 					cellType: {
 						type: 'currency',
 						currency: 'rsd',
@@ -137,6 +141,7 @@
 			size: 80,
 			minSize: 64,
 			enableResizing: false,
+			enableSorting: false,
 			cellType: {
 				type: 'link',
 				target: '_blank',
@@ -154,10 +159,19 @@
 		columnResizeMode: 'onChange',
 		enableRowSelection: true,
 		enableMultiRowSelection: true,
+		initialState: {
+			sorting: [{ id: 'total', desc: true }]
+		},
 		columns
 	});
 
 	const selectedIds = $derived(table.getSelectedRowModel().rows.map((row) => row.original.id));
+	const sorting = $derived(table.store.state.sorting);
+	const sortingLabel = $derived(
+		sorting.length > 0
+			? sorting.map((sort) => `${sort.id} ${sort.desc ? 'desc' : 'asc'}`).join(', ')
+			: 'None'
+	);
 
 	function addInvoice() {
 		data = [
@@ -193,8 +207,9 @@
 			<DataTable {table} />
 		</div>
 
-		<div class="mt-4 text-sm text-ink-dim">
-			Selected ids: {selectedIds.length > 0 ? selectedIds.join(', ') : 'None'}
+		<div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-dim">
+			<div>Selected ids: {selectedIds.length > 0 ? selectedIds.join(', ') : 'None'}</div>
+			<div>Sorting: {sortingLabel}</div>
 		</div>
 	</section>
 </div>
