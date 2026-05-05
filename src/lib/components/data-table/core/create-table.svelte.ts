@@ -1,10 +1,17 @@
 import {
+	columnFacetingFeature,
+	columnFilteringFeature,
 	columnVisibilityFeature,
 	columnResizingFeature,
 	columnSizingFeature,
+	createFacetedMinMaxValues,
+	createFacetedRowModel,
+	createFacetedUniqueValues,
 	createCoreRowModel,
+	createFilteredRowModel,
 	createSortedRowModel,
 	createTable as createTanStackTable,
+	filterFns,
 	functionalUpdate,
 	rowSortingFeature,
 	rowSelectionFeature,
@@ -25,6 +32,8 @@ import type {
 import { normalizeDataTableColumns, type DataTableColumnDef } from './cells';
 
 const dataTableFeatures = tableFeatures({
+	columnFilteringFeature,
+	columnFacetingFeature,
 	columnVisibilityFeature,
 	columnSizingFeature,
 	columnResizingFeature,
@@ -36,6 +45,11 @@ export type DataTableFeatures = typeof dataTableFeatures;
 
 type DataTableData<TData extends RowData> = ReadonlyArray<TData> | (() => ReadonlyArray<TData>);
 
+export type DataTableSelectedState = Pick<
+	TableState<DataTableFeatures>,
+	'columnFilters' | 'columnResizing' | 'columnVisibility' | 'rowSelection' | 'sorting'
+>;
+
 export type DataTableOptions<TData extends RowData> = Omit<
 	TableOptions<DataTableFeatures, TData>,
 	'_features' | 'data' | 'columns'
@@ -44,7 +58,7 @@ export type DataTableOptions<TData extends RowData> = Omit<
 	columns: DataTableColumnDef<TData>[];
 } & Partial<Pick<TableOptions<DataTableFeatures, TData>, '_features'>>;
 
-export type DataTable<TData extends RowData, TSelected = object> = SvelteTable<
+export type DataTable<TData extends RowData, TSelected = DataTableSelectedState> = SvelteTable<
 	DataTableFeatures,
 	TData,
 	TSelected
@@ -53,7 +67,15 @@ export type DataTable<TData extends RowData, TSelected = object> = SvelteTable<
 	updateData: (updater: Updater<ReadonlyArray<TData>>) => void;
 };
 
-class DataTableState<TData extends RowData, TSelected = object> {
+const dataTableStateSelector = (state: TableState<DataTableFeatures>): DataTableSelectedState => ({
+	columnFilters: state.columnFilters,
+	columnResizing: state.columnResizing,
+	columnVisibility: state.columnVisibility,
+	rowSelection: state.rowSelection,
+	sorting: state.sorting
+});
+
+class DataTableState<TData extends RowData, TSelected = DataTableSelectedState> {
 	#options = $state.raw<DataTableOptions<TData>>({} as DataTableOptions<TData>);
 	#table: SvelteTable<DataTableFeatures, TData, TSelected>;
 	#columns: ColumnDef<DataTableFeatures, TData, CellData>[];
@@ -77,11 +99,15 @@ class DataTableState<TData extends RowData, TSelected = object> {
 				_features: options._features ?? dataTableFeatures,
 				_rowModels: {
 					coreRowModel: createCoreRowModel(),
+					filteredRowModel: createFilteredRowModel(filterFns),
+					facetedRowModel: createFacetedRowModel(),
+					facetedUniqueValues: createFacetedUniqueValues(),
+					facetedMinMaxValues: createFacetedMinMaxValues(),
 					sortedRowModel: createSortedRowModel(sortFns),
 					...options._rowModels
 				}
 			},
-			selector
+			selector ?? (dataTableStateSelector as (state: TableState<DataTableFeatures>) => TSelected)
 		);
 	}
 
@@ -119,7 +145,7 @@ class DataTableState<TData extends RowData, TSelected = object> {
 	}
 }
 
-export function createDataTable<TData extends RowData, TSelected = object>(
+export function createDataTable<TData extends RowData, TSelected = DataTableSelectedState>(
 	options: DataTableOptions<TData>,
 	selector?: (state: TableState<DataTableFeatures>) => TSelected
 ): DataTable<TData, TSelected> {

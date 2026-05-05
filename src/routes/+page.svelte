@@ -18,6 +18,7 @@
 	import ListboxTab from './contents/ListboxTab.svelte';
 	import MenuTab from './contents/MenuTab.svelte';
 	import NumberInputTab from './contents/NumberInputTab.svelte';
+	import PopoverTab from './contents/PopoverTab.svelte';
 	import ScrollAreaTab from './contents/ScrollAreaTab.svelte';
 	import SelectTab from './contents/SelectTab.svelte';
 	import SplitterTab from './contents/SplitterTab.svelte';
@@ -49,6 +50,7 @@
 			<Tabs.Trigger value="listbox">Listbox</Tabs.Trigger>
 			<Tabs.Trigger value="menu">Menu</Tabs.Trigger>
 			<Tabs.Trigger value="number-input">Number Input</Tabs.Trigger>
+			<Tabs.Trigger value="popover">Popover</Tabs.Trigger>
 			<Tabs.Trigger value="scroll-area">Scroll Area</Tabs.Trigger>
 			<Tabs.Trigger value="select">Select</Tabs.Trigger>
 			<Tabs.Trigger value="splitter">Splitter</Tabs.Trigger>
@@ -129,6 +131,10 @@
 
 		<Tabs.Content value="number-input">
 			<NumberInputTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="popover">
+			<PopoverTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="scroll-area">

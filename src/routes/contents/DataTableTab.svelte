@@ -2,6 +2,8 @@
 	import Button from '$lib/components/button/button.svelte';
 	import * as DataTable from '$lib/components/data-table';
 	import { createDataTable, type DataTableColumnDef } from '$lib/components/data-table';
+	import { renderComponent } from '@tanstack/svelte-table';
+	import VendorPriceCell from './VendorPriceCell.svelte';
 
 	type Invoice = {
 		id: string;
@@ -10,7 +12,11 @@
 		items: number;
 		paid: boolean;
 		discountRate: number;
-		total: number;
+		vendorPrices: {
+			vendor: string;
+			price: number;
+			currency: string;
+		}[];
 		url: string;
 	};
 
@@ -22,7 +28,11 @@
 			items: 12,
 			paid: true,
 			discountRate: 0.075,
-			total: 1240.34,
+			vendorPrices: [
+				{ vendor: 'Main Supply', price: 1240.34, currency: 'RSD' },
+				{ vendor: 'North Depot', price: 1290.5, currency: 'RSD' },
+				{ vendor: 'Fast Parts', price: 1218.9, currency: 'RSD' }
+			],
 			url: 'https://example.com/invoices/inv-1001'
 		},
 		{
@@ -32,7 +42,11 @@
 			items: 4,
 			paid: false,
 			discountRate: 0.05,
-			total: 860.751,
+			vendorPrices: [
+				{ vendor: 'Main Supply', price: 860.751, currency: 'RSD' },
+				{ vendor: 'North Depot', price: 835.2, currency: 'RSD' },
+				{ vendor: 'Fast Parts', price: 902.4, currency: 'RSD' }
+			],
 			url: 'https://example.com/invoices/inv-1002'
 		},
 		{
@@ -42,7 +56,11 @@
 			items: 18,
 			paid: false,
 			discountRate: 0.125,
-			total: 1425.321,
+			vendorPrices: [
+				{ vendor: 'Main Supply', price: 1425.321, currency: 'RSD' },
+				{ vendor: 'North Depot', price: 1398.75, currency: 'RSD' },
+				{ vendor: 'Fast Parts', price: 1460.1, currency: 'RSD' }
+			],
 			url: 'https://example.com/invoices/inv-1003'
 		},
 		{
@@ -52,10 +70,18 @@
 			items: 2,
 			paid: true,
 			discountRate: 0,
-			total: 312.3,
+			vendorPrices: [
+				{ vendor: 'Main Supply', price: 312.3, currency: 'RSD' },
+				{ vendor: 'North Depot', price: 318.2, currency: 'RSD' },
+				{ vendor: 'Fast Parts', price: 305.4, currency: 'RSD' }
+			],
 			url: 'https://example.com/invoices/inv-1004'
 		}
 	]);
+
+	function getLowestVendorPrice(invoice: Invoice) {
+		return Math.min(...invoice.vendorPrices.map((item) => item.price));
+	}
 
 	const columns = [
 		{
@@ -67,6 +93,10 @@
 					size: 100,
 					enableResizing: false,
 					enableHiding: false,
+					filter: {
+						type: 'text',
+						placeholder: 'Search invoice'
+					},
 					sortDescFirst: false
 				},
 				{
@@ -75,12 +105,17 @@
 					cellType: 'text',
 					size: 180,
 					minSize: 140,
+					filter: {
+						type: 'text',
+						placeholder: 'Search customer'
+					},
 					sortDescFirst: false
 				},
 				{
 					accessorKey: 'status',
 					header: 'Status',
-					size: 120
+					size: 120,
+					filter: 'facet'
 				}
 			]
 		},
@@ -93,6 +128,11 @@
 					size: 90,
 					minSize: 72,
 					sortDescFirst: true,
+					filter: {
+						type: 'number-range',
+						min: 0,
+						step: 1
+					},
 					cellType: {
 						type: 'number',
 						maximumFractionDigits: 0
@@ -102,6 +142,11 @@
 					accessorKey: 'paid',
 					header: 'Paid',
 					size: 100,
+					filter: {
+						type: 'boolean',
+						trueLabel: 'Paid',
+						falseLabel: 'Open'
+					},
 					cellType: {
 						type: 'boolean',
 						trueLabel: 'Paid',
@@ -112,6 +157,16 @@
 					accessorKey: 'discountRate',
 					header: 'Discount',
 					size: 120,
+					filter: {
+						type: 'number-range',
+						min: 0,
+						max: 1,
+						step: 0.01,
+						formatOptions: {
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2
+						}
+					},
 					cellType: {
 						type: 'percentage',
 						minimumFractionDigits: 1,
@@ -119,17 +174,27 @@
 					}
 				},
 				{
-					accessorKey: 'total',
-					header: 'Total',
+					id: 'lowestPrice',
+					accessorFn: getLowestVendorPrice,
+					header: 'Lowest price',
+					align: 'right',
 					size: 140,
 					minSize: 110,
 					sortDescFirst: true,
-					cellType: {
-						type: 'currency',
-						currency: 'rsd',
-						minimumFractionDigits: 2,
-						maximumFractionDigits: 2
-					}
+					filter: {
+						type: 'number-range',
+						min: 0,
+						step: 1,
+						formatOptions: {
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2
+						}
+					},
+					cell: ({ getValue, row }) =>
+						renderComponent(VendorPriceCell, {
+							value: getValue<number>(),
+							prices: row.original.vendorPrices
+						})
 				}
 			]
 		},
@@ -160,7 +225,7 @@
 		enableRowSelection: true,
 		enableMultiRowSelection: true,
 		initialState: {
-			sorting: [{ id: 'total', desc: true }]
+			sorting: [{ id: 'lowestPrice', desc: true }]
 		},
 		columns
 	});
@@ -183,7 +248,11 @@
 				items: 6,
 				paid: false,
 				discountRate: 0.1,
-				total: 720,
+				vendorPrices: [
+					{ vendor: 'Main Supply', price: 720, currency: 'RSD' },
+					{ vendor: 'North Depot', price: 695.5, currency: 'RSD' },
+					{ vendor: 'Fast Parts', price: 741.25, currency: 'RSD' }
+				],
 				url: `https://example.com/invoices/inv-${1001 + data.length}`
 			}
 		];
@@ -196,6 +265,7 @@
 			<DataTable.Title>Data Table</DataTable.Title>
 
 			<div class="flex items-center gap-2">
+				<DataTable.Filters {table} />
 				<DataTable.ColumnVisibility {table} />
 				<Button variant="default" onclick={addInvoice}>Add invoice</Button>
 			</div>

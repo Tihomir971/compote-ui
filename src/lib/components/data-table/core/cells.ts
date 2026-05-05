@@ -5,6 +5,7 @@ import type {
 	CellData,
 	ColumnDef,
 	DisplayColumnDef,
+	FilterFn,
 	GroupColumnDef,
 	RowData
 } from '@tanstack/svelte-table';
@@ -50,15 +51,49 @@ export type DataTableColumnMeta<TData extends RowData = RowData, TValue = unknow
 	dataTable?: {
 		align?: DataTableColumnAlign;
 		cell?: DataTableCellConfig<TData, TValue>;
+		filter?: DataTableFilterConfig<TValue>;
 		hasCustomCell?: boolean;
 	};
 };
 
 export type DataTableColumnAlign = 'left' | 'center' | 'right';
 
+export type DataTableFilterOption<TValue = unknown> = {
+	label: string;
+	value: TValue;
+};
+
+export type DataTableFilterConfig<TValue = unknown> =
+	| {
+			type: 'text';
+			placeholder?: string;
+	  }
+	| {
+			type: 'facet';
+			options?: DataTableFilterOption<TValue>[];
+			maxOptions?: number;
+	  }
+	| {
+			type: 'number-range';
+			min?: number;
+			max?: number;
+			step?: number;
+			formatOptions?: Intl.NumberFormatOptions;
+	  }
+	| {
+			type: 'boolean';
+			trueLabel?: string;
+			falseLabel?: string;
+	  };
+
+export type DataTableFilterType<TValue = unknown> =
+	| DataTableFilterConfig<TValue>
+	| DataTableFilterConfig<TValue>['type'];
+
 type DataTableColumnDefOptions<TData extends RowData, TValue> = {
 	align?: DataTableColumnAlign;
 	cellType?: DataTableCellType<TData, TValue>;
+	filter?: DataTableFilterType<TValue>;
 };
 
 export type DataTableColumnDef<TData extends RowData, TValue extends CellData = CellData> =
@@ -85,6 +120,12 @@ export function getDataTableCellConfig<TData extends RowData, TValue>(
 		?.cell;
 }
 
+export function getDataTableFilterConfig<TData extends RowData, TValue>(
+	columnDef: ColumnDef<DataTableFeatures, TData, TValue>
+): DataTableFilterConfig<TValue> | undefined {
+	return (columnDef.meta as DataTableColumnMeta<TData, TValue> | undefined)?.dataTable?.filter;
+}
+
 export function hasCustomDataTableCell<TData extends RowData, TValue>(
 	cell: DataTableCell<TData, TValue>
 ): boolean {
@@ -100,6 +141,7 @@ export function normalizeDataTableColumns<TData extends RowData>(
 	return columns.map((columnDef) => {
 		const {
 			cellType,
+			filter,
 			align,
 			columns: childColumns,
 			meta,
@@ -108,15 +150,19 @@ export function normalizeDataTableColumns<TData extends RowData>(
 			columns?: DataTableColumnDef<TData>[];
 		};
 		const cell = normalizeDataTableCellType(cellType);
+		const filterConfig = normalizeDataTableFilterType(filter);
 		const hasCustomCell = 'cell' in column;
+		const filterFn =
+			'filterFn' in column ? column.filterFn : getDefaultDataTableFilterFn(filterConfig);
 		const nextMeta =
-			cell || align
+			cell || align || filterConfig
 				? {
 						...(meta ?? {}),
 						dataTable: {
 							...((meta as DataTableColumnMeta<TData> | undefined)?.dataTable ?? {}),
 							...(align ? { align } : {}),
 							...(cell ? { cell } : {}),
+							...(filterConfig ? { filter: filterConfig } : {}),
 							hasCustomCell
 						}
 					}
@@ -125,6 +171,7 @@ export function normalizeDataTableColumns<TData extends RowData>(
 		return {
 			...column,
 			...(childColumns ? { columns: normalizeDataTableColumns(childColumns) } : {}),
+			...(filterFn ? { filterFn } : {}),
 			...(nextMeta ? { meta: nextMeta } : {})
 		} as ColumnDef<DataTableFeatures, TData, CellData>;
 	});
@@ -136,3 +183,28 @@ function normalizeDataTableCellType<TData extends RowData, TValue>(
 	if (!cellType) return undefined;
 	return typeof cellType === 'string' ? { type: cellType } : cellType;
 }
+
+function normalizeDataTableFilterType<TValue>(
+	filter: DataTableFilterType<TValue> | undefined
+): DataTableFilterConfig<TValue> | undefined {
+	if (!filter) return undefined;
+	return typeof filter === 'string' ? { type: filter } : filter;
+}
+
+function getDefaultDataTableFilterFn<TValue>(filter: DataTableFilterConfig<TValue> | undefined) {
+	if (!filter) return undefined;
+
+	if (filter.type === 'facet') return dataTableFacetFilter;
+	if (filter.type === 'number-range') return 'inNumberRange';
+	if (filter.type === 'boolean') return 'equals';
+	return 'includesString';
+}
+
+const dataTableFacetFilter: FilterFn<DataTableFeatures, RowData> = (row, columnId, filterValue) => {
+	if (!Array.isArray(filterValue) || filterValue.length === 0) return true;
+	const value = row.getValue(columnId);
+	return filterValue.some((filterItem) => Object.is(filterItem, value));
+};
+
+dataTableFacetFilter.autoRemove = (filterValue) =>
+	!Array.isArray(filterValue) || filterValue.length === 0;

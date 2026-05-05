@@ -11,6 +11,7 @@
 		label,
 		layout = 'vertical',
 		name,
+		onValueChange,
 		...restProps
 	}: NumberInputProps = $props();
 	const locale = useLocaleContext();
@@ -30,7 +31,9 @@
 	value={value?.toString()}
 	readOnly={readonly}
 	onValueChange={(valueChangeDetails) => {
+		onValueChange?.(valueChangeDetails);
 		if (isNaN(valueChangeDetails.valueAsNumber)) {
+			value = null;
 			return;
 		}
 		value = valueChangeDetails.valueAsNumber;

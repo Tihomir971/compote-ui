@@ -1,19 +1,20 @@
 <script lang="ts" generics="TData extends RowData, TSelected = object">
-	import { cn, type ClassValue } from 'tailwind-variants';
+	import * as Popover from '../popover';
+	import * as ScrollArea from '../scroll-area';
 	import Checkbox from '../checkbox/checkbox.svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
 	import type { Column, RowData } from '@tanstack/svelte-table';
-	import type { DataTable, DataTableFeatures } from './core';
+	import type { DataTable, DataTableFeatures, DataTableSelectedState } from './core';
 
-	type Props = Omit<HTMLAttributes<HTMLDetailsElement>, 'class'> & {
+	type Props = {
 		table: DataTable<TData, TSelected>;
-		class?: ClassValue;
 		triggerLabel?: string;
 	};
 
-	let { table, class: className, triggerLabel = 'Columns', ...rest }: Props = $props();
+	let { table, triggerLabel = 'Columns' }: Props = $props();
 
-	const columnVisibility = $derived(table.store.state.columnVisibility);
+	const columnVisibility = $derived(
+		(table.state as unknown as DataTableSelectedState).columnVisibility
+	);
 	const allColumnsVisible = $derived(table.getIsAllColumnsVisible());
 	const someColumnsVisible = $derived(
 		table.getAllLeafColumns().some((column) => column.getCanHide() && column.getIsVisible())
@@ -35,16 +36,14 @@
 	}
 </script>
 
-<details class={cn('relative', className)} {...rest}>
-	<summary
-		class="flex h-9 cursor-pointer list-none items-center rounded-md border border-surface-3 bg-surface-1 px-3 text-sm font-medium text-ink shadow-sm outline-none hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden"
+<Popover.Root positioning={{ placement: 'bottom-end' }}>
+	<Popover.Trigger
+		class="flex h-9 cursor-pointer items-center rounded-md border border-surface-3 bg-surface-1 px-3 text-sm font-medium text-ink shadow-sm outline-none hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
 	>
 		{triggerLabel}
-	</summary>
+	</Popover.Trigger>
 
-	<div
-		class="absolute right-0 z-30 mt-2 w-56 rounded-md border border-surface-3 bg-surface-1 p-2 shadow-lg"
-	>
+	<Popover.Content class="w-56 p-2" showArrow={false}>
 		<div class="border-b border-surface-3 px-2 pb-2">
 			<Checkbox
 				size="sm"
@@ -54,17 +53,27 @@
 			/>
 		</div>
 
-		<div class="flex max-h-72 flex-col overflow-auto py-1">
-			{#each table.getAllLeafColumns() as column (column.id)}
-				<Checkbox
-					size="md"
-					label={getColumnLabel(column)}
-					class="min-h-8 rounded-sm px-2 hover:bg-surface-2"
-					checked={getColumnIsVisible(column, columnVisibility)}
-					disabled={!column.getCanHide()}
-					onCheckedChange={({ checked }) => column.toggleVisibility(checked === true)}
-				/>
-			{/each}
-		</div>
-	</div>
-</details>
+		<ScrollArea.Root class="h-72">
+			<ScrollArea.Viewport>
+				<ScrollArea.Content class="py-1 pe-3">
+					<div class="flex flex-col">
+						{#each table.getAllLeafColumns() as column (column.id)}
+							<Checkbox
+								size="md"
+								label={getColumnLabel(column)}
+								class="min-h-8 rounded-sm px-2 hover:bg-surface-2"
+								checked={getColumnIsVisible(column, columnVisibility)}
+								disabled={!column.getCanHide()}
+								onCheckedChange={({ checked }) => column.toggleVisibility(checked === true)}
+							/>
+						{/each}
+					</div>
+				</ScrollArea.Content>
+			</ScrollArea.Viewport>
+			<ScrollArea.Scrollbar orientation="vertical">
+				<ScrollArea.Thumb />
+			</ScrollArea.Scrollbar>
+			<ScrollArea.Corner />
+		</ScrollArea.Root>
+	</Popover.Content>
+</Popover.Root>
