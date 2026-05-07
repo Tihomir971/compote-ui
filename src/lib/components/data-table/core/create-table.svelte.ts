@@ -88,16 +88,6 @@ class DataTableState<TData extends RowData, TSelected = DataTableSelectedState> 
 		this.#columns = normalizeDataTableColumns(options.columns);
 		const getData = () => this.#getData();
 
-		$effect(() => {
-			$inspect.trace('[DataTable] #options changed');
-			void this.#options;
-		});
-
-		$effect(() => {
-			$inspect.trace('[DataTable] getData() re-read');
-			void getData();
-		});
-
 		this.#table = createTanStackTable(
 			{
 				...options,
