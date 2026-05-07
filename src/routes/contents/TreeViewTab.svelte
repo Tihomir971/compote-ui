@@ -3,38 +3,38 @@
 
 	const treeItems = [
 		{
-			value: 'folder-1',
+			value: 1,
 			label: 'src',
 			icon: 'ph:file-html',
 			children: [
-				{ value: 'file-1', label: 'App.svelte', icon: 'ph:file-html' },
-				{ value: 'file-2', label: 'main.ts', icon: 'ph:file-ts' },
+				{ value: 2, label: 'App.svelte', icon: 'ph:file-html' },
+				{ value: 3, label: 'main.ts', icon: 'ph:file-ts' },
 				{
-					value: 'folder-2',
+					value: 4,
 					label: 'components',
 					icon: 'ph:folder',
 					children: [
-						{ value: 'file-3', label: 'Button.svelte', icon: 'ph:file-html' },
-						{ value: 'file-4', label: 'Card.svelte', icon: 'ph:file-html' }
+						{ value: 5, label: 'Button.svelte', icon: 'ph:file-html' },
+						{ value: 6, label: 'Card.svelte', icon: 'ph:file-html' }
 					]
 				}
 			]
 		},
 		{
-			value: 'folder-3',
+			value: 7,
 			label: 'public',
 			icon: 'ph:folder',
 			children: [
-				{ value: 'file-5', label: 'favicon.png', icon: 'ph:file-image' },
-				{ value: 'file-6', label: 'logo.svg', icon: 'ph:file-svg' }
+				{ value: 8, label: 'favicon.png', icon: 'ph:file-image' },
+				{ value: 9, label: 'logo.svg', icon: 'ph:file-svg' }
 			]
 		},
-		{ value: 'file-7', label: 'package.json', icon: 'ph:file-js' },
-		{ value: 'file-8', label: 'README.md' }
+		{ value: 10, label: 'package.json', icon: 'ph:file-js' },
+		{ value: 11, label: 'README.md' }
 	];
 
-	let treeSelected = $state([treeItems[1].value]);
-	let treeChecked = $state([treeItems[2].value]);
+	let treeSelected = $state([treeItems[1].value.toString()]);
+	let treeChecked = $state([treeItems[2].value.toString()]);
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">

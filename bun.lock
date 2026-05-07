@@ -21,7 +21,7 @@
         "@sveltejs/package": "^2.5.7",
         "@sveltejs/vite-plugin-svelte": "7.0.0",
         "@tailwindcss/vite": "^4.2.4",
-        "@tanstack/svelte-table": "9.0.0-alpha.41",
+        "@tanstack/svelte-table": "9.0.0-alpha.42",
         "@types/node": "^22",
         "eslint": "^10.2.1",
         "eslint-config-prettier": "^10.1.8",
@@ -41,7 +41,7 @@
         "vite": "^8.0.10",
       },
       "peerDependencies": {
-        "@tanstack/svelte-table": "^9.0.0-alpha.41",
+        "@tanstack/svelte-table": "^9.0.0-alpha.42",
         "svelte": "^5.0.0",
       },
       "optionalPeers": [
@@ -206,9 +206,9 @@
 
     "@tanstack/svelte-store": ["@tanstack/svelte-store@0.12.0", "", { "dependencies": { "@tanstack/store": "0.11.0" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-XhXlU3jIO/WxikfeVczRdsAvRWzsLBh8Ic6sC7nzfzvMbPut7ZSdCbE7/usfm0bMjVGMmZmyzZy2xRu73QYWAA=="],
 
-    "@tanstack/svelte-table": ["@tanstack/svelte-table@9.0.0-alpha.41", "", { "dependencies": { "@tanstack/svelte-store": "^0.12.0", "@tanstack/table-core": "9.0.0-alpha.41" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-NaFG5kfGdmp3zFR4xLaQID9GD2rTo9FlXwvJJ30q7S68BaO4XaUUvMAPIsDHardQo9ImFD4Lbi1y8q8Bvghe3g=="],
+    "@tanstack/svelte-table": ["@tanstack/svelte-table@9.0.0-alpha.42", "", { "dependencies": { "@tanstack/svelte-store": "^0.12.0", "@tanstack/table-core": "9.0.0-alpha.42" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-9DtT9erbjhRur/xDufbcPJkIJVKE+muHkmEQpVgM6/1Ffs9gRHShcPoPcQYfqf+h+X2H9/ArD7/ZPaduhrxU/g=="],
 
-    "@tanstack/table-core": ["@tanstack/table-core@9.0.0-alpha.41", "", { "dependencies": { "@tanstack/store": "^0.11.0" } }, "sha512-Tcxf7A8Z+X333axHB87gk63wR2awDruhQFCiswnZD/NW0dIv82gP/Lb5b4a6bU2BvEdIpOsNTWjvwPO33hPhRQ=="],
+    "@tanstack/table-core": ["@tanstack/table-core@9.0.0-alpha.42", "", { "dependencies": { "@tanstack/store": "^0.11.0" } }, "sha512-wNrqnO/Yr+4g5fYx2EuC4C/yokfsYFUctQYKxrlSUBm+Z1eiKPS1LuKis0TgRAFKvLph2HKthThnIXn25JpXaA=="],
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.10.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg=="],
 
