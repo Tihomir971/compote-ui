@@ -1,5 +1,5 @@
-<script lang="ts" generics="T extends object">
-	import type { CellData, Column } from '@tanstack/svelte-table';
+<script lang="ts" generics="T extends RowData">
+	import type { CellData, Column, RowData } from '@tanstack/svelte-table';
 	import * as Popover from '../popover';
 	import * as ScrollArea from '../scroll-area';
 	import Checkbox from '../checkbox/checkbox.svelte';

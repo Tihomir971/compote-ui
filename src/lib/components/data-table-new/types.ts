@@ -1,17 +1,37 @@
-export type DataTableAlign = 'left' | 'center' | 'right';
+import type { CellData, ColumnDef, RowData, TableFeatures } from '@tanstack/svelte-table';
 
-export type DataTableColumn<T> = {
-	id: string;
+export type DataTableAlign = 'left' | 'center' | 'right';
+export type DataTableCellRenderer<T extends RowData> = (
+	value: unknown,
+	row: T
+) => string | number | boolean | null | undefined;
+
+type DataTableColumnOptions<T extends RowData> = Partial<
+	Pick<
+		ColumnDef<TableFeatures, T, CellData>,
+		| 'size'
+		| 'minSize'
+		| 'maxSize'
+		| 'enableResizing'
+		| 'enableHiding'
+		| 'enableSorting'
+		| 'sortDescFirst'
+	>
+>;
+
+export type DataTableColumn<T extends RowData> = DataTableColumnOptions<T> & {
 	header: string;
-	accessor: keyof T | ((row: T) => unknown);
-	cell?: (value: unknown, row: T) => string | number | boolean | null | undefined;
+	cell?: DataTableCellRenderer<T>;
 	align?: DataTableAlign;
-	size?: number;
-	minSize?: number;
-	maxSize?: number;
-	enableResizing?: boolean;
-	enableHiding?: boolean;
-	enableSorting?: boolean;
-	sortDescFirst?: boolean;
-	width?: string;
-};
+} & (
+		| {
+				accessorKey: Extract<keyof T, string>;
+				id?: string;
+				accessorFn?: never;
+		  }
+		| {
+				accessorFn: (row: T) => unknown;
+				id: string;
+				accessorKey?: never;
+		  }
+	);

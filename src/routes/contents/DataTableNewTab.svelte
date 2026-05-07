@@ -53,48 +53,42 @@
 
 	const columns: DataTableColumn<Invoice>[] = [
 		{
-			id: 'id',
 			header: 'Invoice',
-			accessor: 'id',
+			accessorKey: 'id',
 			enableHiding: false,
 			size: 112,
 			minSize: 88
 		},
 		{
-			id: 'customer',
 			header: 'Customer',
-			accessor: 'customer',
+			accessorKey: 'customer',
 			size: 180,
 			minSize: 120
 		},
 		{
-			id: 'status',
 			header: 'Status',
-			accessor: 'status',
+			accessorKey: 'status',
 			size: 112,
 			minSize: 96
 		},
 		{
-			id: 'items',
 			header: 'Items',
-			accessor: 'items',
+			accessorKey: 'items',
 			align: 'right',
 			size: 80,
 			minSize: 64
 		},
 		{
-			id: 'total',
 			header: 'Total',
-			accessor: 'total',
+			accessorKey: 'total',
 			align: 'right',
 			cell: (value) => currency.format(Number(value)),
 			size: 112,
 			minSize: 96
 		},
 		{
-			id: 'owner',
 			header: 'Owner',
-			accessor: 'owner',
+			accessorKey: 'owner',
 			size: 96,
 			minSize: 80
 		}

@@ -1,10 +1,10 @@
-<script lang="ts" generics="T extends object">
+<script lang="ts" generics="T extends RowData">
 	import { FlexRender } from '@tanstack/svelte-table';
-	import type { CellData, Header } from '@tanstack/svelte-table';
+	import type { CellData, Header, RowData } from '@tanstack/svelte-table';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhCaretDown, PhCaretUp } from '$lib/icons';
-	import type { DataTableFeatures, DataTableInstance } from './create-table';
+	import { getColumnId, type DataTableFeatures, type DataTableInstance } from './create-table';
 	import type { DataTableColumn } from './types';
 
 	type Props = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
@@ -104,7 +104,7 @@
 			{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 				<tr>
 					{#each headerGroup.headers as header (header.id)}
-						{@const columnDef = columns.find((column) => column.id === header.column.id)}
+						{@const columnDef = columns.find((column) => getColumnId(column) === header.column.id)}
 						{@const sortDirection = getHeaderSortDirection(header, table.store.state.sorting)}
 						<th
 							class={cn(
@@ -164,7 +164,7 @@
 			{#each rowModel.rows as row (row.id)}
 				<tr class="border-b border-surface-3 last:border-b-0 hover:bg-well/60">
 					{#each row.getVisibleCells() as cell (cell.id)}
-						{@const columnDef = columns.find((column) => column.id === cell.column.id)}
+						{@const columnDef = columns.find((column) => getColumnId(column) === cell.column.id)}
 						<td class={cn('px-3 py-2 text-ink-dim', alignClass(columnDef?.align))}>
 							<FlexRender {cell} />
 						</td>
