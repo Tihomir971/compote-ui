@@ -1,24 +1,35 @@
 import {
+	columnVisibilityFeature,
 	columnResizingFeature,
 	columnSizingFeature,
+	createSortedRowModel,
 	createTable as createTanStackTable,
+	rowSortingFeature,
+	sortFns,
 	tableFeatures,
 	type CellContext,
 	type CellData,
 	type ColumnDef,
 	type ColumnResizeMode,
 	type ColumnSizingState,
+	type ColumnVisibilityState,
+	type SortingState,
 	type SvelteTable,
 	type TableState
 } from '@tanstack/svelte-table';
 import type { DataTableColumn } from './types';
 
-const dataTableFeatures = tableFeatures({ columnSizingFeature, columnResizingFeature });
+const dataTableFeatures = tableFeatures({
+	columnVisibilityFeature,
+	columnSizingFeature,
+	columnResizingFeature,
+	rowSortingFeature
+});
 
 export type DataTableFeatures = typeof dataTableFeatures;
 export type DataTableSelectedState = Pick<
 	TableState<DataTableFeatures>,
-	'columnSizing' | 'columnResizing'
+	'columnVisibility' | 'columnSizing' | 'columnResizing' | 'sorting'
 >;
 export type DataTableInstance<T extends object> = SvelteTable<
 	DataTableFeatures,
@@ -30,6 +41,8 @@ export type CreateDataTableOptions<T extends object> = {
 	data: T[];
 	columns: DataTableColumn<T>[];
 	columnResizeMode?: ColumnResizeMode;
+	initialSorting?: SortingState;
+	enableSorting?: boolean;
 	debugTable?: boolean;
 };
 
@@ -37,7 +50,11 @@ export function createTable<T extends object>(options: CreateDataTableOptions<T>
 	return createTanStackTable(
 		{
 			_features: dataTableFeatures,
+			_rowModels: {
+				sortedRowModel: createSortedRowModel(sortFns)
+			},
 			columnResizeMode: options.columnResizeMode,
+			enableSorting: options.enableSorting,
 			debugTable: options.debugTable,
 			get data() {
 				return options.data;
@@ -46,14 +63,25 @@ export function createTable<T extends object>(options: CreateDataTableOptions<T>
 				return createColumns(options.columns);
 			},
 			initialState: {
-				columnSizing: createColumnSizing(options.columns)
+				columnVisibility: createColumnVisibility(options.columns),
+				columnSizing: createColumnSizing(options.columns),
+				sorting: options.initialSorting ?? []
 			}
 		},
 		(state): DataTableSelectedState => ({
+			columnVisibility: state.columnVisibility,
 			columnSizing: state.columnSizing,
-			columnResizing: state.columnResizing
+			columnResizing: state.columnResizing,
+			sorting: state.sorting
 		})
 	);
+}
+
+function createColumnVisibility<T extends object>(columns: DataTableColumn<T>[]) {
+	return columns.reduce<ColumnVisibilityState>((visibility, column) => {
+		visibility[column.id] = true;
+		return visibility;
+	}, {});
 }
 
 function createColumnSizing<T extends object>(columns: DataTableColumn<T>[]) {
@@ -75,6 +103,9 @@ function createColumns<T extends object>(columns: DataTableColumn<T>[]) {
 			minSize: column.minSize,
 			maxSize: column.maxSize,
 			enableResizing: column.enableResizing,
+			enableHiding: column.enableHiding,
+			enableSorting: column.enableSorting,
+			sortDescFirst: column.sortDescFirst,
 			meta: {
 				align: column.align
 			}

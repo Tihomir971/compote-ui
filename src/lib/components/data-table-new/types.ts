@@ -10,5 +10,8 @@ export type DataTableColumn<T> = {
 	minSize?: number;
 	maxSize?: number;
 	enableResizing?: boolean;
+	enableHiding?: boolean;
+	enableSorting?: boolean;
+	sortDescFirst?: boolean;
 	width?: string;
 };

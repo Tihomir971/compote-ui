@@ -56,6 +56,7 @@
 			id: 'id',
 			header: 'Invoice',
 			accessor: 'id',
+			enableHiding: false,
 			size: 112,
 			minSize: 88
 		},
@@ -130,10 +131,10 @@
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section class="space-y-4">
-		<div>
-			<h2 class="text-lg font-semibold">Data Table New</h2>
-			<p class="text-sm text-ink-dim">TanStack table with column sizing enabled.</p>
-		</div>
+		<DataTableNew.Toolbar>
+			<DataTableNew.Title>Data Table New</DataTableNew.Title>
+			<DataTableNew.ColumnVisibility {table} />
+		</DataTableNew.Toolbar>
 
 		<div class="flex flex-wrap gap-2">
 			<button
