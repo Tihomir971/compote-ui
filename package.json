@@ -36,7 +36,7 @@
 		"./theme.css": "./dist/theme.css"
 	},
 	"peerDependencies": {
-		"@tanstack/svelte-table": "^9.0.0-alpha.41",
+		"@tanstack/svelte-table": "^9.0.0-alpha.44",
 		"svelte": "^5.0.0"
 	},
 	"peerDependenciesMeta": {
@@ -51,10 +51,10 @@
 		"@sveltejs/adapter-auto": "^7.0.0",
 		"@sveltejs/kit": "^2.57.1",
 		"@sveltejs/package": "^2.5.7",
-		"@sveltejs/vite-plugin-svelte": "7.0.0",
+		"@sveltejs/vite-plugin-svelte": "7.1.2",
 		"@tailwindcss/vite": "^4.2.4",
-		"@tanstack/svelte-table": "9.0.0-alpha.41",
-		"@types/node": "^22",
+		"@tanstack/svelte-table": "9.0.0-alpha.44",
+		"@types/node": "^22.19.18",
 		"eslint": "^10.2.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.17.0",

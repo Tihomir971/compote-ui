@@ -4,6 +4,7 @@ import {
 	columnSizingFeature,
 	createSortedRowModel,
 	createTable as createTanStackTable,
+	rowSelectionFeature,
 	rowSortingFeature,
 	sortFns,
 	tableFeatures,
@@ -13,7 +14,9 @@ import {
 	type ColumnResizeMode,
 	type ColumnSizingState,
 	type ColumnVisibilityState,
+	type Row,
 	type RowData,
+	type RowSelectionState,
 	type SortingState,
 	type SvelteTable,
 	type TableState
@@ -24,13 +27,14 @@ const dataTableFeatures = tableFeatures({
 	columnVisibilityFeature,
 	columnSizingFeature,
 	columnResizingFeature,
+	rowSelectionFeature,
 	rowSortingFeature
 });
 
 export type DataTableFeatures = typeof dataTableFeatures;
 export type DataTableSelectedState = Pick<
 	TableState<DataTableFeatures>,
-	'columnVisibility' | 'columnSizing' | 'columnResizing' | 'sorting'
+	'columnVisibility' | 'columnSizing' | 'columnResizing' | 'rowSelection' | 'sorting'
 >;
 export type DataTableInstance<T extends RowData> = SvelteTable<
 	DataTableFeatures,
@@ -43,6 +47,10 @@ export type CreateDataTableOptions<T extends RowData> = {
 	columns: DataTableColumn<T>[];
 	columnResizeMode?: ColumnResizeMode;
 	initialSorting?: SortingState;
+	initialRowSelection?: RowSelectionState;
+	getRowId?: (row: T, index: number, parent?: Row<DataTableFeatures, T>) => string;
+	enableRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
+	enableMultiRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
 	enableSorting?: boolean;
 	debugTable?: boolean;
 };
@@ -55,6 +63,9 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 				sortedRowModel: createSortedRowModel(sortFns)
 			},
 			columnResizeMode: options.columnResizeMode,
+			getRowId: options.getRowId,
+			enableRowSelection: options.enableRowSelection ?? false,
+			enableMultiRowSelection: options.enableMultiRowSelection,
 			enableSorting: options.enableSorting,
 			debugTable: options.debugTable,
 			get data() {
@@ -66,6 +77,7 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			initialState: {
 				columnVisibility: createColumnVisibility(options.columns),
 				columnSizing: createColumnSizing(options.columns),
+				rowSelection: options.initialRowSelection ?? {},
 				sorting: options.initialSorting ?? []
 			}
 		},
@@ -73,6 +85,7 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			columnVisibility: state.columnVisibility,
 			columnSizing: state.columnSizing,
 			columnResizing: state.columnResizing,
+			rowSelection: state.rowSelection,
 			sorting: state.sorting
 		})
 	);
@@ -97,14 +110,15 @@ function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
 
 function createColumns<T extends RowData>(columns: DataTableColumn<T>[]) {
 	return columns.map((column) => {
+		const columnId = getColumnId(column);
 		const columnDef = {
-			id: getColumnId(column),
+			id: columnId,
 			header: column.header,
 			size: column.size,
 			minSize: column.minSize,
 			maxSize: column.maxSize,
 			enableResizing: column.enableResizing,
-			enableHiding: column.enableHiding,
+			enableHiding: getColumnEnableHiding(column, columnId),
 			enableSorting: column.enableSorting,
 			sortDescFirst: column.sortDescFirst,
 			meta: {
@@ -128,6 +142,12 @@ function createColumns<T extends RowData>(columns: DataTableColumn<T>[]) {
 				formatCellValue(column, context.getValue(), context.row.original)
 		};
 	}) as ColumnDef<DataTableFeatures, T, CellData>[];
+}
+
+function getColumnEnableHiding<T extends RowData>(column: DataTableColumn<T>, columnId: string) {
+	if (column.enableHiding !== undefined) return column.enableHiding;
+	if (columnId === 'id') return false;
+	return undefined;
 }
 
 export function getColumnId<T extends RowData>(column: DataTableColumn<T>): string {

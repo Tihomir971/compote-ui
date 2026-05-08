@@ -54,43 +54,30 @@
 	const columns: DataTableColumn<Invoice>[] = [
 		{
 			header: 'Invoice',
-			accessorKey: 'id',
-			enableHiding: false,
-			size: 112,
-			minSize: 88
+			accessorKey: 'id'
 		},
 		{
 			header: 'Customer',
-			accessorKey: 'customer',
-			size: 180,
-			minSize: 120
+			accessorKey: 'customer'
 		},
 		{
 			header: 'Status',
-			accessorKey: 'status',
-			size: 112,
-			minSize: 96
+			accessorKey: 'status'
 		},
 		{
 			header: 'Items',
 			accessorKey: 'items',
-			align: 'right',
-			size: 80,
-			minSize: 64
+			align: 'right'
 		},
 		{
 			header: 'Total',
 			accessorKey: 'total',
 			align: 'right',
-			cell: (value) => currency.format(Number(value)),
-			size: 112,
-			minSize: 96
+			cell: (value) => currency.format(Number(value))
 		},
 		{
 			header: 'Owner',
-			accessorKey: 'owner',
-			size: 96,
-			minSize: 80
+			accessorKey: 'owner'
 		}
 	];
 
@@ -98,7 +85,9 @@
 		get data() {
 			return invoices;
 		},
-		columns
+		columns,
+		getRowId: (row) => row.id,
+		enableRowSelection: true
 	});
 
 	function addInvoice() {
@@ -121,6 +110,13 @@
 			[columnId]: size
 		});
 	}
+
+	function getSelectedRowCount(rowSelection: unknown) {
+		void rowSelection;
+		return table.getSelectedRowModel().rows.length;
+	}
+
+	const selectedRowCount = $derived(getSelectedRowCount(table.store.state.rowSelection));
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -137,6 +133,11 @@
 			>
 				Add invoice
 			</button>
+			<div
+				class="flex items-center rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-ink-dim"
+			>
+				{selectedRowCount} selected
+			</div>
 		</div>
 
 		<div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -154,7 +155,7 @@
 			{/each}
 		</div>
 
-		<div class="h-96 min-h-0">
+		<div class="h-96 min-h-0 max-w-3xl">
 			<DataTableNew.Root {table} {columns} caption="Invoices" />
 		</div>
 	</section>
