@@ -3,7 +3,7 @@
 	import type { CellData, Header, RowData } from '@tanstack/svelte-table';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
-	import { PhCaretDown, PhCaretUp } from '$lib/icons';
+	import { PhCaretDown, PhCaretUp, PhCheck, PhX } from '$lib/icons';
 	import Checkbox from '../checkbox/checkbox.svelte';
 	import { getColumnId, type DataTableFeatures, type DataTableInstance } from './create-table';
 	import type { DataTableColumn } from './types';
@@ -102,6 +102,12 @@
 	function getSelectedRowCount(rowSelection: unknown) {
 		void rowSelection;
 		return table.getSelectedRowModel().rows.length;
+	}
+
+	function getBooleanCellValue(value: unknown) {
+		if (value === true) return true;
+		if (value === false) return false;
+		return undefined;
 	}
 
 	const rowModel = $derived(table.getRowModel());
@@ -244,7 +250,30 @@
 						{#each row.getVisibleCells() as cell (cell.id)}
 							{@const columnDef = columns.find((column) => getColumnId(column) === cell.column.id)}
 							<td class={cn('px-3 py-2 text-ink-dim', alignClass(columnDef?.align))}>
-								<FlexRender {cell} />
+								{#if columnDef?.type === 'boolean'}
+									{@const value = getBooleanCellValue(cell.getValue())}
+									{#if value === true}
+										<span
+											class="inline-flex size-5 items-center justify-center text-success"
+											role="img"
+											aria-label="Yes"
+										>
+											<PhCheck class="size-4" />
+										</span>
+									{:else if value === false}
+										<span
+											class="inline-flex size-5 items-center justify-center text-danger"
+											role="img"
+											aria-label="No"
+										>
+											<PhX class="size-4" />
+										</span>
+									{:else}
+										-
+									{/if}
+								{:else}
+									<FlexRender {cell} />
+								{/if}
 							</td>
 						{/each}
 						<td aria-hidden="true" class="p-0"></td>

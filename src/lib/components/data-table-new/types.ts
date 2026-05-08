@@ -1,6 +1,7 @@
 import type { CellData, ColumnDef, RowData, TableFeatures } from '@tanstack/svelte-table';
 
 export type DataTableAlign = 'left' | 'center' | 'right';
+export type DataTableColumnType = 'text' | 'number' | 'currency' | 'percent' | 'boolean' | 'select';
 export type DataTableCellRenderer<T extends RowData> = (
 	value: unknown,
 	row: T
@@ -16,6 +17,8 @@ type DataTableColumnOptions<T extends RowData> = Partial<
 		| 'enableHiding'
 		| 'enableSorting'
 		| 'sortDescFirst'
+		| 'enableColumnFilter'
+		| 'filterFn'
 	>
 >;
 
@@ -23,6 +26,9 @@ export type DataTableColumn<T extends RowData> = DataTableColumnOptions<T> & {
 	header: string;
 	cell?: DataTableCellRenderer<T>;
 	align?: DataTableAlign;
+	type?: DataTableColumnType;
+	formatOptions?: Intl.NumberFormatOptions;
+	formatLocale?: string;
 } & (
 		| {
 				accessorKey: Extract<keyof T, string>;

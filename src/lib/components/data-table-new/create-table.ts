@@ -2,8 +2,15 @@ import {
 	columnVisibilityFeature,
 	columnResizingFeature,
 	columnSizingFeature,
+	columnFilteringFeature,
+	columnFacetingFeature,
 	createSortedRowModel,
+	createFilteredRowModel,
+	createFacetedRowModel,
+	createFacetedMinMaxValues,
+	createFacetedUniqueValues,
 	createTable as createTanStackTable,
+	filterFns,
 	rowSelectionFeature,
 	rowSortingFeature,
 	sortFns,
@@ -11,6 +18,7 @@ import {
 	type CellContext,
 	type CellData,
 	type ColumnDef,
+	type ColumnFiltersState,
 	type ColumnResizeMode,
 	type ColumnSizingState,
 	type ColumnVisibilityState,
@@ -21,12 +29,14 @@ import {
 	type SvelteTable,
 	type TableState
 } from '@tanstack/svelte-table';
-import type { DataTableColumn } from './types';
+import type { DataTableColumn, DataTableColumnType } from './types';
 
 const dataTableFeatures = tableFeatures({
 	columnVisibilityFeature,
 	columnSizingFeature,
 	columnResizingFeature,
+	columnFilteringFeature,
+	columnFacetingFeature,
 	rowSelectionFeature,
 	rowSortingFeature
 });
@@ -34,8 +44,22 @@ const dataTableFeatures = tableFeatures({
 export type DataTableFeatures = typeof dataTableFeatures;
 export type DataTableSelectedState = Pick<
 	TableState<DataTableFeatures>,
-	'columnVisibility' | 'columnSizing' | 'columnResizing' | 'rowSelection' | 'sorting'
+	| 'columnVisibility'
+	| 'columnSizing'
+	| 'columnResizing'
+	| 'rowSelection'
+	| 'sorting'
+	| 'columnFilters'
 >;
+
+function oneOfFilterFn(
+	row: Row<DataTableFeatures, RowData>,
+	columnId: string,
+	filterValue: string[]
+): boolean {
+	return filterValue.includes(String(row.getValue(columnId)));
+}
+oneOfFilterFn.autoRemove = (val: unknown): boolean => !Array.isArray(val) || val.length === 0;
 export type DataTableInstance<T extends RowData> = SvelteTable<
 	DataTableFeatures,
 	T,
@@ -48,6 +72,7 @@ export type CreateDataTableOptions<T extends RowData> = {
 	columnResizeMode?: ColumnResizeMode;
 	initialSorting?: SortingState;
 	initialRowSelection?: RowSelectionState;
+	initialColumnFilters?: ColumnFiltersState;
 	getRowId?: (row: T, index: number, parent?: Row<DataTableFeatures, T>) => string;
 	enableRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
 	enableMultiRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
@@ -60,7 +85,11 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		{
 			_features: dataTableFeatures,
 			_rowModels: {
-				sortedRowModel: createSortedRowModel(sortFns)
+				sortedRowModel: createSortedRowModel(sortFns),
+				filteredRowModel: createFilteredRowModel({ ...filterFns, oneOf: oneOfFilterFn }),
+				facetedRowModel: createFacetedRowModel(),
+				facetedMinMaxValues: createFacetedMinMaxValues(),
+				facetedUniqueValues: createFacetedUniqueValues()
 			},
 			columnResizeMode: options.columnResizeMode,
 			getRowId: options.getRowId,
@@ -78,7 +107,8 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 				columnVisibility: createColumnVisibility(options.columns),
 				columnSizing: createColumnSizing(options.columns),
 				rowSelection: options.initialRowSelection ?? {},
-				sorting: options.initialSorting ?? []
+				sorting: options.initialSorting ?? [],
+				columnFilters: options.initialColumnFilters ?? []
 			}
 		},
 		(state): DataTableSelectedState => ({
@@ -86,7 +116,8 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			columnSizing: state.columnSizing,
 			columnResizing: state.columnResizing,
 			rowSelection: state.rowSelection,
-			sorting: state.sorting
+			sorting: state.sorting,
+			columnFilters: state.columnFilters
 		})
 	);
 }
@@ -111,6 +142,7 @@ function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
 function createColumns<T extends RowData>(columns: DataTableColumn<T>[]) {
 	return columns.map((column) => {
 		const columnId = getColumnId(column);
+		const derivedFilterFn = column.filterFn ?? getFilterFnForType(column.type);
 		const columnDef = {
 			id: columnId,
 			header: column.header,
@@ -120,9 +152,14 @@ function createColumns<T extends RowData>(columns: DataTableColumn<T>[]) {
 			enableResizing: column.enableResizing,
 			enableHiding: getColumnEnableHiding(column, columnId),
 			enableSorting: column.enableSorting,
+			enableColumnFilter: column.enableColumnFilter,
 			sortDescFirst: column.sortDescFirst,
+			...(derivedFilterFn !== undefined ? { filterFn: derivedFilterFn as never } : {}),
 			meta: {
-				align: column.align
+				align: column.align,
+				type: column.type,
+				formatOptions: column.formatOptions,
+				formatLocale: column.formatLocale
 			}
 		} satisfies Partial<ColumnDef<DataTableFeatures, T, CellData>>;
 
@@ -156,12 +193,52 @@ export function getColumnId<T extends RowData>(column: DataTableColumn<T>): stri
 	throw new Error('DataTableColumn with accessorFn requires an id.');
 }
 
-function formatCellValue<T extends RowData>(column: DataTableColumn<T>, value: unknown, row: T) {
-	const renderedValue = column.cell ? column.cell(value, row) : value;
+const TYPE_FORMAT_DEFAULTS: Partial<Record<DataTableColumnType, Intl.NumberFormatOptions>> = {
+	currency: { style: 'currency', currency: 'USD' },
+	percent: { style: 'percent' },
+	number: {}
+};
 
-	if (renderedValue === null || renderedValue === undefined || renderedValue === '') {
+function getFilterFnForType(type: DataTableColumnType | undefined): string | undefined {
+	switch (type) {
+		case 'number':
+		case 'currency':
+		case 'percent':
+			return 'inNumberRange';
+		case 'boolean':
+			return 'equals';
+		case 'select':
+			return 'oneOf';
+		default:
+			return undefined;
+	}
+}
+
+function applyTypeFormat<T extends RowData>(
+	column: DataTableColumn<T>,
+	value: unknown
+): string | number | boolean | null | undefined {
+	if (value === null || value === undefined || value === '') return undefined;
+
+	const defaults = column.type ? TYPE_FORMAT_DEFAULTS[column.type] : undefined;
+	if (defaults !== undefined) {
+		return new Intl.NumberFormat(column.formatLocale, {
+			...defaults,
+			...column.formatOptions
+		}).format(Number(value));
+	}
+
+	if (column.type === 'boolean') return value ? 'Yes' : 'No';
+
+	return value as string | number | boolean;
+}
+
+function formatCellValue<T extends RowData>(column: DataTableColumn<T>, value: unknown, row: T) {
+	const rendered = column.cell ? column.cell(value, row) : applyTypeFormat(column, value);
+
+	if (rendered === null || rendered === undefined || rendered === '') {
 		return '-';
 	}
 
-	return String(renderedValue);
+	return String(rendered);
 }

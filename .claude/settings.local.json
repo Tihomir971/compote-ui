@@ -10,5 +10,6 @@
 			"mcp__ark-ui__styling_guide",
 			"mcp__svelte-mcp__svelte-autofixer"
 		]
-	}
+	},
+	"plansDirectory": "./docs/plans"
 }
