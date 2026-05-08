@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { cn, type ClassValue } from 'tailwind-variants';
-	import type { HTMLAttributes } from 'svelte/elements';
 	import type { Snippet } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn, type ClassValue } from 'tailwind-variants';
 
 	type Props = Omit<HTMLAttributes<HTMLHeadingElement>, 'class'> & {
 		class?: ClassValue;

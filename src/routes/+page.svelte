@@ -8,7 +8,7 @@
 	import CollapsibleTab from './contents/CollapsibleTab.svelte';
 	import CheckboxTab from './contents/CheckboxTab.svelte';
 	import ComboboxTab from './contents/ComboboxTab.svelte';
-	import DataTableNewTab from './contents/DataTableNewTab.svelte';
+	import DataTableTab from './contents/DataTableTab.svelte';
 	import DialogTab from './contents/DialogTab.svelte';
 	import DrawerTab from './contents/DrawerTab.svelte';
 	import FieldTab from './contents/FieldTab.svelte';
@@ -94,7 +94,7 @@
 		</Tabs.Content>
 
 		<Tabs.Content value="data-table">
-			<DataTableNewTab />
+			<DataTableTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="dialog">

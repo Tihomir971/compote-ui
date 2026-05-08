@@ -1,18 +1,20 @@
-<script lang="ts" generics="T extends RowData">
-	import type { CellData, Column, RowData } from '@tanstack/svelte-table';
+<script lang="ts" generics="TData extends RowData, TSelected = object">
 	import * as Popover from '../popover';
 	import * as ScrollArea from '../scroll-area';
 	import Checkbox from '../checkbox/checkbox.svelte';
-	import type { DataTableFeatures, DataTableInstance } from './create-table';
+	import type { Column, RowData } from '@tanstack/svelte-table';
+	import type { DataTable, DataTableFeatures, DataTableSelectedState } from './core';
 
 	type Props = {
-		table: DataTableInstance<T>;
+		table: DataTable<TData, TSelected>;
 		triggerLabel?: string;
 	};
 
 	let { table, triggerLabel = 'Columns' }: Props = $props();
 
-	const columnVisibility = $derived(table.store.state.columnVisibility);
+	const columnVisibility = $derived(
+		(table.state as unknown as DataTableSelectedState).columnVisibility
+	);
 	const allColumnsVisible = $derived(table.getIsAllColumnsVisible());
 	const someColumnsVisible = $derived(
 		table.getAllLeafColumns().some((column) => column.getCanHide() && column.getIsVisible())
@@ -21,12 +23,15 @@
 		allColumnsVisible ? true : someColumnsVisible ? 'indeterminate' : false
 	);
 
-	function getColumnLabel(column: Column<DataTableFeatures, T, CellData>) {
+	function getColumnLabel(column: Column<DataTableFeatures, TData, unknown>) {
 		return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
 	}
 
-	function getColumnIsVisible(column: Column<DataTableFeatures, T, CellData>, state: unknown) {
-		void state;
+	function getColumnIsVisible(
+		column: Column<DataTableFeatures, TData, unknown>,
+		visibilityState: unknown
+	) {
+		void visibilityState;
 		return column.getIsVisible();
 	}
 </script>
