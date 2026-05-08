@@ -136,13 +136,29 @@
 		}
 	}
 
-	const rowModel = $derived(table.getRowModel());
-	const visibleColumnCount = $derived(table.getVisibleLeafColumns().length);
+	const tableStateKey = $derived(JSON.stringify(table.store.state));
+	function trackTableState() {
+		return tableStateKey;
+	}
+
+	const rowModel = $derived.by(() => {
+		trackTableState();
+		return table.getRowModel();
+	});
+	const headerGroups = $derived.by(() => {
+		trackTableState();
+		return table.getHeaderGroups();
+	});
+	const visibleLeafColumns = $derived.by(() => {
+		trackTableState();
+		return table.getVisibleLeafColumns();
+	});
+	const visibleColumnCount = $derived(visibleLeafColumns.length);
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
 	const tableColumnCount = $derived(visibleColumnCount + (isRowSelectionEnabled ? 1 : 0));
 	const renderedColumnCount = $derived(tableColumnCount + 1);
-	const headerGroupCount = $derived(table.getHeaderGroups().length);
+	const headerGroupCount = $derived(headerGroups.length);
 	const allRowsSelectionState = $derived(getAllRowsSelectionState(table.store.state.rowSelection));
 	const selectedRowCount = $derived(getSelectedRowCount(table.store.state.rowSelection));
 	const isColumnResizing = $derived(table.store.state.columnResizing.isResizingColumn !== false);
@@ -165,7 +181,7 @@
 				{#if isRowSelectionEnabled}
 					<col style={selectionColumnSizeStyle()} />
 				{/if}
-				{#each table.getVisibleLeafColumns() as column (column.id)}
+				{#each visibleLeafColumns as column (column.id)}
 					<col style={columnSizeStyle(column.getSize())} />
 				{/each}
 				<col />
@@ -174,7 +190,7 @@
 				<caption class="sr-only">{caption}</caption>
 			{/if}
 			<thead class="sticky top-0 z-20 bg-surface-2 text-left text-ink-dim">
-				{#each table.getHeaderGroups() as headerGroup, headerGroupIndex (headerGroup.id)}
+				{#each headerGroups as headerGroup, headerGroupIndex (headerGroup.id)}
 					{@const visibleHeaders = headerGroup.headers.filter((header) => header.colSpan > 0)}
 					<tr>
 						{#if isRowSelectionEnabled && headerGroupIndex === 0}

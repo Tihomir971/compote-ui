@@ -7,7 +7,7 @@ export type DataTableCellRenderer<T extends RowData> = (
 	row: T
 ) => string | number | boolean | null | undefined;
 
-type DataTableColumnOptions<T extends RowData> = Partial<
+export type DataTableColumnOptions<T extends RowData> = Partial<
 	Pick<
 		ColumnDef<TableFeatures, T, CellData>,
 		| 'size'
@@ -22,30 +22,35 @@ type DataTableColumnOptions<T extends RowData> = Partial<
 	>
 >;
 
-type DataTableColumnBase = {
+export type DataTableColumnBase = {
 	header: string;
 	align?: DataTableAlign;
 };
 
-export type DataTableLeafColumn<T extends RowData> = DataTableColumnOptions<T> &
+export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<T> &
 	DataTableColumnBase & {
 		cell?: DataTableCellRenderer<T>;
 		type?: DataTableColumnType;
 		formatOptions?: Intl.NumberFormatOptions;
 		formatLocale?: string;
 		columns?: never;
-	} & (
-		| {
-				accessorKey: Extract<keyof T, string>;
-				id?: string;
-				accessorFn?: never;
-		  }
-		| {
-				accessorFn: (row: T) => unknown;
-				id: string;
-				accessorKey?: never;
-		  }
-	);
+	};
+
+export type DataTableAccessorKeyColumn<T extends RowData> = DataTableLeafColumnBase<T> & {
+	accessorKey: Extract<keyof T, string>;
+	id?: string;
+	accessorFn?: never;
+};
+
+export type DataTableAccessorFnColumn<T extends RowData> = DataTableLeafColumnBase<T> & {
+	accessorFn: (row: T) => unknown;
+	id: string;
+	accessorKey?: never;
+};
+
+export type DataTableLeafColumn<T extends RowData> =
+	| DataTableAccessorKeyColumn<T>
+	| DataTableAccessorFnColumn<T>;
 
 export type DataTableGroupColumn<T extends RowData> = DataTableColumnBase & {
 	id?: string;

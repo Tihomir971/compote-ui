@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/button/button.svelte';
 	import * as DataTableNew from '$lib/components/data-table';
-	import type { DataTableColumn } from '$lib/components/data-table';
 
 	type Invoice = {
 		id: string;
@@ -52,59 +51,43 @@
 		}
 	]);
 
-	const columns: DataTableColumn<Invoice>[] = [
-		{
-			header: 'Invoice',
-			columns: [
-				{
-					header: 'Reference',
-					columns: [
-						{ header: 'Invoice', accessorKey: 'id' },
-						{ header: 'Customer', accessorKey: 'customer' }
-					]
-				},
-				{ header: 'Status', accessorKey: 'status', type: 'select' }
-			]
-		},
-		{
-			header: 'Details',
-			columns: [
-				{
-					header: 'Amount',
-					columns: [
-						{
-							header: 'Items',
-							accessorKey: 'items',
-							type: 'number',
-							align: 'right',
-							formatOptions: { maximumFractionDigits: 0 }
-						},
-						{
-							header: 'Total',
-							accessorKey: 'total',
-							type: 'currency',
-							align: 'right',
-							formatLocale: 'sr-RS'
-						}
-					]
-				},
-				{
-					header: 'Assignment',
-					columns: [
-						{ header: 'Owner', accessorKey: 'owner' },
-						{
-							header: 'Active',
-							accessorKey: 'is_active',
-							type: 'boolean',
-							align: 'center',
-							size: 90,
-							enableResizing: false
-						}
-					]
-				}
-			]
-		}
-	];
+	const column = DataTableNew.createDataTableColumnHelper<Invoice>();
+
+	const columns = column.columns([
+		column.group('Invoice', [
+			column.group('Reference', [
+				column.accessor('id', { header: 'Invoice' }),
+				column.accessor('customer', { header: 'Customer' })
+			]),
+			column.accessor('status', { header: 'Status', type: 'select' })
+		]),
+		column.group('Details', [
+			column.group('Amount', [
+				column.accessor('items', {
+					header: 'Items',
+					type: 'number',
+					align: 'right',
+					formatOptions: { maximumFractionDigits: 0 }
+				}),
+				column.accessor('total', {
+					header: 'Total',
+					type: 'currency',
+					align: 'right',
+					formatLocale: 'sr-RS'
+				})
+			]),
+			column.group('Assignment', [
+				column.accessor('owner', { header: 'Owner' }),
+				column.accessor('is_active', {
+					header: 'Active',
+					type: 'boolean',
+					align: 'center',
+					size: 90,
+					enableResizing: false
+				})
+			])
+		])
+	]);
 
 	const table = DataTableNew.createTable({
 		get data() {
