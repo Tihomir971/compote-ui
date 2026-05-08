@@ -29,7 +29,12 @@ import {
 	type SvelteTable,
 	type TableState
 } from '@tanstack/svelte-table';
-import type { DataTableColumn, DataTableColumnType } from './types';
+import type {
+	DataTableColumn,
+	DataTableColumnType,
+	DataTableGroupColumn,
+	DataTableLeafColumn
+} from './types';
 
 const dataTableFeatures = tableFeatures({
 	columnVisibilityFeature,
@@ -123,14 +128,14 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 }
 
 function createColumnVisibility<T extends RowData>(columns: DataTableColumn<T>[]) {
-	return columns.reduce<ColumnVisibilityState>((visibility, column) => {
+	return getLeafColumns(columns).reduce<ColumnVisibilityState>((visibility, column) => {
 		visibility[getColumnId(column)] = true;
 		return visibility;
 	}, {});
 }
 
 function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
-	return columns.reduce<ColumnSizingState>((sizes, column) => {
+	return getLeafColumns(columns).reduce<ColumnSizingState>((sizes, column) => {
 		if (typeof column.size === 'number') {
 			sizes[getColumnId(column)] = column.size;
 		}
@@ -139,8 +144,21 @@ function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
 	}, {});
 }
 
-function createColumns<T extends RowData>(columns: DataTableColumn<T>[]) {
+function createColumns<T extends RowData>(
+	columns: DataTableColumn<T>[]
+): ColumnDef<DataTableFeatures, T, CellData>[] {
 	return columns.map((column) => {
+		if (isGroupColumn(column)) {
+			return {
+				id: getGroupColumnId(column),
+				header: column.header,
+				columns: createColumns(column.columns),
+				meta: {
+					align: column.align
+				}
+			};
+		}
+
 		const columnId = getColumnId(column);
 		const derivedFilterFn = column.filterFn ?? getFilterFnForType(column.type);
 		const columnDef = {
@@ -181,13 +199,34 @@ function createColumns<T extends RowData>(columns: DataTableColumn<T>[]) {
 	}) as ColumnDef<DataTableFeatures, T, CellData>[];
 }
 
-function getColumnEnableHiding<T extends RowData>(column: DataTableColumn<T>, columnId: string) {
+function isGroupColumn<T extends RowData>(
+	column: DataTableColumn<T>
+): column is DataTableGroupColumn<T> {
+	return Array.isArray(column.columns);
+}
+
+function getLeafColumns<T extends RowData>(
+	columns: DataTableColumn<T>[]
+): DataTableLeafColumn<T>[] {
+	return columns.flatMap((column) =>
+		isGroupColumn(column) ? getLeafColumns(column.columns) : column
+	);
+}
+
+function getGroupColumnId<T extends RowData>(column: DataTableGroupColumn<T>) {
+	return column.id ?? column.header;
+}
+
+function getColumnEnableHiding<T extends RowData>(
+	column: DataTableLeafColumn<T>,
+	columnId: string
+) {
 	if (column.enableHiding !== undefined) return column.enableHiding;
 	if (columnId === 'id') return false;
 	return undefined;
 }
 
-export function getColumnId<T extends RowData>(column: DataTableColumn<T>): string {
+export function getColumnId<T extends RowData>(column: DataTableLeafColumn<T>): string {
 	if (column.id !== undefined) return column.id;
 	if ('accessorKey' in column && column.accessorKey !== undefined) return column.accessorKey;
 	throw new Error('DataTableColumn with accessorFn requires an id.');
@@ -215,7 +254,7 @@ function getFilterFnForType(type: DataTableColumnType | undefined): string | und
 }
 
 function applyTypeFormat<T extends RowData>(
-	column: DataTableColumn<T>,
+	column: DataTableLeafColumn<T>,
 	value: unknown
 ): string | number | boolean | null | undefined {
 	if (value === null || value === undefined || value === '') return undefined;
@@ -233,7 +272,11 @@ function applyTypeFormat<T extends RowData>(
 	return value as string | number | boolean;
 }
 
-function formatCellValue<T extends RowData>(column: DataTableColumn<T>, value: unknown, row: T) {
+function formatCellValue<T extends RowData>(
+	column: DataTableLeafColumn<T>,
+	value: unknown,
+	row: T
+) {
 	const rendered = column.cell ? column.cell(value, row) : applyTypeFormat(column, value);
 
 	if (rendered === null || rendered === undefined || rendered === '') {

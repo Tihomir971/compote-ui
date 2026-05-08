@@ -5,4 +5,10 @@ export { default as Title } from './data-table-title.svelte';
 export { default as ColumnVisibility } from './data-table-column-visibility.svelte';
 export { default as ColumnFilter } from './data-table-column-filter.svelte';
 export type { CreateDataTableOptions, DataTableFeatures, DataTableInstance } from './create-table';
-export type { DataTableAlign, DataTableColumn, DataTableColumnType } from './types';
+export type {
+	DataTableAlign,
+	DataTableColumn,
+	DataTableColumnType,
+	DataTableGroupColumn,
+	DataTableLeafColumn
+} from './types';

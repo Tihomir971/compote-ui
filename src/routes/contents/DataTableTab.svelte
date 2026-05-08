@@ -53,31 +53,56 @@
 	]);
 
 	const columns: DataTableColumn<Invoice>[] = [
-		{ header: 'Invoice', accessorKey: 'id' },
-		{ header: 'Customer', accessorKey: 'customer' },
-		{ header: 'Status', accessorKey: 'status', type: 'select' },
 		{
-			header: 'Items',
-			accessorKey: 'items',
-			type: 'number',
-			align: 'right',
-			formatOptions: { maximumFractionDigits: 0 }
+			header: 'Invoice',
+			columns: [
+				{
+					header: 'Reference',
+					columns: [
+						{ header: 'Invoice', accessorKey: 'id' },
+						{ header: 'Customer', accessorKey: 'customer' }
+					]
+				},
+				{ header: 'Status', accessorKey: 'status', type: 'select' }
+			]
 		},
 		{
-			header: 'Total',
-			accessorKey: 'total',
-			type: 'currency',
-			align: 'right',
-			formatLocale: 'sr-RS'
-		},
-		{ header: 'Owner', accessorKey: 'owner' },
-		{
-			header: 'Active',
-			accessorKey: 'is_active',
-			type: 'boolean',
-			align: 'center',
-			size: 90,
-			enableResizing: false
+			header: 'Details',
+			columns: [
+				{
+					header: 'Amount',
+					columns: [
+						{
+							header: 'Items',
+							accessorKey: 'items',
+							type: 'number',
+							align: 'right',
+							formatOptions: { maximumFractionDigits: 0 }
+						},
+						{
+							header: 'Total',
+							accessorKey: 'total',
+							type: 'currency',
+							align: 'right',
+							formatLocale: 'sr-RS'
+						}
+					]
+				},
+				{
+					header: 'Assignment',
+					columns: [
+						{ header: 'Owner', accessorKey: 'owner' },
+						{
+							header: 'Active',
+							accessorKey: 'is_active',
+							type: 'boolean',
+							align: 'center',
+							size: 90,
+							enableResizing: false
+						}
+					]
+				}
+			]
 		}
 	];
 

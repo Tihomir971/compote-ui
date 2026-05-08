@@ -6,7 +6,7 @@
 	import { PhCaretDown, PhCaretUp, PhCheck, PhX } from '$lib/icons';
 	import Checkbox from '../checkbox/checkbox.svelte';
 	import { getColumnId, type DataTableFeatures, type DataTableInstance } from './create-table';
-	import type { DataTableColumn } from './types';
+	import type { DataTableColumn, DataTableGroupColumn, DataTableLeafColumn } from './types';
 
 	type Props = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
 		table: DataTableInstance<T>;
@@ -110,6 +110,32 @@
 		return undefined;
 	}
 
+	function isGroupColumn(column: DataTableColumn<T>): column is DataTableGroupColumn<T> {
+		return Array.isArray(column.columns);
+	}
+
+	function isLeafColumn(column: DataTableColumn<T>): column is DataTableLeafColumn<T> {
+		return !isGroupColumn(column);
+	}
+
+	function findColumnById(
+		columnId: string,
+		candidates: DataTableColumn<T>[]
+	): DataTableColumn<T> | undefined {
+		for (const column of candidates) {
+			if (isGroupColumn(column)) {
+				if ((column.id ?? column.header) === columnId) return column;
+
+				const found = findColumnById(columnId, column.columns);
+				if (found) return found;
+
+				continue;
+			}
+
+			if (isLeafColumn(column) && getColumnId(column) === columnId) return column;
+		}
+	}
+
 	const rowModel = $derived(table.getRowModel());
 	const visibleColumnCount = $derived(table.getVisibleLeafColumns().length);
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
@@ -149,6 +175,7 @@
 			{/if}
 			<thead class="sticky top-0 z-20 bg-surface-2 text-left text-ink-dim">
 				{#each table.getHeaderGroups() as headerGroup, headerGroupIndex (headerGroup.id)}
+					{@const visibleHeaders = headerGroup.headers.filter((header) => header.colSpan > 0)}
 					<tr>
 						{#if isRowSelectionEnabled && headerGroupIndex === 0}
 							<th
@@ -166,10 +193,8 @@
 								{/if}
 							</th>
 						{/if}
-						{#each headerGroup.headers as header, headerIndex (header.id)}
-							{@const columnDef = columns.find(
-								(column) => getColumnId(column) === header.column.id
-							)}
+						{#each visibleHeaders as header, headerIndex (header.id)}
+							{@const columnDef = findColumnById(header.column.id, columns)}
 							{@const sortDirection = getHeaderSortDirection(header, table.store.state.sorting)}
 							<th
 								class={cn(
@@ -213,7 +238,7 @@
 								{#if header.column.getCanResize()}
 									<div
 										aria-hidden="true"
-										class={resizeHandleClass(headerIndex, headerGroup.headers.length)}
+										class={resizeHandleClass(headerIndex, visibleHeaders.length)}
 										style={resizeHandleStyle(header)}
 										ondblclick={() => header.column.resetSize()}
 										onmousedown={header.getResizeHandler()}
@@ -248,7 +273,7 @@
 							</td>
 						{/if}
 						{#each row.getVisibleCells() as cell (cell.id)}
-							{@const columnDef = columns.find((column) => getColumnId(column) === cell.column.id)}
+							{@const columnDef = findColumnById(cell.column.id, columns)}
 							<td class={cn('px-3 py-2 text-ink-dim', alignClass(columnDef?.align))}>
 								{#if columnDef?.type === 'boolean'}
 									{@const value = getBooleanCellValue(cell.getValue())}

@@ -22,14 +22,19 @@ type DataTableColumnOptions<T extends RowData> = Partial<
 	>
 >;
 
-export type DataTableColumn<T extends RowData> = DataTableColumnOptions<T> & {
+type DataTableColumnBase = {
 	header: string;
-	cell?: DataTableCellRenderer<T>;
 	align?: DataTableAlign;
-	type?: DataTableColumnType;
-	formatOptions?: Intl.NumberFormatOptions;
-	formatLocale?: string;
-} & (
+};
+
+export type DataTableLeafColumn<T extends RowData> = DataTableColumnOptions<T> &
+	DataTableColumnBase & {
+		cell?: DataTableCellRenderer<T>;
+		type?: DataTableColumnType;
+		formatOptions?: Intl.NumberFormatOptions;
+		formatLocale?: string;
+		columns?: never;
+	} & (
 		| {
 				accessorKey: Extract<keyof T, string>;
 				id?: string;
@@ -41,3 +46,16 @@ export type DataTableColumn<T extends RowData> = DataTableColumnOptions<T> & {
 				accessorKey?: never;
 		  }
 	);
+
+export type DataTableGroupColumn<T extends RowData> = DataTableColumnBase & {
+	id?: string;
+	columns: DataTableColumn<T>[];
+	accessorKey?: never;
+	accessorFn?: never;
+	cell?: never;
+	type?: never;
+	formatOptions?: never;
+	formatLocale?: never;
+};
+
+export type DataTableColumn<T extends RowData> = DataTableLeafColumn<T> | DataTableGroupColumn<T>;
