@@ -14,6 +14,7 @@
 	import FieldTab from './contents/FieldTab.svelte';
 	import FieldsetTab from './contents/FieldsetTab.svelte';
 	import FileUploadTab from './contents/FileUploadTab.svelte';
+	import HoverCardTab from './contents/HoverCardTab.svelte';
 	import ImageCropperTab from './contents/ImageCropperTab.svelte';
 	import ListboxTab from './contents/ListboxTab.svelte';
 	import MenuTab from './contents/MenuTab.svelte';
@@ -46,6 +47,7 @@
 			<Tabs.Trigger value="field">Field</Tabs.Trigger>
 			<Tabs.Trigger value="fieldset">Fieldset</Tabs.Trigger>
 			<Tabs.Trigger value="file-upload">File Upload</Tabs.Trigger>
+			<Tabs.Trigger value="hover-card">Hover Card</Tabs.Trigger>
 			<Tabs.Trigger value="image-cropper">Image Cropper</Tabs.Trigger>
 			<Tabs.Trigger value="listbox">Listbox</Tabs.Trigger>
 			<Tabs.Trigger value="menu">Menu</Tabs.Trigger>
@@ -115,6 +117,10 @@
 
 		<Tabs.Content value="file-upload">
 			<FileUploadTab />
+		</Tabs.Content>
+
+		<Tabs.Content value="hover-card">
+			<HoverCardTab />
 		</Tabs.Content>
 
 		<Tabs.Content value="image-cropper">

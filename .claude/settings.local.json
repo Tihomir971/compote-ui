@@ -8,7 +8,9 @@
 			"mcp__svelte-mcp__get-documentation",
 			"mcp__ark-ui__list_components",
 			"mcp__ark-ui__styling_guide",
-			"mcp__svelte-mcp__svelte-autofixer"
+			"mcp__svelte-mcp__svelte-autofixer",
+			"Bash(Get-ChildItem -Path \"C:\\\\Users\\\\tihom\\\\Desktop\\\\Development\\\\shared\\\\compote-ui\\\\src\\\\lib\" -Recurse)",
+			"Bash(Select-Object FullName)"
 		]
 	},
 	"plansDirectory": "./docs/plans"

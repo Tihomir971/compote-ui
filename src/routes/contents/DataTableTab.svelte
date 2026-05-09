@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/button/button.svelte';
-	import * as DataTableNew from '$lib/components/data-table';
+	import * as DataTable from '$lib/components/data-table';
 	import VendorPriceCell from './VendorPriceCell.svelte';
 
 	type VendorPrice = {
@@ -84,7 +84,7 @@
 		}
 	]);
 
-	const column = DataTableNew.createDataTableColumnHelper<Invoice>();
+	const column = DataTable.createDataTableColumnHelper<Invoice>();
 
 	const columns = column.columns([
 		column.group('Invoice', [
@@ -136,7 +136,7 @@
 		])
 	]);
 
-	const table = DataTableNew.createTable({
+	const table = DataTable.createTable({
 		get data() {
 			return invoices;
 		},
@@ -169,18 +169,18 @@
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section class="space-y-4">
-		<DataTableNew.Toolbar>
-			<DataTableNew.Title>Data Table New</DataTableNew.Title>
+		<DataTable.Toolbar>
+			<DataTable.Title>Data Table New</DataTable.Title>
 
 			{#snippet right()}
 				<Button variant="outline" onclick={addInvoice}>Add invoice</Button>
-				<DataTableNew.ColumnFilter {table} />
-				<DataTableNew.ColumnVisibility {table} />
+				<DataTable.ColumnFilter {table} />
+				<DataTable.ColumnVisibility {table} />
 			{/snippet}
-		</DataTableNew.Toolbar>
+		</DataTable.Toolbar>
 
 		<div class="h-96 min-h-0 max-w-3xl">
-			<DataTableNew.Root {table} {columns} caption="Invoices" />
+			<DataTable.Root {table} {columns} caption="Invoices" />
 		</div>
 	</section>
 </div>

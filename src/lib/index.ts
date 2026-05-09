@@ -9,6 +9,8 @@ export * as Card from './components/card';
 
 export * as Collapsible from './components/collapsible';
 
+export * as HoverCard from './components/hover-card';
+
 export * as ScrollArea from './components/scroll-area';
 
 export { loadImage, fileToDataUrl, cropImage, processImage } from './utils/image-processing';
