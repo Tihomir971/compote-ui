@@ -5,6 +5,7 @@ import {
 	columnFilteringFeature,
 	columnFacetingFeature,
 	columnPinningFeature,
+	columnOrderingFeature,
 	createSortedRowModel,
 	createFilteredRowModel,
 	createFacetedRowModel,
@@ -49,6 +50,7 @@ const dataTableFeatures = tableFeatures({
 	columnFilteringFeature,
 	columnFacetingFeature,
 	columnPinningFeature,
+	columnOrderingFeature,
 	rowSelectionFeature,
 	rowSortingFeature
 });

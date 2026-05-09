@@ -1,6 +1,6 @@
 <script lang="ts" generics="T extends RowData">
 	import { FlexRender } from '@tanstack/svelte-table';
-	import type { CellData, Header, RowData } from '@tanstack/svelte-table';
+	import type { CellData, ColumnPinningPosition, Header, RowData } from '@tanstack/svelte-table';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhArrowSquareOut, PhCaretDown, PhCaretUp, PhCheck, PhX } from '$lib/icons';
@@ -110,33 +110,39 @@
 		return undefined;
 	}
 
-	function getPinningStyle(column: {
-		id: string;
-		getIsPinned(): false | 'left' | 'right';
-		getPinnedIndex(): number;
-		getSize(): number;
-	}): string | undefined {
+	//	type PinPosition = 'center' | false | 'left' | 'right';
+	function getPinningStyle(
+		column: {
+			getIsPinned(): ColumnPinningPosition;
+			getStart(position?: ColumnPinningPosition): number;
+			getAfter(position?: ColumnPinningPosition): number;
+			getIsLastColumn(position?: ColumnPinningPosition): boolean;
+			getIsFirstColumn(position?: ColumnPinningPosition): boolean;
+		},
+		isHeader = false
+	): string | undefined {
 		const isPinned = column.getIsPinned();
 		if (!isPinned) return undefined;
 
-		const pinnedIndex = column.getPinnedIndex();
-		let offset = 0;
+		const zIndex = isHeader ? 15 : 1;
+		const selectionOffset = isRowSelectionEnabled ? 40 : 0;
 
 		if (isPinned === 'left') {
-			const leftCols = table.getLeftLeafColumns();
-			if (isRowSelectionEnabled) offset += 40;
-			for (let i = 0; i < pinnedIndex; i++) offset += leftCols[i]!.getSize();
-			const isLast = pinnedIndex === leftCols.length - 1;
-			const shadow = isLast ? 'box-shadow: -4px 0 4px -4px rgba(0,0,0,0.12) inset' : undefined;
-			return ['position: sticky', 'z-index: 1', `left: ${offset}px`, shadow]
+			const left = column.getStart('left') + selectionOffset;
+			const shadow =
+				!isHeader && column.getIsLastColumn('left')
+					? 'box-shadow: -4px 0 4px -4px var(--compote-border) inset'
+					: undefined;
+			return ['position: sticky', `z-index: ${zIndex}`, `left: ${left}px`, shadow]
 				.filter(Boolean)
 				.join('; ');
 		} else {
-			const rightCols = table.getRightLeafColumns();
-			for (let i = pinnedIndex + 1; i < rightCols.length; i++) offset += rightCols[i]!.getSize();
-			const isFirst = pinnedIndex === 0;
-			const shadow = isFirst ? 'box-shadow: 4px 0 4px -4px rgba(0,0,0,0.12) inset' : undefined;
-			return ['position: sticky', 'z-index: 1', `right: ${offset}px`, shadow]
+			const right = column.getAfter('right');
+			const shadow =
+				!isHeader && column.getIsFirstColumn('right')
+					? 'box-shadow: 4px 0 4px -4px var(--compote-border) inset'
+					: undefined;
+			return ['position: sticky', `z-index: ${zIndex}`, `right: ${right}px`, shadow]
 				.filter(Boolean)
 				.join('; ');
 		}
@@ -237,7 +243,7 @@
 						{#if isRowSelectionEnabled && headerGroupIndex === 0}
 							<th
 								class="border-b border-surface-3 bg-surface-2 px-3 py-2 text-center align-middle font-medium"
-								style="position: sticky; left: 0; z-index: 1"
+								style="position: sticky; left: 0; z-index: 15"
 								rowspan={headerGroupCount}
 							>
 								{#if isMultiRowSelectionEnabled}
@@ -263,7 +269,7 @@
 								aria-sort={header.column.getCanSort()
 									? getHeaderAriaSort(sortDirection)
 									: undefined}
-								style={getPinningStyle(header.column)}
+								style={getPinningStyle(header.column, true)}
 							>
 								{#if !header.isPlaceholder}
 									{#if header.column.getCanSort()}
@@ -315,16 +321,16 @@
 					{@const rowSelected = getRowSelectionState(table.store.state.rowSelection, row.id)}
 					<tr
 						class={cn(
-							'group/row border-b border-surface-3 last:border-b-0 hover:bg-well/60',
-							rowSelected && 'bg-well/60'
+							'group/row border-b border-surface-3 last:border-b-0',
+							'[--row-bg:var(--compote-surface-1)]',
+							'hover:bg-well/60 hover:[--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
+							rowSelected &&
+								'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
 						)}
 					>
 						{#if isRowSelectionEnabled}
 							<td
-								class={cn(
-									'px-3 py-2 text-center align-middle group-hover/row:bg-well/60',
-									rowSelected ? 'bg-well/60' : 'bg-surface-1'
-								)}
+								class="bg-(--row-bg) px-3 py-2 text-center align-middle"
 								style="position: sticky; left: 0; z-index: 1"
 							>
 								<Checkbox
@@ -343,8 +349,7 @@
 								class={cn(
 									'truncate px-3 py-2',
 									alignClass(columnDef?.align),
-									cell.column.getIsPinned() && (rowSelected ? 'bg-well/60' : 'bg-surface-1'),
-									cell.column.getIsPinned() && 'group-hover/row:bg-well/60'
+									cell.column.getIsPinned() && 'bg-(--row-bg)'
 								)}
 								style={getPinningStyle(cell.column)}
 							>
