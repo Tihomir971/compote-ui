@@ -13,7 +13,7 @@
 
 <Carousel.ItemGroup
 	class={cn(
-		'flex min-w-0 flex-1 overflow-hidden rounded-lg [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+		'flex min-w-0 flex-1 [scrollbar-width:none] overflow-hidden rounded-lg [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
 		className
 	)}
 	{...rest}

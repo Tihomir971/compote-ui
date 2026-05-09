@@ -13,7 +13,7 @@
 <ScrollArea.Viewport
 	{...rest}
 	class={cn(
-		'h-full overscroll-contain outline-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+		'h-full [scrollbar-width:none] overscroll-contain outline-none [&::-webkit-scrollbar]:hidden',
 		'focus-visible:ring-2 focus-visible:ring-ring',
 		className
 	)}
