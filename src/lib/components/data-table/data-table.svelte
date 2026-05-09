@@ -299,7 +299,7 @@
 						{/if}
 						{#each row.getVisibleCells() as cell (cell.id)}
 							{@const columnDef = findColumnById(cell.column.id, columns)}
-							<td class={cn('px-3 py-2 text-ink-dim', alignClass(columnDef?.align))}>
+							<td class={cn('truncate px-3 py-2 text-ink-dim', alignClass(columnDef?.align))}>
 								{#if columnDef?.type === 'boolean'}
 									{@const value = getBooleanCellValue(cell.getValue())}
 									{#if value === true}
