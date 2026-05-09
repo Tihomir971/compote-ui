@@ -18,8 +18,29 @@ type AccessorFnColumnOptions<T extends RowData> = Omit<
 
 type GroupColumnOptions<T extends RowData> = Omit<
 	DataTableGroupColumn<T>,
-	'columns' | 'accessorKey' | 'accessorFn' | 'cell' | 'type' | 'formatOptions' | 'formatLocale'
+	| 'columns'
+	| 'accessorKey'
+	| 'accessorFn'
+	| 'cell'
+	| 'cellComponent'
+	| 'cellProps'
+	| 'cellSnippet'
+	| 'type'
+	| 'formatOptions'
+	| 'formatLocale'
 >;
+
+function urlDefaults<T extends { type?: string; align?: string; enableSorting?: boolean }>(
+	options: T
+): T {
+	if (options.type !== 'url') return options;
+	return {
+		align: 'center',
+		enableSorting: false,
+		size: 60,
+		...options
+	};
+}
 
 export function createDataTableColumnHelper<T extends RowData>() {
 	return {
@@ -28,7 +49,7 @@ export function createDataTableColumnHelper<T extends RowData>() {
 			options: AccessorKeyColumnOptions<T>
 		): DataTableAccessorKeyColumn<T> {
 			return {
-				...options,
+				...urlDefaults(options),
 				accessorKey
 			};
 		},
@@ -38,7 +59,7 @@ export function createDataTableColumnHelper<T extends RowData>() {
 			options: AccessorFnColumnOptions<T>
 		): DataTableAccessorFnColumn<T> {
 			return {
-				...options,
+				...urlDefaults(options),
 				accessorFn
 			};
 		},

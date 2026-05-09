@@ -3,7 +3,7 @@
 	import type { CellData, Header, RowData } from '@tanstack/svelte-table';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
-	import { PhCaretDown, PhCaretUp, PhCheck, PhX } from '$lib/icons';
+	import { PhArrowSquareOut, PhCaretDown, PhCaretUp, PhCheck, PhX } from '$lib/icons';
 	import Checkbox from '../checkbox/checkbox.svelte';
 	import { getColumnId, type DataTableFeatures, type DataTableInstance } from './create-table';
 	import type { DataTableColumn, DataTableGroupColumn, DataTableLeafColumn } from './types';
@@ -108,6 +108,15 @@
 		if (value === true) return true;
 		if (value === false) return false;
 		return undefined;
+	}
+
+	function getUrlCellValue(value: unknown) {
+		if (typeof value !== 'string' || value.trim() === '') return undefined;
+		return value;
+	}
+
+	function openUrlCell(value: string) {
+		window.open(value, '_blank', 'noopener,noreferrer');
 	}
 
 	function isGroupColumn(column: DataTableColumn<T>): column is DataTableGroupColumn<T> {
@@ -309,6 +318,22 @@
 										>
 											<PhX class="size-4" />
 										</span>
+									{:else}
+										-
+									{/if}
+								{:else if columnDef?.type === 'url'}
+									{@const value = getUrlCellValue(cell.getValue())}
+									{#if value}
+										<button
+											type="button"
+											class={cn(
+												'inline-flex max-w-full items-center gap-1.5 rounded-sm font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+												justifyClass(columnDef.align)
+											)}
+											onclick={() => openUrlCell(value)}
+										>
+											<PhArrowSquareOut class="size-3.5 shrink-0" />
+										</button>
 									{:else}
 										-
 									{/if}

@@ -1,11 +1,27 @@
 import type { CellData, ColumnDef, RowData, TableFeatures } from '@tanstack/svelte-table';
+import type { Snippet } from 'svelte';
 
 export type DataTableAlign = 'left' | 'center' | 'right';
-export type DataTableColumnType = 'text' | 'number' | 'currency' | 'percent' | 'boolean' | 'select';
+export type DataTableColumnType =
+	| 'text'
+	| 'number'
+	| 'currency'
+	| 'percent'
+	| 'boolean'
+	| 'select'
+	| 'url';
 export type DataTableCellRenderer<T extends RowData> = (
 	value: unknown,
 	row: T
 ) => string | number | boolean | null | undefined;
+export type DataTableCellRenderProps<T extends RowData> = {
+	value: unknown;
+	row: T;
+};
+export type DataTableCellPropsResolver<T extends RowData> = (
+	value: unknown,
+	row: T
+) => Record<string, unknown>;
 
 export type DataTableColumnOptions<T extends RowData> = Partial<
 	Pick<
@@ -30,6 +46,9 @@ export type DataTableColumnBase = {
 export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<T> &
 	DataTableColumnBase & {
 		cell?: DataTableCellRenderer<T>;
+		cellComponent?: unknown;
+		cellProps?: DataTableCellPropsResolver<T>;
+		cellSnippet?: Snippet<[DataTableCellRenderProps<T>]>;
 		type?: DataTableColumnType;
 		formatOptions?: Intl.NumberFormatOptions;
 		formatLocale?: string;
@@ -58,6 +77,9 @@ export type DataTableGroupColumn<T extends RowData> = DataTableColumnBase & {
 	accessorKey?: never;
 	accessorFn?: never;
 	cell?: never;
+	cellComponent?: never;
+	cellProps?: never;
+	cellSnippet?: never;
 	type?: never;
 	formatOptions?: never;
 	formatLocale?: never;

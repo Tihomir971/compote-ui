@@ -11,6 +11,8 @@ import {
 	createFacetedUniqueValues,
 	createTable as createTanStackTable,
 	filterFns,
+	renderComponent,
+	renderSnippet,
 	rowSelectionFeature,
 	rowSortingFeature,
 	sortFns,
@@ -29,6 +31,8 @@ import {
 	type SvelteTable,
 	type TableState
 } from '@tanstack/svelte-table';
+import type { Component } from 'svelte';
+import { useLocaleContext } from '@ark-ui/svelte/locale';
 import type {
 	DataTableColumn,
 	DataTableColumnType,
@@ -86,6 +90,7 @@ export type CreateDataTableOptions<T extends RowData> = {
 };
 
 export function createTable<T extends RowData>(options: CreateDataTableOptions<T>) {
+	const localeCtx = useLocaleContext();
 	return createTanStackTable(
 		{
 			_features: dataTableFeatures,
@@ -106,7 +111,7 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 				return options.data;
 			},
 			get columns() {
-				return createColumns(options.columns);
+				return createColumns(options.columns, localeCtx);
 			},
 			initialState: {
 				columnVisibility: createColumnVisibility(options.columns),
@@ -145,14 +150,15 @@ function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
 }
 
 function createColumns<T extends RowData>(
-	columns: DataTableColumn<T>[]
+	columns: DataTableColumn<T>[],
+	localeCtx: ReturnType<typeof useLocaleContext>
 ): ColumnDef<DataTableFeatures, T, CellData>[] {
 	return columns.map((column) => {
 		if (isGroupColumn(column)) {
 			return {
 				id: getGroupColumnId(column),
 				header: column.header,
-				columns: createColumns(column.columns),
+				columns: createColumns(column.columns, localeCtx),
 				meta: {
 					align: column.align
 				}
@@ -186,7 +192,7 @@ function createColumns<T extends RowData>(
 				...columnDef,
 				accessorFn: column.accessorFn,
 				cell: (context: CellContext<DataTableFeatures, T, CellData>) =>
-					formatCellValue(column, context.getValue(), context.row.original)
+					formatCellValue(column, context.getValue(), context.row.original, localeCtx)
 			};
 		}
 
@@ -194,7 +200,7 @@ function createColumns<T extends RowData>(
 			...columnDef,
 			accessorKey: column.accessorKey,
 			cell: (context: CellContext<DataTableFeatures, T, CellData>) =>
-				formatCellValue(column, context.getValue(), context.row.original)
+				formatCellValue(column, context.getValue(), context.row.original, localeCtx)
 		};
 	}) as ColumnDef<DataTableFeatures, T, CellData>[];
 }
@@ -255,13 +261,15 @@ function getFilterFnForType(type: DataTableColumnType | undefined): string | und
 
 function applyTypeFormat<T extends RowData>(
 	column: DataTableLeafColumn<T>,
-	value: unknown
+	value: unknown,
+	localeCtx: ReturnType<typeof useLocaleContext>
 ): string | number | boolean | null | undefined {
 	if (value === null || value === undefined || value === '') return undefined;
 
 	const defaults = column.type ? TYPE_FORMAT_DEFAULTS[column.type] : undefined;
 	if (defaults !== undefined) {
-		return new Intl.NumberFormat(column.formatLocale, {
+		const locale = column.formatLocale ?? localeCtx().locale;
+		return new Intl.NumberFormat(locale, {
 			...defaults,
 			...column.formatOptions
 		}).format(Number(value));
@@ -275,13 +283,35 @@ function applyTypeFormat<T extends RowData>(
 function formatCellValue<T extends RowData>(
 	column: DataTableLeafColumn<T>,
 	value: unknown,
-	row: T
+	row: T,
+	localeCtx: ReturnType<typeof useLocaleContext>
 ) {
-	const rendered = column.cell ? column.cell(value, row) : applyTypeFormat(column, value);
+	if (column.cellComponent) {
+		return renderComponent(
+			column.cellComponent as Component<Record<string, unknown>>,
+			getCellComponentProps(column, value, row)
+		);
+	}
+
+	if (column.cellSnippet) {
+		return renderSnippet(column.cellSnippet, { value, row });
+	}
+
+	const rendered = column.cell
+		? column.cell(value, row)
+		: applyTypeFormat(column, value, localeCtx);
 
 	if (rendered === null || rendered === undefined || rendered === '') {
 		return '-';
 	}
 
 	return String(rendered);
+}
+
+function getCellComponentProps<T extends RowData>(
+	column: DataTableLeafColumn<T>,
+	value: unknown,
+	row: T
+) {
+	return column.cellProps ? column.cellProps(value, row) : { value, row };
 }

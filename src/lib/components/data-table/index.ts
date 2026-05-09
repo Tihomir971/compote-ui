@@ -14,6 +14,8 @@ export type {
 	DataTableColumnBase,
 	DataTableColumnOptions,
 	DataTableColumnType,
+	DataTableCellPropsResolver,
+	DataTableCellRenderProps,
 	DataTableGroupColumn,
 	DataTableLeafColumnBase,
 	DataTableLeafColumn
