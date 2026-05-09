@@ -4,6 +4,7 @@ import {
 	columnSizingFeature,
 	columnFilteringFeature,
 	columnFacetingFeature,
+	columnPinningFeature,
 	createSortedRowModel,
 	createFilteredRowModel,
 	createFacetedRowModel,
@@ -21,6 +22,7 @@ import {
 	type CellData,
 	type ColumnDef,
 	type ColumnFiltersState,
+	type ColumnPinningState,
 	type ColumnResizeMode,
 	type ColumnSizingState,
 	type ColumnVisibilityState,
@@ -46,6 +48,7 @@ const dataTableFeatures = tableFeatures({
 	columnResizingFeature,
 	columnFilteringFeature,
 	columnFacetingFeature,
+	columnPinningFeature,
 	rowSelectionFeature,
 	rowSortingFeature
 });
@@ -116,6 +119,7 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			initialState: {
 				columnVisibility: createColumnVisibility(options.columns),
 				columnSizing: createColumnSizing(options.columns),
+				columnPinning: createColumnPinning(options.columns),
 				rowSelection: options.initialRowSelection ?? {},
 				sorting: options.initialSorting ?? [],
 				columnFilters: options.initialColumnFilters ?? []
@@ -147,6 +151,14 @@ function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
 
 		return sizes;
 	}, {});
+}
+
+function createColumnPinning<T extends RowData>(columns: DataTableColumn<T>[]): ColumnPinningState {
+	const leafCols = getLeafColumns(columns);
+	return {
+		left: leafCols.filter((c) => c.pinned === 'left').map(getColumnId),
+		right: leafCols.filter((c) => c.pinned === 'right').map(getColumnId)
+	};
 }
 
 function createColumns<T extends RowData>(

@@ -52,6 +52,7 @@ export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<
 		type?: DataTableColumnType;
 		formatOptions?: Intl.NumberFormatOptions;
 		formatLocale?: string;
+		pinned?: 'left' | 'right';
 		columns?: never;
 	};
 

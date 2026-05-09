@@ -110,6 +110,38 @@
 		return undefined;
 	}
 
+	function getPinningStyle(column: {
+		id: string;
+		getIsPinned(): false | 'left' | 'right';
+		getPinnedIndex(): number;
+		getSize(): number;
+	}): string | undefined {
+		const isPinned = column.getIsPinned();
+		if (!isPinned) return undefined;
+
+		const pinnedIndex = column.getPinnedIndex();
+		let offset = 0;
+
+		if (isPinned === 'left') {
+			const leftCols = table.getLeftLeafColumns();
+			if (isRowSelectionEnabled) offset += 40;
+			for (let i = 0; i < pinnedIndex; i++) offset += leftCols[i]!.getSize();
+			const isLast = pinnedIndex === leftCols.length - 1;
+			const shadow = isLast ? 'box-shadow: -4px 0 4px -4px rgba(0,0,0,0.12) inset' : undefined;
+			return ['position: sticky', 'z-index: 1', `left: ${offset}px`, shadow]
+				.filter(Boolean)
+				.join('; ');
+		} else {
+			const rightCols = table.getRightLeafColumns();
+			for (let i = pinnedIndex + 1; i < rightCols.length; i++) offset += rightCols[i]!.getSize();
+			const isFirst = pinnedIndex === 0;
+			const shadow = isFirst ? 'box-shadow: 4px 0 4px -4px rgba(0,0,0,0.12) inset' : undefined;
+			return ['position: sticky', 'z-index: 1', `right: ${offset}px`, shadow]
+				.filter(Boolean)
+				.join('; ');
+		}
+	}
+
 	function getUrlCellValue(value: unknown) {
 		if (typeof value !== 'string' || value.trim() === '') return undefined;
 		return value;
@@ -205,6 +237,7 @@
 						{#if isRowSelectionEnabled && headerGroupIndex === 0}
 							<th
 								class="border-b border-surface-3 bg-surface-2 px-3 py-2 text-center align-middle font-medium"
+								style="position: sticky; left: 0; z-index: 1"
 								rowspan={headerGroupCount}
 							>
 								{#if isMultiRowSelectionEnabled}
@@ -230,6 +263,7 @@
 								aria-sort={header.column.getCanSort()
 									? getHeaderAriaSort(sortDirection)
 									: undefined}
+								style={getPinningStyle(header.column)}
 							>
 								{#if !header.isPlaceholder}
 									{#if header.column.getCanSort()}
@@ -281,12 +315,18 @@
 					{@const rowSelected = getRowSelectionState(table.store.state.rowSelection, row.id)}
 					<tr
 						class={cn(
-							'border-b border-surface-3 last:border-b-0 hover:bg-well/60',
+							'group/row border-b border-surface-3 last:border-b-0 hover:bg-well/60',
 							rowSelected && 'bg-well/60'
 						)}
 					>
 						{#if isRowSelectionEnabled}
-							<td class="px-3 py-2 text-center align-middle">
+							<td
+								class={cn(
+									'px-3 py-2 text-center align-middle group-hover/row:bg-well/60',
+									rowSelected ? 'bg-well/60' : 'bg-surface-1'
+								)}
+								style="position: sticky; left: 0; z-index: 1"
+							>
 								<Checkbox
 									size="sm"
 									aria-label="Select row"
@@ -299,7 +339,15 @@
 						{/if}
 						{#each row.getVisibleCells() as cell (cell.id)}
 							{@const columnDef = findColumnById(cell.column.id, columns)}
-							<td class={cn('truncate px-3 py-2 text-ink-dim', alignClass(columnDef?.align))}>
+							<td
+								class={cn(
+									'truncate px-3 py-2',
+									alignClass(columnDef?.align),
+									cell.column.getIsPinned() && (rowSelected ? 'bg-well/60' : 'bg-surface-1'),
+									cell.column.getIsPinned() && 'group-hover/row:bg-well/60'
+								)}
+								style={getPinningStyle(cell.column)}
+							>
 								{#if columnDef?.type === 'boolean'}
 									{@const value = getBooleanCellValue(cell.getValue())}
 									{#if value === true}

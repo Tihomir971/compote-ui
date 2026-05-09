@@ -89,7 +89,7 @@
 	const columns = column.columns([
 		column.group('Invoice', [
 			column.group('Reference', [
-				column.accessor('id', { header: 'Invoice' }),
+				column.accessor('id', { header: 'Invoice', pinned: 'left' }),
 				column.accessor('url', {
 					header: 'Link',
 					type: 'url'
