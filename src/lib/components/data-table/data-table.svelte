@@ -5,12 +5,11 @@
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhArrowSquareOut, PhCaretDown, PhCaretUp, PhCheck, PhX } from '$lib/icons';
 	import Checkbox from '../checkbox/checkbox.svelte';
-	import { getColumnId, type DataTableFeatures, type DataTableInstance } from './create-table';
-	import type { DataTableColumn, DataTableGroupColumn, DataTableLeafColumn } from './types';
+	import { type DataTableFeatures, type DataTableInstance } from './create-table';
+	import type { DataTableColumnMeta } from './types';
 
 	type Props = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
 		table: DataTableInstance<T>;
-		columns: DataTableColumn<T>[];
 		caption?: string;
 		emptyMessage?: string;
 		class?: ClassValue;
@@ -18,18 +17,17 @@
 
 	let {
 		table,
-		columns,
 		caption,
 		emptyMessage = 'No rows found',
 		class: className,
 		...rest
 	}: Props = $props();
 
-	function alignClass(align: DataTableColumn<T>['align']) {
+	function alignClass(align: DataTableColumnMeta['align']) {
 		return align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left';
 	}
 
-	function justifyClass(align: DataTableColumn<T>['align']) {
+	function justifyClass(align: DataTableColumnMeta['align']) {
 		return align === 'right'
 			? 'justify-end'
 			: align === 'center'
@@ -37,7 +35,7 @@
 				: 'justify-start';
 	}
 
-	function sortButtonDirectionClass(align: DataTableColumn<T>['align']) {
+	function sortButtonDirectionClass(align: DataTableColumnMeta['align']) {
 		return align === 'right' ? 'flex-row-reverse' : 'flex-row';
 	}
 
@@ -157,30 +155,8 @@
 		window.open(value, '_blank', 'noopener,noreferrer');
 	}
 
-	function isGroupColumn(column: DataTableColumn<T>): column is DataTableGroupColumn<T> {
-		return Array.isArray(column.columns);
-	}
-
-	function isLeafColumn(column: DataTableColumn<T>): column is DataTableLeafColumn<T> {
-		return !isGroupColumn(column);
-	}
-
-	function findColumnById(
-		columnId: string,
-		candidates: DataTableColumn<T>[]
-	): DataTableColumn<T> | undefined {
-		for (const column of candidates) {
-			if (isGroupColumn(column)) {
-				if ((column.id ?? column.header) === columnId) return column;
-
-				const found = findColumnById(columnId, column.columns);
-				if (found) return found;
-
-				continue;
-			}
-
-			if (isLeafColumn(column) && getColumnId(column) === columnId) return column;
-		}
+	function getColumnMeta(columnDef: { meta?: unknown }): DataTableColumnMeta | undefined {
+		return columnDef.meta as DataTableColumnMeta | undefined;
 	}
 
 	const tableStateKey = $derived(JSON.stringify(table.store.state));
@@ -258,7 +234,7 @@
 							</th>
 						{/if}
 						{#each visibleHeaders as header, headerIndex (header.id)}
-							{@const columnDef = findColumnById(header.column.id, columns)}
+							{@const columnDef = getColumnMeta(header.column.columnDef)}
 							{@const sortDirection = getHeaderSortDirection(header, table.store.state.sorting)}
 							<th
 								class={cn(
@@ -344,7 +320,7 @@
 							</td>
 						{/if}
 						{#each row.getVisibleCells() as cell (cell.id)}
-							{@const columnDef = findColumnById(cell.column.id, columns)}
+							{@const columnDef = getColumnMeta(cell.column.columnDef)}
 							<td
 								class={cn(
 									'truncate px-3 py-2',

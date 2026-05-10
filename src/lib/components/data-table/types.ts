@@ -87,3 +87,10 @@ export type DataTableGroupColumn<T extends RowData> = DataTableColumnBase & {
 };
 
 export type DataTableColumn<T extends RowData> = DataTableLeafColumn<T> | DataTableGroupColumn<T>;
+
+export type DataTableColumnMeta = {
+	align?: DataTableAlign;
+	type?: DataTableColumnType;
+	formatOptions?: Intl.NumberFormatOptions;
+	formatLocale?: string;
+};

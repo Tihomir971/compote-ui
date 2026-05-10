@@ -180,7 +180,7 @@
 		</DataTable.Toolbar>
 
 		<div class="h-96 min-h-0 max-w-3xl">
-			<DataTable.Root {table} {columns} caption="Invoices" />
+			<DataTable.Root {table} caption="Invoices" />
 		</div>
 	</section>
 </div>
