@@ -239,10 +239,10 @@
 			<thead class="sticky top-0 z-20 bg-surface-2 text-left text-ink-dim">
 				{#each headerGroups as headerGroup, headerGroupIndex (headerGroup.id)}
 					{@const visibleHeaders = headerGroup.headers.filter((header) => header.colSpan > 0)}
-					<tr>
+					<tr class="h-9">
 						{#if isRowSelectionEnabled && headerGroupIndex === 0}
 							<th
-								class="border-b border-surface-3 bg-surface-2 px-3 py-2 text-center align-middle font-medium"
+								class="h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 text-center align-middle leading-5 font-medium"
 								style="position: sticky; left: 0; z-index: 15"
 								rowspan={headerGroupCount}
 							>
@@ -262,7 +262,7 @@
 							{@const sortDirection = getHeaderSortDirection(header, table.store.state.sorting)}
 							<th
 								class={cn(
-									'relative border-b border-surface-3 bg-surface-2 px-3 py-2 font-medium',
+									'relative h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 align-middle leading-5 font-medium',
 									alignClass(columnDef?.align)
 								)}
 								colspan={header.colSpan}
@@ -312,7 +312,7 @@
 								{/if}
 							</th>
 						{/each}
-						<th aria-hidden="true" class="border-b border-surface-3 bg-surface-2 p-0"></th>
+						<th aria-hidden="true" class="h-9 border-b border-surface-3 bg-surface-2 p-0"></th>
 					</tr>
 				{/each}
 			</thead>
