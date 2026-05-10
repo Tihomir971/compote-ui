@@ -202,6 +202,8 @@
 			}
 		];
 	}
+
+	let lastDoubleClicked = $state<Invoice | null>(null);
 </script>
 
 <div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -217,8 +219,13 @@
 		</DataTable.Toolbar>
 
 		<div class="h-96 min-h-0 max-w-3xl">
-			<DataTable.Root {table} caption="Invoices" />
+			<DataTable.Root {table} caption="Invoices" onRowDoubleClick={({ row }) => (lastDoubleClicked = row)} />
 		</div>
+		{#if lastDoubleClicked}
+			<p class="text-sm text-ink-dim">
+				Last double-clicked: <span class="font-medium text-ink">{lastDoubleClicked.id} — {lastDoubleClicked.customer}</span>
+			</p>
+		{/if}
 	</section>
 
 	<section class="space-y-4">
@@ -232,7 +239,12 @@
 		</VirtualDataTable.Toolbar>
 
 		<div class="h-96 min-h-0 max-w-3xl">
-			<VirtualDataTable.Root table={virtualTable} caption="Virtualized invoices" />
+			<VirtualDataTable.Root table={virtualTable} caption="Virtualized invoices" onRowDoubleClick={({ row }) => (lastDoubleClicked = row)} />
 		</div>
+		{#if lastDoubleClicked}
+			<p class="text-sm text-ink-dim">
+				Last double-clicked: <span class="font-medium text-ink">{lastDoubleClicked.id} — {lastDoubleClicked.customer}</span>
+			</p>
+		{/if}
 	</section>
 </div>

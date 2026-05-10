@@ -27,9 +27,10 @@
 		isRowSelectionEnabled: boolean;
 		table: DataTableInstance<T>;
 		emptyMessage: string;
+		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
 	};
 
-	let { rows, scrollContainer, isRowSelectionEnabled, table, emptyMessage }: Props = $props();
+	let { rows, scrollContainer, isRowSelectionEnabled, table, emptyMessage, onRowDoubleClick }: Props = $props();
 
 	const rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLTableRowElement>({
 		get count() {
@@ -75,6 +76,7 @@
 						'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
 				)}
 				style="display: flex; position: absolute; transform: translateY({virtualRow.start}px); width: 100%"
+				ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
 			>
 				{#if isRowSelectionEnabled}
 					<td

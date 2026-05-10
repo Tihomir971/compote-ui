@@ -16,6 +16,7 @@
 		caption?: string;
 		emptyMessage?: string;
 		class?: ClassValue;
+		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
 	};
 
 	let {
@@ -23,6 +24,7 @@
 		caption,
 		emptyMessage = 'No rows found',
 		class: className,
+		onRowDoubleClick,
 		...rest
 	}: Props = $props();
 
@@ -86,6 +88,7 @@
 					{isRowSelectionEnabled}
 					{table}
 					{emptyMessage}
+					{onRowDoubleClick}
 				/>
 			{/if}
 		</table>
