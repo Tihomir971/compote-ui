@@ -82,7 +82,10 @@ Uses `light-dark()` CSS function — no `@media` block or duplicate variable dec
 
 When you add a new component or make significant changes to an existing one:
 
-1. **Add a playground tab** — create `src/routes/contents/<ComponentName>Tab.svelte` with examples covering the component's key features, then register it in `src/routes/+page.svelte` (import + `Tabs.Trigger` + `Tabs.Content`), keeping entries in alphabetical order.
+1. **Add a playground page**
+   - Create `src/routes/components/<component-slug>/+page.svelte` that imports and renders the tab content.
+   - Add an entry to the `navItems` array in `src/routes/components/nav-items.ts`, keeping entries in alphabetical order.
+     The playground uses a vertical sidebar navigation on the left and routed pages on the right.
 
 2. **Update the compote-ui skill** — the skill lives at `~/.claude/skills/compote-ui/references/`. Add or update the relevant reference file (e.g. `display.md`, `form.md`, `layout.md`). Document the component anatomy, props, and a minimal usage example.
 

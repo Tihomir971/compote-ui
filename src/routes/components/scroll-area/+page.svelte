@@ -15,7 +15,7 @@
 						state machines, Ark UI ensures consistent behavior across all frameworks while giving
 						you complete control over styling. Whether you need a simple button or a complex data
 						table, Ark UI has you covered with a comprehensive set of components that are both
-						flexible and accessible. The library follows WAI-ARIA patterns and supports keyboard
+						flexble and accessible. The library follows WAI-ARIA patterns and supports keyboard
 						navigation out of the box.
 					</p>
 				</ScrollArea.Content>
