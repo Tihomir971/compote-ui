@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/button/button.svelte';
 	import * as DataTable from '$lib/components/data-table';
+	import * as VirtualDataTable from '$lib/components/data-table/virtual';
 	import VendorPriceCell from './VendorPriceCell.svelte';
 
 	type VendorPrice = {
@@ -130,6 +131,7 @@
 					type: 'boolean',
 					align: 'center',
 					size: 90,
+					pinned: 'right',
 					enableResizing: false
 				})
 			])
@@ -140,6 +142,41 @@
 		get data() {
 			return invoices;
 		},
+		columns,
+		getRowId: (row) => row.id,
+		enableRowSelection: true
+	});
+
+	function createLargeInvoices(count: number): Invoice[] {
+		const statuses: Invoice['status'][] = ['Paid', 'Pending', 'Overdue'];
+		const owners = ['Mila', 'Petar', 'Ana', 'Marko', 'Natasha'];
+		const customers = ['Acme Co.', 'Northwind', 'Globex', 'Umbrella', 'Stark Industries'];
+
+		return Array.from({ length: count }, (_, index) => {
+			const id = `INV-${(2000 + index).toString()}`;
+			const total = 300 + ((index * 137) % 2400) + index / 100;
+			return {
+				id,
+				url: `https://example.com/invoices/${id.toLowerCase()}`,
+				customer: customers[index % customers.length],
+				status: statuses[index % statuses.length],
+				items: 1 + (index % 24),
+				total,
+				vendorPrices: [
+					{ vendor: 'Metro Supply', price: total * 0.98, currency: 'RSD' },
+					{ vendor: 'Delta Trade', price: total, currency: 'RSD' },
+					{ vendor: 'Novi Partner', price: total * 1.03, currency: 'RSD' }
+				],
+				owner: owners[index % owners.length],
+				is_active: index % 7 !== 0
+			};
+		});
+	}
+
+	const largeInvoices = createLargeInvoices(10000);
+
+	const virtualTable = VirtualDataTable.createTable({
+		data: largeInvoices,
 		columns,
 		getRowId: (row) => row.id,
 		enableRowSelection: true
@@ -181,6 +218,21 @@
 
 		<div class="h-96 min-h-0 max-w-3xl">
 			<DataTable.Root {table} caption="Invoices" />
+		</div>
+	</section>
+
+	<section class="space-y-4">
+		<VirtualDataTable.Toolbar>
+			<VirtualDataTable.Title>Data Table Virtualized</VirtualDataTable.Title>
+
+			{#snippet right()}
+				<VirtualDataTable.ColumnFilter table={virtualTable} />
+				<VirtualDataTable.ColumnVisibility table={virtualTable} />
+			{/snippet}
+		</VirtualDataTable.Toolbar>
+
+		<div class="h-96 min-h-0 max-w-3xl">
+			<VirtualDataTable.Root table={virtualTable} caption="Virtualized invoices" />
 		</div>
 	</section>
 </div>
