@@ -223,7 +223,7 @@
 	{/if}
 
 	<div class="min-h-0 flex-1 overflow-auto">
-		<table class="table-fixed border-collapse text-sm" style={tableSizeStyle()}>
+		<table class="table-fixed border-separate border-spacing-0 text-sm" style={tableSizeStyle()}>
 			<colgroup>
 				{#if isRowSelectionEnabled}
 					<col style={selectionColumnSizeStyle()} />
@@ -276,7 +276,7 @@
 										<button
 											type="button"
 											class={cn(
-												'inline-flex max-w-full items-center gap-1 rounded-sm outline-none hover:text-ink data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-focus-visible:outline-ring',
+												'inline-flex max-w-full appearance-none items-center gap-1 rounded-sm border-0 bg-transparent p-0 align-middle text-sm leading-5 text-inherit outline-none hover:text-ink data-focus-visible:outline-2 data-focus-visible:outline-offset-2 data-focus-visible:outline-ring',
 												justifyClass(columnDef?.align),
 												sortButtonDirectionClass(columnDef?.align)
 											)}
@@ -380,7 +380,7 @@
 										<button
 											type="button"
 											class={cn(
-												'inline-flex max-w-full items-center gap-1.5 rounded-sm font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+												'inline-flex max-w-full appearance-none items-center gap-1.5 rounded-sm border-0 bg-transparent p-0 align-middle leading-5 font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
 												justifyClass(columnDef.align)
 											)}
 											onclick={() => openUrlCell(value)}
