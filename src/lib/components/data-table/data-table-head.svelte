@@ -72,7 +72,6 @@
 		if (!isMultiRowSelectionEnabled) return false;
 		return headerGroupIndex === headerGroupCount - 1;
 	}
-
 </script>
 
 <thead
