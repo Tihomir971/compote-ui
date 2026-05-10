@@ -22,15 +22,12 @@ import {
 	type CellContext,
 	type CellData,
 	type ColumnDef,
-	type ColumnFiltersState,
 	type ColumnPinningState,
 	type ColumnResizeMode,
 	type ColumnSizingState,
 	type ColumnVisibilityState,
 	type Row,
 	type RowData,
-	type RowSelectionState,
-	type SortingState,
 	type SvelteTable,
 	type TableState
 } from '@tanstack/svelte-table';
@@ -84,9 +81,7 @@ export type CreateDataTableOptions<T extends RowData> = {
 	data: T[];
 	columns: DataTableColumn<T>[];
 	columnResizeMode?: ColumnResizeMode;
-	initialSorting?: SortingState;
-	initialRowSelection?: RowSelectionState;
-	initialColumnFilters?: ColumnFiltersState;
+	initialState?: Partial<TableState<DataTableFeatures>>;
 	getRowId?: (row: T, index: number, parent?: Row<DataTableFeatures, T>) => string;
 	enableRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
 	enableMultiRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
@@ -119,12 +114,19 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 				return createColumns(options.columns, localeCtx);
 			},
 			initialState: {
-				columnVisibility: createColumnVisibility(options.columns),
-				columnSizing: createColumnSizing(options.columns),
-				columnPinning: createColumnPinning(options.columns),
-				rowSelection: options.initialRowSelection ?? {},
-				sorting: options.initialSorting ?? [],
-				columnFilters: options.initialColumnFilters ?? []
+				...options.initialState,
+				columnVisibility: {
+					...createColumnVisibility(options.columns),
+					...options.initialState?.columnVisibility
+				},
+				columnSizing: {
+					...createColumnSizing(options.columns),
+					...options.initialState?.columnSizing
+				},
+				columnPinning: options.initialState?.columnPinning ?? createColumnPinning(options.columns),
+				rowSelection: options.initialState?.rowSelection ?? {},
+				sorting: options.initialState?.sorting ?? [],
+				columnFilters: options.initialState?.columnFilters ?? []
 			}
 		},
 		(state): DataTableSelectedState => ({
