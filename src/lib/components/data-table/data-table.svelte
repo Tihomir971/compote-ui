@@ -118,7 +118,7 @@
 					>
 						{#if isRowSelectionEnabled}
 							<td
-								class="border-b border-surface-3 bg-(--row-bg) px-3 py-2 text-center align-middle group-last/row:border-b-0"
+								class="border-b border-surface-2 bg-(--row-bg) px-3 py-2 text-center align-middle group-last/row:border-b-0"
 								style="position: sticky; left: 0; z-index: 1"
 							>
 								<Checkbox
@@ -135,7 +135,7 @@
 							{@const columnDef = getColumnMeta(cell.column.columnDef)}
 							<td
 								class={cn(
-									'truncate border-b border-surface-3 px-3 py-2 group-last/row:border-b-0',
+									'truncate border-b border-b-surface-2 px-3 py-2 group-last/row:border-b-0',
 									alignClass(columnDef?.align),
 									cell.column.getIsPinned() && 'bg-(--row-bg)'
 								)}
@@ -183,9 +183,7 @@
 								{/if}
 							</td>
 						{/each}
-						<td
-							aria-hidden="true"
-							class="border-b border-surface-3 p-0 group-last/row:border-b-0"
+						<td aria-hidden="true" class="border-b border-surface-2 p-0 group-last/row:border-b-0"
 						></td>
 					</tr>
 				{:else}
