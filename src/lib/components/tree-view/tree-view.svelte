@@ -20,8 +20,7 @@
 	let {
 		items = [],
 		label,
-		// eslint-disable-next-line no-useless-assignment
-		contextNode = $bindable(null),
+		onContextMenu,
 		selectedValue = $bindable([]),
 		checkedValue = $bindable([]),
 		selectionMode = 'single',
@@ -68,7 +67,9 @@
 		const targetNode = target.closest('[data-part="item"], [data-part="branch-control"]');
 		if (targetNode) {
 			const nodeId = targetNode.getAttribute('data-value');
-			contextNode = nodeId ?? null;
+			if (nodeId) {
+				onContextMenu?.({ nodeId, event });
+			}
 		}
 	}
 </script>

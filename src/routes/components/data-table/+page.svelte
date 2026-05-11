@@ -203,6 +203,7 @@
 		];
 	}
 
+	let lastClicked = $state<Invoice | null>(null);
 	let lastDoubleClicked = $state<Invoice | null>(null);
 </script>
 
@@ -219,13 +220,28 @@
 		</DataTable.Toolbar>
 
 		<div class="h-96 min-h-0 max-w-3xl">
-			<DataTable.Root {table} caption="Invoices" onRowDoubleClick={({ row }) => (lastDoubleClicked = row)} />
+			<DataTable.Root
+				{table}
+				caption="Invoices"
+				onRowClick={({ row }) => (lastClicked = row)}
+				onRowDoubleClick={({ row }) => (lastDoubleClicked = row)}
+			/>
 		</div>
-		{#if lastDoubleClicked}
-			<p class="text-sm text-ink-dim">
-				Last double-clicked: <span class="font-medium text-ink">{lastDoubleClicked.id} — {lastDoubleClicked.customer}</span>
-			</p>
-		{/if}
+		<div class="flex items-center justify-between">
+			{#if lastClicked}
+				<p class="text-sm text-ink-dim">
+					Last clicked:
+					<span class="font-medium text-ink">{lastClicked.id} — {lastClicked.customer}</span>
+				</p>
+			{/if}
+			{#if lastDoubleClicked}
+				<p class="text-sm text-ink-dim">
+					Last double-clicked: <span class="font-medium text-ink"
+						>{lastDoubleClicked.id} — {lastDoubleClicked.customer}</span
+					>
+				</p>
+			{/if}
+		</div>
 	</section>
 
 	<section class="space-y-4">
@@ -239,11 +255,24 @@
 		</VirtualDataTable.Toolbar>
 
 		<div class="h-96 min-h-0 max-w-3xl">
-			<VirtualDataTable.Root table={virtualTable} caption="Virtualized invoices" onRowDoubleClick={({ row }) => (lastDoubleClicked = row)} />
+			<VirtualDataTable.Root
+				table={virtualTable}
+				caption="Virtualized invoices"
+				onRowClick={({ row }) => (lastClicked = row)}
+				onRowDoubleClick={({ row }) => (lastDoubleClicked = row)}
+			/>
 		</div>
+		{#if lastClicked}
+			<p class="text-sm text-ink-dim">
+				Last clicked:
+				<span class="font-medium text-ink">{lastClicked.id} — {lastClicked.customer}</span>
+			</p>
+		{/if}
 		{#if lastDoubleClicked}
 			<p class="text-sm text-ink-dim">
-				Last double-clicked: <span class="font-medium text-ink">{lastDoubleClicked.id} — {lastDoubleClicked.customer}</span>
+				Last double-clicked: <span class="font-medium text-ink"
+					>{lastDoubleClicked.id} — {lastDoubleClicked.customer}</span
+				>
 			</p>
 		{/if}
 	</section>

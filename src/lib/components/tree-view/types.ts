@@ -7,5 +7,5 @@ import type { TreeItem } from '$lib/utils/collections';
 export interface TreeViewProps<T extends TreeItem> extends Omit<UseTreeViewProps<T>, 'collection'> {
 	items?: T[];
 	label?: string;
-	contextNode?: string | null;
+	onContextMenu?: (details: { nodeId: string; event: MouseEvent }) => void;
 }
