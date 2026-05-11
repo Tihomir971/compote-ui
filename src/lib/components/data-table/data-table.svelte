@@ -28,6 +28,7 @@
 		caption?: string;
 		emptyMessage?: string;
 		class?: ClassValue;
+		onRowClick?: (details: { row: T; event: MouseEvent }) => void;
 		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
 	};
 
@@ -36,6 +37,7 @@
 		caption,
 		emptyMessage = 'No rows found',
 		class: className,
+		onRowClick,
 		onRowDoubleClick,
 		...rest
 	}: Props = $props();
@@ -117,6 +119,7 @@
 							rowSelected &&
 								'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
 						)}
+						onclick={(event) => onRowClick?.({ row: row.original, event })}
 						ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
 					>
 						{#if isRowSelectionEnabled}
