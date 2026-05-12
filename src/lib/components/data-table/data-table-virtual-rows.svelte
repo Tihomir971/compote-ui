@@ -18,6 +18,7 @@
 		justifyClass,
 		openUrlCell,
 		virtualColumnSizeStyle,
+		virtualGrowColumnSizeStyle,
 		virtualSelectionColumnSizeStyle
 	} from './data-table-utils';
 
@@ -116,7 +117,9 @@
 							cell.column.getIsPinned() && 'bg-(--row-bg)'
 						)}
 						style={joinStyles(
-							virtualColumnSizeStyle(cell.column.getSize()),
+							getColumnMeta(cell.column.columnDef)?.grow
+								? virtualGrowColumnSizeStyle()
+								: virtualColumnSizeStyle(cell.column.getSize()),
 							getPinningStyle(cell.column, false, isRowSelectionEnabled)
 						)}
 					>

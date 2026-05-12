@@ -50,6 +50,14 @@ export function tableSizeStyle<T extends RowData>(
 	return `width: max(100%, ${table.getTotalSize() + (isRowSelectionEnabled ? 40 : 0)}px)`;
 }
 
+export function virtualGrowColumnSizeStyle() {
+	return 'display: flex; flex: 1; min-width: 0';
+}
+
+export function virtualGroupWithGrowSizeStyle(fixedPortion: number) {
+	return `display: flex; flex: 1 0 ${fixedPortion}px; width: ${fixedPortion}px`;
+}
+
 export function resizeHandleStyle<T extends RowData>(
 	table: DataTableInstance<T>,
 	header: Header<DataTableFeatures, T, CellData>

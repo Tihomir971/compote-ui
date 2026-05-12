@@ -199,7 +199,8 @@ function createColumns<T extends RowData>(
 				align: column.align,
 				type: column.type,
 				formatOptions: column.formatOptions,
-				formatLocale: column.formatLocale
+				formatLocale: column.formatLocale,
+				grow: column.grow
 			}
 		} satisfies Partial<ColumnDef<DataTableFeatures, T, CellData>>;
 

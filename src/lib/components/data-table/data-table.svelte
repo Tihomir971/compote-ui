@@ -59,6 +59,8 @@
 		trackTableState();
 		return table.getVisibleLeafColumns();
 	});
+	const growColumn = $derived(visibleLeafColumns.find((col) => getColumnMeta(col.columnDef)?.grow));
+	const hasGrowColumn = $derived(growColumn !== undefined);
 	const visibleColumnCount = $derived(visibleLeafColumns.length);
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
@@ -93,9 +95,15 @@
 					<col style={selectionColumnSizeStyle()} />
 				{/if}
 				{#each visibleLeafColumns as column (column.id)}
-					<col style={columnSizeStyle(column.getSize())} />
+					<col
+						style={getColumnMeta(column.columnDef)?.grow
+							? undefined
+							: columnSizeStyle(column.getSize())}
+					/>
 				{/each}
-				<col />
+				{#if !hasGrowColumn}
+					<col />
+				{/if}
 			</colgroup>
 			{#if caption}
 				<caption class="sr-only">{caption}</caption>
@@ -107,6 +115,7 @@
 				{isRowSelectionEnabled}
 				{isMultiRowSelectionEnabled}
 				{allRowsSelectionState}
+				{hasGrowColumn}
 			/>
 			<tbody>
 				{#each rowModel.rows as row (row.id)}
@@ -189,8 +198,10 @@
 								{/if}
 							</td>
 						{/each}
-						<td aria-hidden="true" class="border-b border-surface-2 p-0 group-last/row:border-b-0"
-						></td>
+						{#if !hasGrowColumn}
+							<td aria-hidden="true" class="border-b border-surface-2 p-0 group-last/row:border-b-0"
+							></td>
+						{/if}
 					</tr>
 				{:else}
 					<tr>

@@ -18,6 +18,8 @@
 		resizeHandleStyle,
 		sortButtonDirectionClass,
 		virtualColumnSizeStyle,
+		virtualGroupWithGrowSizeStyle,
+		virtualGrowColumnSizeStyle,
 		virtualSelectionColumnSizeStyle
 	} from './data-table-utils';
 
@@ -29,6 +31,7 @@
 		isMultiRowSelectionEnabled: boolean;
 		allRowsSelectionState: boolean | 'indeterminate';
 		isVirtual?: boolean;
+		hasGrowColumn?: boolean;
 	};
 
 	let {
@@ -38,14 +41,41 @@
 		isRowSelectionEnabled,
 		isMultiRowSelectionEnabled,
 		allRowsSelectionState,
-		isVirtual = false
+		isVirtual = false,
+		hasGrowColumn = false
 	}: Props = $props();
 
-	function headerCellStyle(header: HeaderGroup<DataTableFeatures, T>['headers'][number]) {
+	type Header = HeaderGroup<DataTableFeatures, T>['headers'][number];
+
+	function findGrowLeafHeader(header: Header): Header | undefined {
+		if (header.subHeaders.length === 0) {
+			return getColumnMeta(header.column.columnDef)?.grow ? header : undefined;
+		}
+		for (const sub of header.subHeaders) {
+			const found = findGrowLeafHeader(sub);
+			if (found) return found;
+		}
+		return undefined;
+	}
+
+	function headerCellStyle(header: Header) {
 		const canPinHeader = header.subHeaders.length === 0;
 
+		let virtualSizeStyle: string | undefined;
+		if (isVirtual) {
+			const isGrowLeaf = canPinHeader && getColumnMeta(header.column.columnDef)?.grow;
+			if (isGrowLeaf) {
+				virtualSizeStyle = virtualGrowColumnSizeStyle();
+			} else {
+				const growLeaf = findGrowLeafHeader(header);
+				virtualSizeStyle = growLeaf
+					? virtualGroupWithGrowSizeStyle(header.getSize() - growLeaf.getSize())
+					: virtualColumnSizeStyle(header.getSize());
+			}
+		}
+
 		return joinStyles(
-			isVirtual ? virtualColumnSizeStyle(header.getSize()) : undefined,
+			virtualSizeStyle,
 			canPinHeader ? getPinningStyle(header.column, true, isRowSelectionEnabled) : undefined
 		);
 	}
@@ -155,7 +185,7 @@
 					{/if}
 				</th>
 			{/each}
-			{#if !isVirtual}
+			{#if !isVirtual && !hasGrowColumn}
 				<th aria-hidden="true" class="h-9 border-b border-surface-3 bg-surface-2 p-0"></th>
 			{/if}
 		</tr>

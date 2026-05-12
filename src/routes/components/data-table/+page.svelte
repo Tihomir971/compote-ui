@@ -96,7 +96,7 @@
 					header: 'Link',
 					type: 'url'
 				}),
-				column.accessor('customer', { header: 'Customer' })
+				column.accessor('customer', { header: 'Customer', grow: true })
 			]),
 			column.accessor('status', { header: 'Status', type: 'select' })
 		]),
