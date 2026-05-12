@@ -13,4 +13,5 @@ export interface ComboboxProps<T extends ListItem> extends Omit<
 	multiple?: boolean;
 	layout?: 'vertical' | 'horizontal';
 	loading?: boolean;
+	class?: string;
 }

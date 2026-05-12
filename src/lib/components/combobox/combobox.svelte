@@ -18,6 +18,7 @@
 		readOnly,
 		multiple,
 		loading = false,
+		class: className,
 		...restProps
 	}: ComboboxProps<T> = $props();
 
@@ -87,7 +88,11 @@
 	{multiple}
 	{readOnly}
 	{...restProps}
-	class={cn(layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5')}
+	class={cn(
+		layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5',
+		'w-full',
+		className
+	)}
 >
 	{#if label}
 		<Combobox.Label class="text-sm">
@@ -98,7 +103,7 @@
 
 	<Combobox.Control
 		class={cn(
-			'flex min-h-9 items-center gap-1 rounded border bg-surface-1 px-3 shadow-sm',
+			'flex min-h-9 min-w-0 items-center gap-1 rounded border bg-surface-1 px-3 shadow-sm',
 			'focus-within:ring-1 focus-within:ring-ring',
 			'data-invalid:border-danger data-invalid:focus-within:ring-danger',
 			multiple && 'flex-wrap py-1'
@@ -118,7 +123,7 @@
 		{/if}
 		<Combobox.Input
 			placeholder={placeholder ?? 'Search...'}
-			class="flex-1 bg-transparent text-sm outline-none placeholder:text-ink-dim disabled:cursor-not-allowed disabled:opacity-50"
+			class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-dim disabled:cursor-not-allowed disabled:opacity-50"
 		/>
 		{#if !readOnly}
 			<Combobox.ClearTrigger class="text-ink-dim transition-colors hover:text-ink">
