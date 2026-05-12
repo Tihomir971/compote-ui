@@ -31,6 +31,7 @@ import {
 	type SvelteTable,
 	type TableState
 } from '@tanstack/svelte-table';
+import { createAtom } from '@tanstack/svelte-store';
 import type { Component } from 'svelte';
 import { useLocaleContext } from '@ark-ui/svelte/locale';
 import type {
@@ -92,6 +93,16 @@ export type CreateDataTableOptions<T extends RowData> = {
 
 export function createTable<T extends RowData>(options: CreateDataTableOptions<T>) {
 	const localeCtx = useLocaleContext();
+
+	const initialColumnVisibility = {
+		...createColumnVisibility(options.columns),
+		...options.initialState?.columnVisibility
+	};
+
+	const columnVisibilityAtom = options.onColumnVisibilityChange
+		? createAtom<ColumnVisibilityState>(initialColumnVisibility)
+		: undefined;
+
 	const table = createTanStackTable(
 		{
 			_features: dataTableFeatures,
@@ -114,12 +125,10 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			get columns() {
 				return createColumns(options.columns, localeCtx);
 			},
+			...(columnVisibilityAtom ? { atoms: { columnVisibility: columnVisibilityAtom } } : {}),
 			initialState: {
 				...options.initialState,
-				columnVisibility: {
-					...createColumnVisibility(options.columns),
-					...options.initialState?.columnVisibility
-				},
+				columnVisibility: initialColumnVisibility,
 				columnSizing: {
 					...createColumnSizing(options.columns),
 					...options.initialState?.columnSizing
@@ -140,13 +149,16 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		})
 	);
 
-	if (options.onColumnVisibilityChange) {
+	if (columnVisibilityAtom && options.onColumnVisibilityChange) {
 		const { onColumnVisibilityChange } = options;
-		const orig = table.setColumnVisibility.bind(table);
-		table.setColumnVisibility = (updater) => {
-			orig(updater);
-			onColumnVisibilityChange(table.store.state.columnVisibility);
-		};
+		let initialized = false;
+		columnVisibilityAtom.subscribe((value) => {
+			if (!initialized) {
+				initialized = true;
+				return;
+			}
+			onColumnVisibilityChange(value);
+		});
 	}
 
 	return table;
