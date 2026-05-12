@@ -41,7 +41,7 @@
 	class={rootClass}
 >
 	{#if label}
-		<NumberInput.Label>
+		<NumberInput.Label class="text-sm leading-none font-medium">
 			{label}
 			<Field.RequiredIndicator />
 		</NumberInput.Label>

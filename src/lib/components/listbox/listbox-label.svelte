@@ -13,6 +13,6 @@
 	let { class: className, children, ...restProps }: Props = $props();
 </script>
 
-<Listbox.Label {...restProps} class={cn('text-sm font-medium text-ink', className)}>
+<Listbox.Label {...restProps} class={cn('text-sm font-medium', className)}>
 	{@render children?.()}
 </Listbox.Label>

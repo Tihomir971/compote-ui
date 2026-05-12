@@ -39,7 +39,7 @@
 	class={cn(layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5')}
 >
 	{#if label}
-		<Select.Label>
+		<Select.Label class="text-sm leading-none font-medium">
 			{label}
 			<Field.RequiredIndicator />
 		</Select.Label>
