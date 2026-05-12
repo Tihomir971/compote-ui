@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TreeView } from '$lib';
+	import { TreeView, Menu } from '$lib';
 
 	const treeItems = [
 		{
@@ -35,14 +35,29 @@
 
 	let treeSelected = $state([treeItems[1].value.toString()]);
 	let treeChecked = $state([treeItems[2].value.toString()]);
+
+	let contextNodeId = $state<string | null>(null);
 </script>
 
-<div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
+<div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Tree View</h2>
-		<div class="h-80 rounded-lg border border-surface-3">
-			<TreeView items={treeItems} label="Project" bind:selectedValue={treeSelected} />
-		</div>
+		<Menu.Root>
+			<Menu.ContextTrigger class="h-80 rounded-lg border border-surface-3">
+				<TreeView
+					items={treeItems}
+					label="Project"
+					bind:selectedValue={treeSelected}
+					onContextMenu={({ nodeId }) => (contextNodeId = nodeId)}
+				/>
+			</Menu.ContextTrigger>
+			<Menu.Content>
+				<Menu.Item value="rename">Rename '{contextNodeId}'</Menu.Item>
+				<Menu.Item value="duplicate">Duplicate</Menu.Item>
+				<Menu.Separator />
+				<Menu.Item value="delete">Delete</Menu.Item>
+			</Menu.Content>
+		</Menu.Root>
 		<p class="mt-2 text-sm text-ink-dim">Selected: {treeSelected.join(', ')}</p>
 
 		<section>

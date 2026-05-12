@@ -24,7 +24,7 @@
 	let selectedGrouped = $state([listboxItems[0].value]);
 </script>
 
-<div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
+<div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Basic</h2>
 		<div class="flex flex-col gap-4">

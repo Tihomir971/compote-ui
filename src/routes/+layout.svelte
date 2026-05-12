@@ -19,9 +19,9 @@
 </script>
 
 <LocaleProvider locale="sr-Latn-RS">
-	<div class="flex h-screen">
+	<div class="grid h-screen grid-cols-[14rem_1fr]">
 		<!-- Sidebar -->
-		<aside class="w-56 shrink-0 border-r border-border bg-surface-1">
+		<aside class="border-r border-border bg-surface-1">
 			<div class="border-b border-border px-4 py-3">
 				<h1 class="text-sm font-semibold text-ink">Compote UI</h1>
 			</div>
@@ -50,10 +50,8 @@
 		</aside>
 
 		<!-- Main content -->
-		<main class="flex-1 overflow-y-auto">
-			<div class="mx-auto max-w-4xl p-8">
-				{@render children()}
-			</div>
+		<main class="min-w-0 overflow-x-hidden overflow-y-auto p-8 *:mx-auto">
+			{@render children()}
 		</main>
 	</div>
 </LocaleProvider>

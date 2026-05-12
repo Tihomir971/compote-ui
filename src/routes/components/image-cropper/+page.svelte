@@ -6,7 +6,7 @@
 	let imageCropperAspectRatio = $state(16 / 9);
 </script>
 
-<div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
+<div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Image Cropper</h2>
 		<ImageCropper src={imageCropperSrc} bind:aspectRatio={imageCropperAspectRatio} />

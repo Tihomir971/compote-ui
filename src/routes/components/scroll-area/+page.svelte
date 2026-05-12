@@ -2,7 +2,7 @@
 	import { ScrollArea } from '$lib';
 </script>
 
-<div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
+<div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Vertical</h2>
 		<ScrollArea.Root class="h-48 w-72">

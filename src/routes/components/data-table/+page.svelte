@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/button/button.svelte';
+	import { Splitter } from '$lib';
 	import * as DataTable from '$lib/components/data-table';
 	import * as VirtualDataTable from '$lib/components/data-table/virtual';
 	import VendorPriceCell from './VendorPriceCell.svelte';
@@ -207,7 +208,7 @@
 	let lastDoubleClicked = $state<Invoice | null>(null);
 </script>
 
-<div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
+<div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section class="space-y-4">
 		<DataTable.Toolbar>
 			<DataTable.Title>Data Table New</DataTable.Title>
@@ -236,9 +237,9 @@
 			{/if}
 			{#if lastDoubleClicked}
 				<p class="text-sm text-ink-dim">
-					Last double-clicked: <span class="font-medium text-ink"
-						>{lastDoubleClicked.id} — {lastDoubleClicked.customer}</span
-					>
+					Last double-clicked: <span class="font-medium text-ink">
+						{lastDoubleClicked.id} — {lastDoubleClicked.customer}
+					</span>
 				</p>
 			{/if}
 		</div>
@@ -276,4 +277,44 @@
 			</p>
 		{/if}
 	</section>
+</div>
+
+<div class="mt-5 w-full max-w-none space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">
+	<h2 class="text-lg font-semibold">Tables in Splitter</h2>
+	<div class="h-125 w-full overflow-hidden">
+		{#snippet leftPanel()}
+			<div class="flex h-full min-h-0 flex-col overflow-hidden p-2">
+				<DataTable.Toolbar>
+					<DataTable.Title>Regular</DataTable.Title>
+					{#snippet right()}
+						<DataTable.ColumnFilter {table} />
+						<DataTable.ColumnVisibility {table} />
+					{/snippet}
+				</DataTable.Toolbar>
+				<div class="mt-2 min-h-0 flex-1">
+					<DataTable.Root {table} caption="Invoices" />
+				</div>
+			</div>
+		{/snippet}
+		{#snippet rightPanel()}
+			<div class="flex h-full min-h-0 flex-col overflow-hidden p-2">
+				<VirtualDataTable.Toolbar>
+					<VirtualDataTable.Title>Virtualized</VirtualDataTable.Title>
+					{#snippet right()}
+						<VirtualDataTable.ColumnFilter table={virtualTable} />
+						<VirtualDataTable.ColumnVisibility table={virtualTable} />
+					{/snippet}
+				</VirtualDataTable.Toolbar>
+				<div class="mt-2 min-h-0 flex-1">
+					<VirtualDataTable.Root table={virtualTable} caption="Virtualized invoices" />
+				</div>
+			</div>
+		{/snippet}
+		<Splitter
+			panels={[
+				{ id: 'left', minSize: 10, content: leftPanel },
+				{ id: 'right', minSize: 10, content: rightPanel }
+			]}
+		/>
+	</div>
 </div>

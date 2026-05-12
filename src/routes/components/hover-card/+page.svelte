@@ -4,7 +4,7 @@
 	import type { Placement } from '@zag-js/popper';
 </script>
 
-<div class="space-y-12 p-8">
+<div class="max-w-4xl space-y-12 p-8">
 	<section class="space-y-4">
 		<h2 class="text-sm font-semibold tracking-wide text-ink-dim uppercase">Basic</h2>
 		<HoverCard.Root>

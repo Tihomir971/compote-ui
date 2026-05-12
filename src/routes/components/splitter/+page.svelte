@@ -2,7 +2,7 @@
 	import { Splitter } from '$lib';
 </script>
 
-<div class="space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
+<div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Horizontal Splitter</h2>
 		<div class="h-64 rounded-lg border border-surface-3">
@@ -14,8 +14,8 @@
 			{/snippet}
 			<Splitter
 				panels={[
-					{ id: 'left', minSize: 150, content: leftPanel },
-					{ id: 'right', minSize: 150, content: rightPanel }
+					{ id: 'left', minSize: 20, content: leftPanel },
+					{ id: 'right', minSize: 20, content: rightPanel }
 				]}
 			/>
 		</div>
@@ -33,8 +33,8 @@
 			<Splitter
 				orientation="vertical"
 				panels={[
-					{ id: 'top', minSize: 100, content: topPanel },
-					{ id: 'bottom', minSize: 100, content: bottomPanel }
+					{ id: 'top', minSize: 20, content: topPanel },
+					{ id: 'bottom', minSize: 20, content: bottomPanel }
 				]}
 			/>
 		</div>
