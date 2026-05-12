@@ -74,8 +74,7 @@
 	}
 </script>
 
-<div class="flex h-full flex-col" role="none" oncontextmenu={handleContextMenu}>
-	<!--
+<!--
     | Varijabla       | Vrednost | Opis |
     |---|---|---|
     | `--tree-indent` | `0.75rem` | indent po nivou |
@@ -83,70 +82,69 @@
     | `--tree-gap`    | `0.5rem`  | razmak između elemenata |
     | `--tree-px`     | `0.75rem` | bazni levi padding
     -->
-	<TreeView.Root
-		{...restProps}
-		{collection}
-		{selectionMode}
-		{selectedValue}
-		{expandedValue}
-		{checkedValue}
-		onSelectionChange={(details) => {
-			onSelectionChange?.(details);
-		}}
-		onExpandedChange={(details) => {
-			userExpandedValue = details.expandedValue;
-			onExpandedChange?.(details);
-		}}
-		onCheckedChange={(details) => {
-			checkedValue = details.checkedValue;
-			onCheckedChange?.(details);
-		}}
-		class="flex h-full flex-col"
-		style="--tree-indent: 0rem; --tree-icon: 1rem; --tree-gap: 0.5rem; --tree-px: 0.75rem"
-	>
-		{#if label}
-			<TreeView.Label class="px-3 pt-3 text-sm font-medium">{label}</TreeView.Label>
-		{/if}
+<TreeView.Root
+	oncontextmenu={handleContextMenu}
+	{...restProps}
+	{collection}
+	{selectionMode}
+	{selectedValue}
+	{expandedValue}
+	{checkedValue}
+	onSelectionChange={(details) => {
+		onSelectionChange?.(details);
+	}}
+	onExpandedChange={(details) => {
+		userExpandedValue = details.expandedValue;
+		onExpandedChange?.(details);
+	}}
+	onCheckedChange={(details) => {
+		checkedValue = details.checkedValue;
+		onCheckedChange?.(details);
+	}}
+	class="flex h-full flex-col gap-3"
+	style="--tree-indent: 0rem; --tree-icon: 1rem; --tree-gap: 0.5rem; --tree-px: 0.75rem"
+>
+	{#if label}
+		<TreeView.Label class="font-medium">{label}</TreeView.Label>
+	{/if}
 
-		<div class="flex gap-2 p-3">
-			<TreeView.Context>
-				{#snippet render(tree)}
-					<Button
-						variant="outline"
-						size="icon-lg"
-						title="Collapse all"
-						onclick={() => tree().collapse()}
-					>
-						<PhArrowsInSimple class="size-4" />
-					</Button>
-				{/snippet}
-			</TreeView.Context>
-
-			<div class="flex-1">
-				<Field.Root>
-					<Field.Input bind:value={searchTerm} placeholder="Search...">
-						{#snippet startIcon()}
-							<PhMagnifyingGlass class="size-4" />
-						{/snippet}
-						{#snippet endIcon()}
-							<Button variant="ghost" size="icon" onclick={() => (searchTerm = '')}>
-								<PhX />
-							</Button>
-						{/snippet}
-					</Field.Input>
-				</Field.Root>
-			</div>
+	<div class="flex gap-1">
+		<TreeView.Context>
+			{#snippet render(tree)}
+				<Button
+					variant="outline"
+					size="icon-lg"
+					title="Collapse all"
+					onclick={() => tree().collapse()}
+				>
+					<PhArrowsInSimple class="size-4" />
+				</Button>
+			{/snippet}
+		</TreeView.Context>
+		<div class="flex-1">
+			<Field.Root>
+				<Field.Input bind:value={searchTerm} placeholder="Search...">
+					{#snippet startIcon()}
+						<PhMagnifyingGlass class="size-4" />
+					{/snippet}
+					{#snippet endIcon()}
+						<Button variant="ghost" size="icon" onclick={() => (searchTerm = '')}>
+							<PhX />
+						</Button>
+					{/snippet}
+				</Field.Input>
+			</Field.Root>
 		</div>
+	</div>
 
-		<div class="flex-1 overflow-x-hidden overflow-y-auto">
-			<TreeView.Tree class="flex flex-col text-sm">
-				{#each collection.rootNode.children ?? [] as node, index (node.value)}
-					{@render renderNode(node as T, [index])}
-				{/each}
-			</TreeView.Tree>
-		</div>
-	</TreeView.Root>
-</div>
+	<div class="flex-1 overflow-x-hidden overflow-y-auto">
+		<TreeView.Tree class="flex flex-col text-sm">
+			{#each collection.rootNode.children ?? [] as node, index (node.value)}
+				{@render renderNode(node as T, [index])}
+			{/each}
+		</TreeView.Tree>
+	</div>
+</TreeView.Root>
 
 {#snippet nodeCheckbox()}
 	<TreeView.NodeCheckbox
@@ -186,7 +184,7 @@
 					</TreeView.BranchText>
 				</TreeView.BranchControl>
 				<TreeView.BranchContent class="relative">
-					<TreeView.BranchIndentGuide class="absolute inset-y-0 w-px bg-border" />
+					<!-- <TreeView.BranchIndentGuide class="absolute inset-y-0 w-px bg-border" /> -->
 					{#each node.children as child, childIndex (child.value)}
 						{@render renderNode(child as T, [...indexPath, childIndex])}
 					{/each}

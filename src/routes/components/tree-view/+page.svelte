@@ -43,7 +43,7 @@
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Tree View</h2>
 		<Menu.Root>
-			<Menu.ContextTrigger class="h-80 rounded-lg border border-surface-3">
+			<Menu.ContextTrigger class="h-80 rounded-lg border border-surface-3 p-2">
 				<TreeView
 					items={treeItems}
 					label="Project"
@@ -59,19 +59,19 @@
 			</Menu.Content>
 		</Menu.Root>
 		<p class="mt-2 text-sm text-ink-dim">Selected: {treeSelected.join(', ')}</p>
+	</section>
 
-		<section>
-			<h2 class="mb-4 text-lg font-semibold">Tree View with Checkboxes</h2>
-			<div class="h-80 rounded-lg border border-surface-3">
-				<TreeView
-					items={treeItems}
-					label="Project"
-					bind:selectedValue={treeSelected}
-					bind:checkedValue={treeChecked}
-					selectionMode="multiple"
-				/>
-			</div>
-			<p class="mt-2 text-sm text-ink-dim">Checked: {treeChecked.join(', ')}</p>
-		</section>
+	<section>
+		<h2 class="mb-4 text-lg font-semibold">Tree View with Checkboxes</h2>
+		<div class="h-80 rounded-lg border border-surface-3">
+			<TreeView
+				items={treeItems}
+				label="Project"
+				bind:selectedValue={treeSelected}
+				bind:checkedValue={treeChecked}
+				selectionMode="multiple"
+			/>
+		</div>
+		<p class="mt-2 text-sm text-ink-dim">Checked: {treeChecked.join(', ')}</p>
 	</section>
 </div>
