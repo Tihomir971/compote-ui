@@ -87,11 +87,12 @@ export type CreateDataTableOptions<T extends RowData> = {
 	enableMultiRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
 	enableSorting?: boolean;
 	debugTable?: boolean;
+	onColumnVisibilityChange?: (visibility: ColumnVisibilityState) => void;
 };
 
 export function createTable<T extends RowData>(options: CreateDataTableOptions<T>) {
 	const localeCtx = useLocaleContext();
-	return createTanStackTable(
+	const table = createTanStackTable(
 		{
 			_features: dataTableFeatures,
 			_rowModels: {
@@ -138,6 +139,17 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			columnFilters: state.columnFilters
 		})
 	);
+
+	if (options.onColumnVisibilityChange) {
+		const { onColumnVisibilityChange } = options;
+		const orig = table.setColumnVisibility.bind(table);
+		table.setColumnVisibility = (updater) => {
+			orig(updater);
+			onColumnVisibilityChange(table.store.state.columnVisibility);
+		};
+	}
+
+	return table;
 }
 
 function createColumnVisibility<T extends RowData>(columns: DataTableColumn<T>[]) {
