@@ -19,6 +19,7 @@
 		multiple,
 		loading = false,
 		class: className,
+		onValueChange,
 		...restProps
 	}: ComboboxProps<T> = $props();
 
@@ -75,6 +76,7 @@
 			const found = items.find((item) => item.value.toString() === details.value[0]);
 			value = found?.value ?? null;
 		}
+		onValueChange?.(details);
 	}
 </script>
 
