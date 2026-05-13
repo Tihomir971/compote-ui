@@ -285,6 +285,19 @@ const TYPE_FORMAT_DEFAULTS: Partial<Record<DataTableColumnType, Intl.NumberForma
 	number: {}
 };
 
+const TYPE_DATE_FORMAT_DEFAULTS: Record<'date' | 'time' | 'date-time', Intl.DateTimeFormatOptions> =
+	{
+		date: { day: '2-digit', month: '2-digit', year: 'numeric' },
+		time: { hour: '2-digit', minute: '2-digit' },
+		'date-time': {
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		}
+	};
+
 function getFilterFnForType(type: DataTableColumnType | undefined): string | undefined {
 	switch (type) {
 		case 'number':
@@ -307,13 +320,23 @@ function applyTypeFormat<T extends RowData>(
 ): string | number | boolean | null | undefined {
 	if (value === null || value === undefined || value === '') return undefined;
 
-	const defaults = column.type ? TYPE_FORMAT_DEFAULTS[column.type] : undefined;
-	if (defaults !== undefined) {
+	const numDefaults = column.type ? TYPE_FORMAT_DEFAULTS[column.type] : undefined;
+	if (numDefaults !== undefined) {
 		const locale = column.formatLocale ?? localeCtx().locale;
 		return new Intl.NumberFormat(locale, {
-			...defaults,
-			...column.formatOptions
+			...numDefaults,
+			...(column.formatOptions as Intl.NumberFormatOptions | undefined)
 		}).format(Number(value));
+	}
+
+	if (column.type === 'date' || column.type === 'time' || column.type === 'date-time') {
+		const dateValue = value instanceof Date ? value : new Date(value as string | number);
+		if (isNaN(dateValue.getTime())) return undefined;
+		const locale = column.formatLocale ?? localeCtx().locale;
+		return new Intl.DateTimeFormat(locale, {
+			...TYPE_DATE_FORMAT_DEFAULTS[column.type],
+			...(column.formatOptions as Intl.DateTimeFormatOptions | undefined)
+		}).format(dateValue);
 	}
 
 	if (column.type === 'boolean') return value ? 'Yes' : 'No';

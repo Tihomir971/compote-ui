@@ -30,16 +30,25 @@ type GroupColumnOptions<T extends RowData> = Omit<
 	| 'formatLocale'
 >;
 
-function urlDefaults<T extends { type?: string; align?: string; enableSorting?: boolean }>(
+type TypeDefaults = { align?: string; size?: number; enableSorting?: boolean };
+
+const TYPE_DEFAULTS: Partial<Record<string, TypeDefaults>> = {
+	number: { align: 'right' },
+	currency: { align: 'right' },
+	percent: { align: 'right' },
+	date: { align: 'center', size: 110 },
+	time: { align: 'center', size: 80 },
+	'date-time': { align: 'center', size: 160 },
+	boolean: { align: 'center', size: 90 },
+	url: { align: 'center', size: 60, enableSorting: false }
+};
+
+function applyTypeDefaults<T extends { type?: string; align?: string; enableSorting?: boolean }>(
 	options: T
 ): T {
-	if (options.type !== 'url') return options;
-	return {
-		align: 'center',
-		enableSorting: false,
-		size: 60,
-		...options
-	};
+	const defaults = options.type ? TYPE_DEFAULTS[options.type] : undefined;
+	if (!defaults) return options;
+	return { ...defaults, ...options };
 }
 
 export function createDataTableColumnHelper<T extends RowData>() {
@@ -49,7 +58,7 @@ export function createDataTableColumnHelper<T extends RowData>() {
 			options: AccessorKeyColumnOptions<T>
 		): DataTableAccessorKeyColumn<T> {
 			return {
-				...urlDefaults(options),
+				...applyTypeDefaults(options),
 				accessorKey
 			};
 		},
@@ -59,7 +68,7 @@ export function createDataTableColumnHelper<T extends RowData>() {
 			options: AccessorFnColumnOptions<T>
 		): DataTableAccessorFnColumn<T> {
 			return {
-				...urlDefaults(options),
+				...applyTypeDefaults(options),
 				accessorFn
 			};
 		},

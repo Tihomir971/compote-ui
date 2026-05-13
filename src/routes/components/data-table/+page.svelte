@@ -5,6 +5,83 @@
 	import * as VirtualDataTable from '$lib/components/data-table/virtual';
 	import VendorPriceCell from './VendorPriceCell.svelte';
 
+	type TypesRow = {
+		label: string;
+		textVal: string;
+		numberVal: number;
+		currencyVal: number;
+		percentVal: number;
+		booleanVal: boolean;
+		selectVal: string;
+		urlVal: string;
+		dateVal: Date;
+		timeVal: Date;
+		datetimeVal: Date;
+	};
+
+	const typesRows: TypesRow[] = [
+		{
+			label: 'Row A',
+			textVal: 'Hello world',
+			numberVal: 42000,
+			currencyVal: 1899.99,
+			percentVal: 0.742,
+			booleanVal: true,
+			selectVal: 'Active',
+			urlVal: 'https://example.com',
+			dateVal: new Date('2024-03-15'),
+			timeVal: new Date('2024-03-15T09:30:00'),
+			datetimeVal: new Date('2024-03-15T09:30:00')
+		},
+		{
+			label: 'Row B',
+			textVal: 'Foo bar',
+			numberVal: 1500.5,
+			currencyVal: 299,
+			percentVal: 0.123,
+			booleanVal: false,
+			selectVal: 'Inactive',
+			urlVal: 'https://svelte.dev',
+			dateVal: new Date('2025-11-01'),
+			timeVal: new Date('2025-11-01T14:45:00'),
+			datetimeVal: new Date('2025-11-01T14:45:00')
+		},
+		{
+			label: 'Row C',
+			textVal: '',
+			numberVal: 0,
+			currencyVal: 0,
+			percentVal: 0,
+			booleanVal: false,
+			selectVal: 'Pending',
+			urlVal: '',
+			dateVal: new Date('NaN'),
+			timeVal: new Date('NaN'),
+			datetimeVal: new Date('NaN')
+		}
+	];
+
+	const typesCol = DataTable.createDataTableColumnHelper<TypesRow>();
+	const typesColumns = typesCol.columns([
+		typesCol.accessor('label', { header: 'Label', type: 'text' }),
+		typesCol.accessor('textVal', { header: 'Text', type: 'text' }),
+		typesCol.accessor('numberVal', { header: 'Number', type: 'number' }),
+		typesCol.accessor('currencyVal', { header: 'Currency', type: 'currency' }),
+		typesCol.accessor('percentVal', { header: 'Percent', type: 'percent' }),
+		typesCol.accessor('booleanVal', { header: 'Boolean', type: 'boolean' }),
+		typesCol.accessor('selectVal', { header: 'Select', type: 'select' }),
+		typesCol.accessor('urlVal', { header: 'URL', type: 'url' }),
+		typesCol.accessor('dateVal', { header: 'Date', type: 'date' }),
+		typesCol.accessor('timeVal', { header: 'Time', type: 'time' }),
+		typesCol.accessor('datetimeVal', { header: 'Date-Time', type: 'date-time' })
+	]);
+
+	const typesTable = DataTable.createTable({
+		data: typesRows,
+		columns: typesColumns,
+		getRowId: (row) => row.label
+	});
+
 	type VendorPrice = {
 		vendor: string;
 		price: number;
@@ -207,6 +284,15 @@
 	let lastClicked = $state<Invoice | null>(null);
 	let lastDoubleClicked = $state<Invoice | null>(null);
 </script>
+
+<div class="max-w-5xl space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">
+	<DataTable.Toolbar>
+		<DataTable.Title>Column Types</DataTable.Title>
+	</DataTable.Toolbar>
+	<div class="h-48 min-h-0">
+		<DataTable.Root table={typesTable} caption="Column type examples" />
+	</div>
+</div>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section class="space-y-4">

@@ -9,7 +9,10 @@ export type DataTableColumnType =
 	| 'percent'
 	| 'boolean'
 	| 'select'
-	| 'url';
+	| 'url'
+	| 'date'
+	| 'time'
+	| 'date-time';
 export type DataTableCellRenderer<T extends RowData> = (
 	value: unknown,
 	row: T
@@ -50,7 +53,7 @@ export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<
 		cellProps?: DataTableCellPropsResolver<T>;
 		cellSnippet?: Snippet<[DataTableCellRenderProps<T>]>;
 		type?: DataTableColumnType;
-		formatOptions?: Intl.NumberFormatOptions;
+		formatOptions?: Intl.NumberFormatOptions | Intl.DateTimeFormatOptions;
 		formatLocale?: string;
 		pinned?: 'left' | 'right';
 		grow?: boolean;
@@ -92,7 +95,7 @@ export type DataTableColumn<T extends RowData> = DataTableLeafColumn<T> | DataTa
 export type DataTableColumnMeta = {
 	align?: DataTableAlign;
 	type?: DataTableColumnType;
-	formatOptions?: Intl.NumberFormatOptions;
+	formatOptions?: Intl.NumberFormatOptions | Intl.DateTimeFormatOptions;
 	formatLocale?: string;
 	grow?: boolean;
 };
