@@ -10,12 +10,12 @@
 	import {
 		alignClass,
 		columnSizeStyle,
-		getAllRowsSelectionState,
+		//		getAllRowsSelectionState,
 		getBooleanCellValue,
 		getColumnMeta,
 		getPinningStyle,
 		getRowSelectionState,
-		getSelectedRowCount,
+		//		getSelectedRowCount,
 		getUrlCellValue,
 		justifyClass,
 		openUrlCell,
@@ -53,11 +53,14 @@
 	const tableColumnCount = $derived(visibleColumnCount + (isRowSelectionEnabled ? 1 : 0));
 	const renderedColumnCount = $derived(tableColumnCount + 1);
 	const headerGroupCount = $derived(headerGroups.length);
-	const allRowsSelectionState = $derived(
-		getAllRowsSelectionState(table, table.store.state.rowSelection)
-	);
-	const selectedRowCount = $derived(getSelectedRowCount(table, table.store.state.rowSelection));
-	const isColumnResizing = $derived(table.store.state.columnResizing.isResizingColumn !== false);
+	//	const allRowsSelectionState = $derived(
+	//		getAllRowsSelectionState(table, table.store.state.rowSelection)
+	//	);
+	//	const selectedRowCount = $derived(getSelectedRowCount(table, table.store.state.rowSelection));
+	//	const isColumnResizing = $derived(table.store.state.columnResizing.isResizingColumn !== false);
+	const allRowsSelectionState = $derived<boolean | 'indeterminate'>(false);
+	const selectedRowCount = $derived(0);
+	const isColumnResizing = $derived(false);
 </script>
 
 <div
