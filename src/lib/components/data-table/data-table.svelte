@@ -42,23 +42,9 @@
 		...rest
 	}: Props = $props();
 
-	const tableStateKey = $derived(JSON.stringify(table.store.state));
-	function trackTableState() {
-		return tableStateKey;
-	}
-
-	const rowModel = $derived.by(() => {
-		trackTableState();
-		return table.getRowModel();
-	});
-	const headerGroups = $derived.by(() => {
-		trackTableState();
-		return table.getHeaderGroups();
-	});
-	const visibleLeafColumns = $derived.by(() => {
-		trackTableState();
-		return table.getVisibleLeafColumns();
-	});
+	const rowModel = $derived(table.getRowModel());
+	const headerGroups = $derived(table.getHeaderGroups());
+	const visibleLeafColumns = $derived(table.getVisibleLeafColumns());
 	const growColumn = $derived(visibleLeafColumns.find((col) => getColumnMeta(col.columnDef)?.grow));
 	const hasGrowColumn = $derived(growColumn !== undefined);
 	const visibleColumnCount = $derived(visibleLeafColumns.length);
