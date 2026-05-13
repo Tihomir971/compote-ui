@@ -8,9 +8,9 @@ import {
 	columnOrderingFeature,
 	createSortedRowModel,
 	createFilteredRowModel,
-	createFacetedRowModel,
-	createFacetedMinMaxValues,
-	createFacetedUniqueValues,
+	//	createFacetedRowModel,
+	//	createFacetedMinMaxValues,
+	//	createFacetedUniqueValues,
 	createTable as createTanStackTable,
 	filterFns,
 	renderComponent,
@@ -108,10 +108,10 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			_features: dataTableFeatures,
 			_rowModels: {
 				sortedRowModel: createSortedRowModel(sortFns),
-				filteredRowModel: createFilteredRowModel({ ...filterFns, oneOf: oneOfFilterFn }),
-				facetedRowModel: createFacetedRowModel(),
-				facetedMinMaxValues: createFacetedMinMaxValues(),
-				facetedUniqueValues: createFacetedUniqueValues()
+				filteredRowModel: createFilteredRowModel({ ...filterFns, oneOf: oneOfFilterFn })
+				// facetedRowModel: createFacetedRowModel(),
+				// facetedMinMaxValues: createFacetedMinMaxValues(),
+				// facetedUniqueValues: createFacetedUniqueValues()
 			},
 			columnResizeMode: options.columnResizeMode,
 			getRowId: options.getRowId,
