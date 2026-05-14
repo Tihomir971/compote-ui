@@ -1,4 +1,7 @@
-<script lang="ts" generics="TFeatures extends TableFeatures, T extends RowData, TState = TableState<TFeatures>">
+<script
+	lang="ts"
+	generics="TFeatures extends TableFeatures, T extends RowData, TState = TableState<TFeatures>"
+>
 	import { FlexRender } from '@tanstack/svelte-table';
 	import type { RowData, SvelteTable, TableFeatures, TableState } from '@tanstack/svelte-table';
 

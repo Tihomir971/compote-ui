@@ -4,7 +4,14 @@
 	import DataTableNew from '$lib/components/data-table/data-table-new.svelte';
 	import * as DataTable from '$lib/components/data-table';
 	let compoteRunning = $state(false); // --- SimpleStressTable + compote-ui createTable ---
-	type CompoteRow = { id: number; name: string; value: number; status: string; active: boolean; url: string | null };
+	type CompoteRow = {
+		id: number;
+		name: string;
+		value: number;
+		status: string;
+		active: boolean;
+		url: string | null;
+	};
 
 	const compoteDatasetA: CompoteRow[] = Array.from({ length: 14 }, (_, i) => ({
 		id: i + 1,
@@ -52,9 +59,9 @@
 			return compoteData;
 		},
 		columns: compoteColumns,
-		getRowId: (row) => String(row.id)
+		getRowId: (row) => String(row.id),
+		enableRowSelection: true
 	});
-
 </script>
 
 <div class="max-w-2xl space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">

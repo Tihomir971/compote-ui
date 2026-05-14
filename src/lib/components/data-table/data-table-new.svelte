@@ -6,6 +6,7 @@
 	import { createSubscriber } from 'svelte/reactivity';
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
+	import Checkbox from '../checkbox/checkbox.svelte';
 	import { type DataTableInstance } from './create-table';
 	import {
 		alignClass,
@@ -59,6 +60,11 @@
 		return untrack(() => table.getTotalSize());
 	});
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
+	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
+	// table.state is the public selected state — safe to read directly in template
+	// table.store.state is the internal TanStack atom — accumulates subscriptions
+	const rowSelection = $derived(table.state.rowSelection);
+	const selectedCount = $derived(Object.keys(rowSelection).length);
 </script>
 
 <div
@@ -88,8 +94,28 @@
 				<caption class="sr-only">{caption}</caption>
 			{/if}
 			<thead class="sticky top-0 z-20 bg-surface-2 text-left text-ink-dim">
-				{#each headerGroups as headerGroup (headerGroup.id)}
+				{#each headerGroups as headerGroup, headerGroupIndex (headerGroup.id)}
 					<tr class="h-9">
+						{#if isRowSelectionEnabled}
+							<th
+								class="h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 text-center align-middle"
+								style="position: sticky; left: 0; z-index: 15; width: 40px; min-width: 40px; max-width: 40px"
+							>
+								{#if isMultiRowSelectionEnabled && headerGroupIndex === headerGroups.length - 1}
+									<Checkbox
+										size="sm"
+										aria-label="Select all rows"
+										class="mx-auto size-4"
+										checked={table.getIsAllRowsSelected()
+											? true
+											: table.getIsSomeRowsSelected()
+												? 'indeterminate'
+												: false}
+										onCheckedChange={({ checked }) => table.toggleAllRowsSelected(checked === true)}
+									/>
+								{/if}
+							</th>
+						{/if}
 						{#each headerGroup.headers as header (header.id)}
 							{@const columnDef = getColumnMeta(header.column.columnDef)}
 							<th
@@ -112,15 +138,33 @@
 			</thead>
 			<tbody>
 				{#each rowModel.rows as row (row.id)}
+					{@const isSelected = Boolean(rowSelection[row.id])}
 					<tr
 						class={cn(
 							'group/row',
 							'[--row-bg:var(--compote-surface-1)]',
-							'hover:bg-well/60 hover:[--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
+							'hover:bg-well/60 hover:[--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
+							isSelected &&
+								'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
 						)}
 						onclick={(event) => onRowClick?.({ row: row.original, event })}
 						ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
 					>
+						{#if isRowSelectionEnabled}
+							<td
+								class="border-b border-surface-2 bg-(--row-bg) px-3 py-2 text-center align-middle group-last/row:border-b-0"
+								style="position: sticky; left: 0; z-index: 1"
+							>
+								<Checkbox
+									size="sm"
+									aria-label="Select row"
+									class="mx-auto size-4"
+									checked={isSelected}
+									disabled={!row.getCanSelect()}
+									onCheckedChange={({ checked }) => row.toggleSelected(checked === true)}
+								/>
+							</td>
+						{/if}
 						{#each row.getVisibleCells() as cell (cell.id)}
 							{@const columnDef = getColumnMeta(cell.column.columnDef)}
 							<td
@@ -132,11 +176,19 @@
 								{#if columnDef?.type === 'boolean'}
 									{@const value = getBooleanCellValue(cell.getValue())}
 									{#if value === true}
-										<span class="inline-flex size-5 items-center justify-center text-success" role="img" aria-label="Yes">
+										<span
+											class="inline-flex size-5 items-center justify-center text-success"
+											role="img"
+											aria-label="Yes"
+										>
 											<PhCheck class="size-4" />
 										</span>
 									{:else if value === false}
-										<span class="inline-flex size-5 items-center justify-center text-danger" role="img" aria-label="No">
+										<span
+											class="inline-flex size-5 items-center justify-center text-danger"
+											role="img"
+											aria-label="No"
+										>
 											<PhX class="size-4" />
 										</span>
 									{:else}
@@ -164,9 +216,7 @@
 							</td>
 						{/each}
 						{#if !hasGrowColumn}
-							<td
-								aria-hidden="true"
-								class="border-b border-surface-2 p-0 group-last/row:border-b-0"
+							<td aria-hidden="true" class="border-b border-surface-2 p-0 group-last/row:border-b-0"
 							></td>
 						{/if}
 					</tr>
@@ -185,6 +235,10 @@
 	</div>
 
 	<div class="shrink-0 border-t border-surface-3 bg-surface-2 px-3 py-2 text-sm text-ink-dim">
-		{rowModel.rows.length} rows
+		{#if isRowSelectionEnabled}
+			{selectedCount} of {rowModel.rows.length} rows selected
+		{:else}
+			{rowModel.rows.length} rows
+		{/if}
 	</div>
 </div>

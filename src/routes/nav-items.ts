@@ -13,6 +13,8 @@ export const navItems: NavItem[] = [
 	{ label: 'Combobox', slug: 'combobox' },
 	{ label: 'Data Table', slug: 'data-table' },
 	{ label: 'Data Table Test', slug: 'data-table-test' },
+	{ label: 'Data Table Tanstack', slug: 'data-table-tanstack' },
+	{ label: 'Data Table Tanstack Backup', slug: 'data-table-tanstack-copy' },
 	{ label: 'Dialog', slug: 'dialog' },
 	{ label: 'Drawer', slug: 'drawer' },
 	{ label: 'Field', slug: 'field' },
