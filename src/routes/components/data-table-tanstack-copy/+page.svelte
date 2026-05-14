@@ -21,11 +21,29 @@
 	});
 
 	let data = $state(makeData(100));
+	let paintMs = $state<number | null>(null);
+	let measureStart = 0;
+
+	function measure() {
+		measureStart = performance.now();
+	}
+	function afterPaint() {
+		requestAnimationFrame(() => {
+			requestAnimationFrame(() => {
+				paintMs = performance.now() - measureStart;
+			});
+		});
+	}
+
 	const refreshData = () => {
+		measure();
 		data = makeData(100);
+		afterPaint();
 	};
 	const stressTest = () => {
+		measure();
 		data = makeData(200_000);
+		afterPaint();
 	};
 
 	// Svelte action to set indeterminate property on checkbox inputs
@@ -116,9 +134,12 @@
 </script>
 
 <div class="demo-root">
-	<div>
+	<div style="display: flex; align-items: center; gap: 12px;">
 		<button onclick={() => refreshData()}>Regenerate Data</button>
 		<button onclick={() => stressTest()}>Stress Test (200k rows)</button>
+		{#if paintMs !== null}
+			<span>paint: <strong>{paintMs.toFixed(1)} ms</strong></span>
+		{/if}
 	</div>
 	<div>
 		<input
