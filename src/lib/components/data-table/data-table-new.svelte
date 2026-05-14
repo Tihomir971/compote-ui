@@ -5,8 +5,16 @@
 	import { untrack } from 'svelte';
 	import { createSubscriber } from 'svelte/reactivity';
 	import { cn, type ClassValue } from 'tailwind-variants';
+	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
 	import { type DataTableInstance } from './create-table';
-	import { getColumnMeta } from './data-table-utils';
+	import {
+		alignClass,
+		getBooleanCellValue,
+		getColumnMeta,
+		getUrlCellValue,
+		justifyClass,
+		openUrlCell
+	} from './data-table-utils';
 
 	type Props = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
 		table: DataTableInstance<T>;
@@ -35,7 +43,6 @@
 	const rowModel = $derived(table.getRowModel());
 	const headerGroups = $derived(table.getHeaderGroups());
 
-	// Column sizing state — protected with createSubscriber + untrack
 	const columnSizes = $derived.by(() => {
 		subscribeToTable();
 		return untrack(() =>
@@ -84,8 +91,12 @@
 				{#each headerGroups as headerGroup (headerGroup.id)}
 					<tr class="h-9">
 						{#each headerGroup.headers as header (header.id)}
+							{@const columnDef = getColumnMeta(header.column.columnDef)}
 							<th
-								class="h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 align-middle leading-5 font-medium"
+								class={cn(
+									'h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 align-middle leading-5 font-medium',
+									alignClass(columnDef?.align)
+								)}
 								colspan={header.colSpan}
 							>
 								{#if !header.isPlaceholder}
@@ -111,8 +122,45 @@
 						ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
 					>
 						{#each row.getVisibleCells() as cell (cell.id)}
-							<td class="truncate border-b border-b-surface-2 px-3 py-2 group-last/row:border-b-0">
-								<FlexRender {cell} />
+							{@const columnDef = getColumnMeta(cell.column.columnDef)}
+							<td
+								class={cn(
+									'truncate border-b border-b-surface-2 px-3 py-2 group-last/row:border-b-0',
+									alignClass(columnDef?.align)
+								)}
+							>
+								{#if columnDef?.type === 'boolean'}
+									{@const value = getBooleanCellValue(cell.getValue())}
+									{#if value === true}
+										<span class="inline-flex size-5 items-center justify-center text-success" role="img" aria-label="Yes">
+											<PhCheck class="size-4" />
+										</span>
+									{:else if value === false}
+										<span class="inline-flex size-5 items-center justify-center text-danger" role="img" aria-label="No">
+											<PhX class="size-4" />
+										</span>
+									{:else}
+										-
+									{/if}
+								{:else if columnDef?.type === 'url'}
+									{@const value = getUrlCellValue(cell.getValue())}
+									{#if value}
+										<button
+											type="button"
+											class={cn(
+												'inline-flex max-w-full appearance-none items-center gap-1.5 rounded-sm border-0 bg-transparent p-0 align-middle leading-5 font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+												justifyClass(columnDef.align)
+											)}
+											onclick={() => openUrlCell(value)}
+										>
+											<PhArrowSquareOut class="size-3.5 shrink-0" />
+										</button>
+									{:else}
+										-
+									{/if}
+								{:else}
+									<FlexRender {cell} />
+								{/if}
 							</td>
 						{/each}
 						{#if !hasGrowColumn}
