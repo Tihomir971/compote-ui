@@ -1,21 +1,21 @@
 <script lang="ts" generics="T extends RowData">
-	import { FlexRender } from '@tanstack/svelte-table';
-	import type { RowData } from '@tanstack/svelte-table';
+	import type { RowData } from '@tanstack/table-core';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
-	import Checkbox from '../checkbox/checkbox.svelte';
-	import { type DataTableInstance } from './create-table';
+	import type { DataTableInstance } from './data-table-utils';
 	import DataTableHead from './data-table-head.svelte';
+	import FlexRender from './flex-render.svelte';
 	import {
 		alignClass,
 		columnSizeStyle,
-		//		getAllRowsSelectionState,
 		getBooleanCellValue,
 		getColumnMeta,
 		getPinningStyle,
-		getRowSelectionState,
-		//		getSelectedRowCount,
+		getAllRowsSelectionState,
+		getReactiveCells,
+		getReactiveTableState,
+		getSelectedRowCount,
 		getUrlCellValue,
 		justifyClass,
 		openUrlCell,
@@ -42,9 +42,19 @@
 		...rest
 	}: Props = $props();
 
-	const rowModel = $derived(table.getRowModel());
-	const headerGroups = $derived(table.getHeaderGroups());
-	const visibleLeafColumns = $derived(table.getVisibleLeafColumns());
+	const tableState = $derived(getReactiveTableState(table));
+	const rowModel = $derived.by(() => {
+		getReactiveTableState(table);
+		return table.getRowModel();
+	});
+	const headerGroups = $derived.by(() => {
+		getReactiveTableState(table);
+		return table.getHeaderGroups();
+	});
+	const visibleLeafColumns = $derived.by(() => {
+		getReactiveTableState(table);
+		return table.getVisibleLeafColumns();
+	});
 	const growColumn = $derived(visibleLeafColumns.find((col) => getColumnMeta(col.columnDef)?.grow));
 	const hasGrowColumn = $derived(growColumn !== undefined);
 	const visibleColumnCount = $derived(visibleLeafColumns.length);
@@ -53,14 +63,15 @@
 	const tableColumnCount = $derived(visibleColumnCount + (isRowSelectionEnabled ? 1 : 0));
 	const renderedColumnCount = $derived(tableColumnCount + 1);
 	const headerGroupCount = $derived(headerGroups.length);
-	//	const allRowsSelectionState = $derived(
-	//		getAllRowsSelectionState(table, table.store.state.rowSelection)
-	//	);
-	//	const selectedRowCount = $derived(getSelectedRowCount(table, table.store.state.rowSelection));
-	//	const isColumnResizing = $derived(table.store.state.columnResizing.isResizingColumn !== false);
-	const allRowsSelectionState = $derived<boolean | 'indeterminate'>(false);
-	const selectedRowCount = $derived(0);
-	const isColumnResizing = $derived(false);
+	const allRowsSelectionState = $derived.by(() => {
+		getReactiveTableState(table);
+		return getAllRowsSelectionState(table);
+	});
+	const selectedRowCount = $derived.by(() => {
+		getReactiveTableState(table);
+		return getSelectedRowCount(table);
+	});
+	const isColumnResizing = $derived(tableState.columnSizingInfo.isResizingColumn !== false);
 </script>
 
 <div
@@ -108,7 +119,7 @@
 			/>
 			<tbody>
 				{#each rowModel.rows as row (row.id)}
-					{@const rowSelected = getRowSelectionState(table, table.store.state.rowSelection, row.id)}
+					{@const rowSelected = getReactiveTableState(table).rowSelection[row.id] === true}
 					<tr
 						class={cn(
 							'group/row',
@@ -125,17 +136,17 @@
 								class="border-b border-surface-2 bg-(--row-bg) px-3 py-2 text-center align-middle group-last/row:border-b-0"
 								style="position: sticky; left: 0; z-index: 1"
 							>
-								<Checkbox
-									size="sm"
+								<input
+									type="checkbox"
 									aria-label="Select row"
-									class="mx-auto size-4"
+									class="table-checkbox mx-auto block size-4"
 									checked={rowSelected}
 									disabled={!row.getCanSelect()}
-									onCheckedChange={({ checked }) => row.toggleSelected(checked === true)}
+									onchange={(e) => row.toggleSelected(e.currentTarget.checked)}
 								/>
 							</td>
 						{/if}
-						{#each row.getVisibleCells() as cell (cell.id)}
+						{#each getReactiveCells(row, getReactiveTableState(table).columnVisibility) as cell (cell.id)}
 							{@const columnDef = getColumnMeta(cell.column.columnDef)}
 							<td
 								class={cn(
@@ -143,7 +154,7 @@
 									alignClass(columnDef?.align),
 									cell.column.getIsPinned() && 'bg-(--row-bg)'
 								)}
-								style={getPinningStyle(cell.column, false, isRowSelectionEnabled)}
+								style={getPinningStyle(cell.column, table, false, isRowSelectionEnabled)}
 							>
 								{#if columnDef?.type === 'boolean'}
 									{@const value = getBooleanCellValue(cell.getValue())}
@@ -183,7 +194,7 @@
 										-
 									{/if}
 								{:else}
-									<FlexRender {cell} />
+									<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
 								{/if}
 							</td>
 						{/each}
@@ -211,3 +222,7 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	@import './data-table-checkbox.css';
+</style>

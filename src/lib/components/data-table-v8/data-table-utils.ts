@@ -1,15 +1,20 @@
-import type { CellData, ColumnPinningPosition, Header, RowData } from '@tanstack/svelte-table';
+import type {
+	Column,
+	Header,
+	Row,
+	RowData,
+	Table,
+	TableState,
+	VisibilityState
+} from '@tanstack/table-core';
 import { cn } from 'tailwind-variants';
-import type { DataTableFeatures, DataTableInstance } from './create-table';
 import type { DataTableColumnMeta } from './types';
 
-export type DataTablePinnableColumn = {
-	getIsPinned(): ColumnPinningPosition;
-	getStart(position?: ColumnPinningPosition): number;
-	getAfter(position?: ColumnPinningPosition): number;
-	getIsLastColumn(position?: ColumnPinningPosition): boolean;
-	getIsFirstColumn(position?: ColumnPinningPosition): boolean;
-};
+export type DataTableInstance<T extends RowData> = Table<T>;
+
+export function getReactiveTableState<T extends RowData>(table: DataTableInstance<T>): TableState {
+	return (table as unknown as { _svelteState?: TableState })._svelteState ?? table.getState();
+}
 
 export function alignClass(align: DataTableColumnMeta['align']) {
 	return align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left';
@@ -60,10 +65,10 @@ export function virtualGroupWithGrowSizeStyle(fixedPortion: number) {
 
 export function resizeHandleStyle<T extends RowData>(
 	table: DataTableInstance<T>,
-	header: Header<DataTableFeatures, T, CellData>
+	header: Header<T, unknown>
 ) {
 	if (table.options.columnResizeMode !== 'onEnd') return undefined;
-	const deltaOffset = table.store.state.columnResizing.deltaOffset;
+	const deltaOffset = table.getState().columnSizingInfo.deltaOffset;
 	if (!header.column.getIsResizing() || deltaOffset === null) return undefined;
 	return `transform: translateX(${deltaOffset}px)`;
 }
@@ -75,11 +80,7 @@ export function resizeHandleClass(headerIndex: number, headerCount: number) {
 	);
 }
 
-export function getHeaderSortDirection<T extends RowData>(
-	header: Header<DataTableFeatures, T, CellData>,
-	sortingState: unknown
-) {
-	void sortingState;
+export function getHeaderSortDirection<T extends RowData>(header: Header<T, unknown>) {
 	return header.column.getIsSorted();
 }
 
@@ -96,10 +97,8 @@ export function getHeaderAriaSort(sortDirection: false | 'asc' | 'desc') {
 }
 
 export function getAllRowsSelectionState<T extends RowData>(
-	table: DataTableInstance<T>,
-	rowSelection: unknown
-) {
-	void rowSelection;
+	table: DataTableInstance<T>
+): boolean | 'indeterminate' {
 	const allRowsSelected = table.getIsAllRowsSelected();
 	const someRowsSelected = table.getIsSomeRowsSelected();
 	return allRowsSelected ? true : someRowsSelected ? 'indeterminate' : false;
@@ -107,18 +106,19 @@ export function getAllRowsSelectionState<T extends RowData>(
 
 export function getRowSelectionState<T extends RowData>(
 	table: DataTableInstance<T>,
-	rowSelection: unknown,
 	rowId: string
 ) {
-	void rowSelection;
 	return table.getRow(rowId).getIsSelected();
 }
 
-export function getSelectedRowCount<T extends RowData>(
-	table: DataTableInstance<T>,
-	rowSelection: unknown
+export function getReactiveCells<T extends RowData>(
+	row: Row<T>,
+	columnVisibility: VisibilityState
 ) {
-	void rowSelection;
+	return row.getAllCells().filter((cell) => columnVisibility[cell.column.id] !== false);
+}
+
+export function getSelectedRowCount<T extends RowData>(table: DataTableInstance<T>) {
 	return table.getSelectedRowModel().rows.length;
 }
 
@@ -128,8 +128,9 @@ export function getBooleanCellValue(value: unknown) {
 	return undefined;
 }
 
-export function getPinningStyle(
-	column: DataTablePinnableColumn,
+export function getPinningStyle<T extends RowData>(
+	column: Column<T, unknown>,
+	table: DataTableInstance<T>,
 	isHeader = false,
 	isRowSelectionEnabled = false
 ): string | undefined {
@@ -141,8 +142,10 @@ export function getPinningStyle(
 
 	if (isPinned === 'left') {
 		const left = column.getStart('left') + selectionOffset;
+		const leftCols = table.getLeftLeafColumns();
+		const isLastLeft = leftCols[leftCols.length - 1]?.id === column.id;
 		const shadow =
-			!isHeader && column.getIsLastColumn('left')
+			!isHeader && isLastLeft
 				? 'box-shadow: -4px 0 4px -4px var(--compote-border) inset'
 				: undefined;
 		return ['position: sticky', `z-index: ${zIndex}`, `left: ${left}px`, shadow]
@@ -150,8 +153,10 @@ export function getPinningStyle(
 			.join('; ');
 	} else {
 		const right = column.getAfter('right');
+		const rightCols = table.getRightLeafColumns();
+		const isFirstRight = rightCols[0]?.id === column.id;
 		const shadow =
-			!isHeader && column.getIsFirstColumn('right')
+			!isHeader && isFirstRight
 				? 'box-shadow: 4px 0 4px -4px var(--compote-border) inset'
 				: undefined;
 		return ['position: sticky', `z-index: ${zIndex}`, `right: ${right}px`, shadow]

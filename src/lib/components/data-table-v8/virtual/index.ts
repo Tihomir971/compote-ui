@@ -2,10 +2,13 @@ export { default as Root } from '../data-table-virtualized.svelte';
 export {
 	ColumnFilter,
 	ColumnVisibility,
+	FlexRender,
 	Title,
 	Toolbar,
 	createDataTableColumnHelper,
-	createTable
+	createTable,
+	renderComponent,
+	renderSnippet
 } from '../index';
 export type {
 	CreateDataTableOptions,
@@ -18,7 +21,6 @@ export type {
 	DataTableColumnBase,
 	DataTableColumnOptions,
 	DataTableColumnType,
-	DataTableFeatures,
 	DataTableGroupColumn,
 	DataTableInstance,
 	DataTableLeafColumn,

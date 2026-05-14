@@ -1,11 +1,11 @@
 <script lang="ts" generics="T extends RowData">
 	import { onDestroy } from 'svelte';
-	import type { CellData, Column, RowData } from '@tanstack/svelte-table';
+	import type { Column, RowData } from '@tanstack/table-core';
 	import * as Popover from '../popover';
 	import * as ScrollArea from '../scroll-area';
 	import Checkbox from '../checkbox/checkbox.svelte';
 	import { cn } from 'tailwind-variants';
-	import type { DataTableFeatures, DataTableInstance } from './create-table';
+	import { getReactiveTableState, type DataTableInstance } from './data-table-utils';
 	import NumberInput from '../number-input/number-input.svelte';
 	import * as Field from '../field';
 
@@ -21,21 +21,24 @@
 	let localNumMax: Record<string, number> = $state({});
 	const timers: Record<string, ReturnType<typeof setTimeout>> = {};
 
-	const columnFilters = $derived(table.store.state.columnFilters);
+	const columnFilters = $derived(getReactiveTableState(table).columnFilters);
 	const activeCount = $derived(columnFilters.length);
-	const filterableColumns = $derived(table.getAllLeafColumns().filter((col) => col.getCanFilter()));
+	const filterableColumns = $derived.by(() => {
+		getReactiveTableState(table);
+		return table.getAllLeafColumns().filter((col) => col.getCanFilter());
+	});
 
 	onDestroy(() => {
 		Object.values(timers).forEach(clearTimeout);
 	});
 
-	function getColumnType(column: Column<DataTableFeatures, T, CellData>): string | undefined {
+	function getColumnType(column: Column<T, unknown>): string | undefined {
 		return (column.columnDef.meta as Record<string, unknown> | undefined)?.type as
 			| string
 			| undefined;
 	}
 
-	function getColumnLabel(column: Column<DataTableFeatures, T, CellData>): string {
+	function getColumnLabel(column: Column<T, unknown>): string {
 		return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
 	}
 
@@ -48,7 +51,7 @@
 		table.resetColumnFilters();
 	}
 
-	function handleTextInput(column: Column<DataTableFeatures, T, CellData>, value: string) {
+	function handleTextInput(column: Column<T, unknown>, value: string) {
 		localText[column.id] = value;
 		clearTimeout(timers[column.id]);
 		timers[column.id] = setTimeout(() => {
@@ -57,7 +60,7 @@
 	}
 
 	function handleNumericInput(
-		column: Column<DataTableFeatures, T, CellData>,
+		column: Column<T, unknown>,
 		which: 'min' | 'max',
 		value: number | null
 	) {
@@ -76,33 +79,27 @@
 		}, 300);
 	}
 
-	function getSelectValues(column: Column<DataTableFeatures, T, CellData>): string[] {
+	function getSelectValues(column: Column<T, unknown>): string[] {
 		return (column.getFilterValue() as string[] | undefined) ?? [];
 	}
 
-	function handleSelectChange(
-		column: Column<DataTableFeatures, T, CellData>,
-		value: string,
-		checked: boolean
-	) {
+	function handleSelectChange(column: Column<T, unknown>, value: string, checked: boolean) {
 		const current = getSelectValues(column);
 		const next = checked ? [...current, value] : current.filter((v) => v !== value);
 		column.setFilterValue(next.length ? next : undefined);
 	}
 
-	function getFacetedValues(column: Column<DataTableFeatures, T, CellData>): string[] {
+	function getFacetedValues(column: Column<T, unknown>): string[] {
 		return Array.from(column.getFacetedUniqueValues().keys()).map(String).sort();
 	}
 
-	function getFacetedMinMax(
-		column: Column<DataTableFeatures, T, CellData>
-	): [number | undefined, number | undefined] {
+	function getFacetedMinMax(column: Column<T, unknown>): [number | undefined, number | undefined] {
 		const vals = column.getFacetedMinMaxValues();
 		return vals ? [vals[0] as number, vals[1] as number] : [undefined, undefined];
 	}
 
 	function getColumnFormatOptions(
-		column: Column<DataTableFeatures, T, CellData>
+		column: Column<T, unknown>
 	): Intl.NumberFormatOptions | undefined {
 		return (column.columnDef.meta as Record<string, unknown> | undefined)?.formatOptions as
 			| Intl.NumberFormatOptions

@@ -12,6 +12,7 @@ export const navItems: NavItem[] = [
 	{ label: 'Collapsible', slug: 'collapsible' },
 	{ label: 'Combobox', slug: 'combobox' },
 	{ label: 'Data Table', slug: 'data-table' },
+	{ label: 'Data Table v8', slug: 'data-table-v8' },
 	{ label: 'Dialog', slug: 'dialog' },
 	{ label: 'Drawer', slug: 'drawer' },
 	{ label: 'Field', slug: 'field' },

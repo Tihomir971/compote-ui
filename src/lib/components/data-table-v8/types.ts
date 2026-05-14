@@ -1,4 +1,4 @@
-import type { CellData, ColumnDef, RowData, TableFeatures } from '@tanstack/svelte-table';
+import type { FilterFnOption, RowData } from '@tanstack/table-core';
 import type { Snippet } from 'svelte';
 
 export type DataTableAlign = 'left' | 'center' | 'right';
@@ -26,20 +26,17 @@ export type DataTableCellPropsResolver<T extends RowData> = (
 	row: T
 ) => Record<string, unknown>;
 
-export type DataTableColumnOptions<T extends RowData> = Partial<
-	Pick<
-		ColumnDef<TableFeatures, T, CellData>,
-		| 'size'
-		| 'minSize'
-		| 'maxSize'
-		| 'enableResizing'
-		| 'enableHiding'
-		| 'enableSorting'
-		| 'sortDescFirst'
-		| 'enableColumnFilter'
-		| 'filterFn'
-	>
->;
+export type DataTableColumnOptions<T extends RowData> = {
+	size?: number;
+	minSize?: number;
+	maxSize?: number;
+	enableResizing?: boolean;
+	enableHiding?: boolean;
+	enableSorting?: boolean;
+	sortDescFirst?: boolean;
+	enableColumnFilter?: boolean;
+	filterFn?: FilterFnOption<T>;
+};
 
 export type DataTableColumnBase = {
 	header: string;

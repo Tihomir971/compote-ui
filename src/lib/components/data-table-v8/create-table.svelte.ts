@@ -1,94 +1,68 @@
 import {
-	columnVisibilityFeature,
-	columnResizingFeature,
-	columnSizingFeature,
-	columnFilteringFeature,
-	columnFacetingFeature,
-	columnPinningFeature,
-	columnOrderingFeature,
-	createSortedRowModel,
-	createFilteredRowModel,
-	//	createFacetedRowModel,
-	//	createFacetedMinMaxValues,
-	//	createFacetedUniqueValues,
-	createTable as createTanStackTable,
-	filterFns,
-	renderComponent,
-	renderSnippet,
-	rowSelectionFeature,
-	rowSortingFeature,
-	sortFns,
-	tableFeatures,
-	type CellContext,
-	type CellData,
+	getCoreRowModel,
+	getSortedRowModel,
+	getFilteredRowModel,
+	getFacetedRowModel,
+	getFacetedUniqueValues,
+	getFacetedMinMaxValues,
 	type ColumnDef,
 	type ColumnPinningState,
 	type ColumnResizeMode,
 	type ColumnSizingState,
-	type ColumnVisibilityState,
+	type VisibilityState,
+	type FilterFn,
 	type Row,
 	type RowData,
-	type SvelteTable,
-	type TableState
-} from '@tanstack/svelte-table';
-import { createAtom } from '@tanstack/svelte-store';
-import type { Component } from 'svelte';
+	type Table,
+	type Updater
+} from '@tanstack/table-core';
 import { useLocaleContext } from '@ark-ui/svelte/locale';
+import type { Component } from 'svelte';
+import { createSvelteTable } from './create-svelte-table.svelte';
+import { renderComponent, renderSnippet } from './render-helpers';
 import type {
 	DataTableColumn,
 	DataTableColumnType,
 	DataTableGroupColumn,
-	DataTableLeafColumn
+	DataTableLeafColumn,
+	DataTableColumnMeta
 } from './types';
 
-const dataTableFeatures = tableFeatures({
-	columnVisibilityFeature,
-	columnSizingFeature,
-	columnResizingFeature,
-	columnFilteringFeature,
-	columnFacetingFeature,
-	columnPinningFeature,
-	columnOrderingFeature,
-	rowSelectionFeature,
-	rowSortingFeature
-});
+declare module '@tanstack/table-core' {
+	interface FilterFns {
+		oneOf: FilterFn<unknown>;
+	}
+}
 
-export type DataTableFeatures = typeof dataTableFeatures;
-export type DataTableSelectedState = Pick<
-	TableState<DataTableFeatures>,
-	| 'columnVisibility'
-	| 'columnSizing'
-	| 'columnResizing'
-	| 'rowSelection'
-	| 'sorting'
-	| 'columnFilters'
->;
-
-function oneOfFilterFn(
-	row: Row<DataTableFeatures, RowData>,
+function oneOfFilterFn<T extends RowData>(
+	row: Row<T>,
 	columnId: string,
 	filterValue: string[]
 ): boolean {
 	return filterValue.includes(String(row.getValue(columnId)));
 }
 oneOfFilterFn.autoRemove = (val: unknown): boolean => !Array.isArray(val) || val.length === 0;
-export type DataTableInstance<T extends RowData> = SvelteTable<
-	DataTableFeatures,
-	T,
-	DataTableSelectedState
->;
+
+export type DataTableInstance<T extends RowData> = Table<T>;
 
 export type CreateDataTableOptions<T extends RowData> = {
 	data: T[];
 	columns: DataTableColumn<T>[];
 	columnResizeMode?: ColumnResizeMode;
-	initialState?: Partial<TableState<DataTableFeatures>>;
-	getRowId?: (row: T, index: number, parent?: Row<DataTableFeatures, T>) => string;
-	enableRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
-	enableMultiRowSelection?: boolean | ((row: Row<DataTableFeatures, T>) => boolean);
+	initialState?: {
+		columnVisibility?: VisibilityState;
+		columnSizing?: ColumnSizingState;
+		columnPinning?: ColumnPinningState;
+		rowSelection?: Record<string, boolean>;
+		sorting?: { id: string; desc: boolean }[];
+		columnFilters?: { id: string; value: unknown }[];
+	};
+	getRowId?: (row: T, index: number, parent?: Row<T>) => string;
+	enableRowSelection?: boolean | ((row: Row<T>) => boolean);
+	enableMultiRowSelection?: boolean | ((row: Row<T>) => boolean);
 	enableSorting?: boolean;
 	debugTable?: boolean;
-	onColumnVisibilityChange?: (visibility: ColumnVisibilityState) => void;
+	onColumnVisibilityChange?: (visibility: VisibilityState) => void;
 };
 
 export function createTable<T extends RowData>(options: CreateDataTableOptions<T>) {
@@ -99,71 +73,53 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		...options.initialState?.columnVisibility
 	};
 
-	const columnVisibilityAtom = options.onColumnVisibilityChange
-		? createAtom<ColumnVisibilityState>(initialColumnVisibility)
-		: undefined;
-
-	const table = createTanStackTable(
-		{
-			_features: dataTableFeatures,
-			_rowModels: {
-				sortedRowModel: createSortedRowModel(sortFns),
-				filteredRowModel: createFilteredRowModel({ ...filterFns, oneOf: oneOfFilterFn })
-				// facetedRowModel: createFacetedRowModel(),
-				// facetedMinMaxValues: createFacetedMinMaxValues(),
-				// facetedUniqueValues: createFacetedUniqueValues()
-			},
-			columnResizeMode: options.columnResizeMode,
-			getRowId: options.getRowId,
-			enableRowSelection: options.enableRowSelection ?? false,
-			enableMultiRowSelection: options.enableMultiRowSelection,
-			enableSorting: options.enableSorting,
-			debugTable: options.debugTable,
-			get data() {
-				return options.data;
-			},
-			columns: createColumns(options.columns, localeCtx),
-			...(columnVisibilityAtom ? { atoms: { columnVisibility: columnVisibilityAtom } } : {}),
-			initialState: {
-				...options.initialState,
-				columnVisibility: initialColumnVisibility,
-				columnSizing: {
-					...createColumnSizing(options.columns),
-					...options.initialState?.columnSizing
-				},
-				columnPinning: options.initialState?.columnPinning ?? createColumnPinning(options.columns),
-				rowSelection: options.initialState?.rowSelection ?? {},
-				sorting: options.initialState?.sorting ?? [],
-				columnFilters: options.initialState?.columnFilters ?? []
-			}
+	const table = createSvelteTable<T>({
+		get data() {
+			return options.data;
 		},
-		(state): DataTableSelectedState => ({
-			columnVisibility: state.columnVisibility,
-			columnSizing: state.columnSizing,
-			columnResizing: state.columnResizing,
-			rowSelection: state.rowSelection,
-			sorting: state.sorting,
-			columnFilters: state.columnFilters
-		})
-	);
-
-	if (columnVisibilityAtom && options.onColumnVisibilityChange) {
-		const { onColumnVisibilityChange } = options;
-		let initialized = false;
-		columnVisibilityAtom.subscribe((value) => {
-			if (!initialized) {
-				initialized = true;
-				return;
-			}
-			onColumnVisibilityChange(value);
-		});
-	}
+		columns: createColumns(options.columns, localeCtx),
+		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
+		getFacetedRowModel: getFacetedRowModel(),
+		getFacetedUniqueValues: getFacetedUniqueValues(),
+		getFacetedMinMaxValues: getFacetedMinMaxValues(),
+		columnResizeMode: options.columnResizeMode,
+		getRowId: options.getRowId,
+		enableRowSelection: options.enableRowSelection ?? false,
+		enableMultiRowSelection: options.enableMultiRowSelection,
+		enableSorting: options.enableSorting,
+		debugTable: options.debugTable,
+		filterFns: {
+			oneOf: oneOfFilterFn as FilterFn<T>
+		},
+		...(options.onColumnVisibilityChange
+			? {
+					onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
+						const newVis =
+							typeof updater === 'function' ? updater(table.getState().columnVisibility) : updater;
+						options.onColumnVisibilityChange!(newVis);
+					}
+				}
+			: {}),
+		initialState: {
+			columnVisibility: initialColumnVisibility,
+			columnSizing: {
+				...createColumnSizing(options.columns),
+				...options.initialState?.columnSizing
+			},
+			columnPinning: options.initialState?.columnPinning ?? createColumnPinning(options.columns),
+			rowSelection: options.initialState?.rowSelection ?? {},
+			sorting: options.initialState?.sorting ?? [],
+			columnFilters: options.initialState?.columnFilters ?? []
+		}
+	});
 
 	return table;
 }
 
 function createColumnVisibility<T extends RowData>(columns: DataTableColumn<T>[]) {
-	return getLeafColumns(columns).reduce<ColumnVisibilityState>((visibility, column) => {
+	return getLeafColumns(columns).reduce<VisibilityState>((visibility, column) => {
 		visibility[getColumnId(column)] = true;
 		return visibility;
 	}, {});
@@ -174,7 +130,6 @@ function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
 		if (typeof column.size === 'number') {
 			sizes[getColumnId(column)] = column.size;
 		}
-
 		return sizes;
 	}, {});
 }
@@ -190,7 +145,7 @@ function createColumnPinning<T extends RowData>(columns: DataTableColumn<T>[]): 
 function createColumns<T extends RowData>(
 	columns: DataTableColumn<T>[],
 	localeCtx: ReturnType<typeof useLocaleContext>
-): ColumnDef<DataTableFeatures, T, CellData>[] {
+): ColumnDef<T>[] {
 	return columns.map((column) => {
 		if (isGroupColumn(column)) {
 			return {
@@ -199,7 +154,7 @@ function createColumns<T extends RowData>(
 				columns: createColumns(column.columns, localeCtx),
 				meta: {
 					align: column.align
-				}
+				} satisfies DataTableColumnMeta
 			};
 		}
 
@@ -214,8 +169,8 @@ function createColumns<T extends RowData>(
 			enableResizing: column.enableResizing,
 			enableHiding: getColumnEnableHiding(column, columnId),
 			enableSorting: column.enableSorting,
-			enableColumnFilter: column.enableColumnFilter,
 			sortDescFirst: column.sortDescFirst,
+			enableColumnFilter: column.enableColumnFilter,
 			...(derivedFilterFn !== undefined ? { filterFn: derivedFilterFn as never } : {}),
 			meta: {
 				align: column.align,
@@ -223,14 +178,14 @@ function createColumns<T extends RowData>(
 				formatOptions: column.formatOptions,
 				formatLocale: column.formatLocale,
 				grow: column.grow
-			}
-		} satisfies Partial<ColumnDef<DataTableFeatures, T, CellData>>;
+			} satisfies DataTableColumnMeta
+		} satisfies Partial<ColumnDef<T>>;
 
 		if (typeof column.accessorFn === 'function') {
 			return {
 				...columnDef,
 				accessorFn: column.accessorFn,
-				cell: (context: CellContext<DataTableFeatures, T, CellData>) =>
+				cell: (context) =>
 					formatCellValue(column, context.getValue(), context.row.original, localeCtx)
 			};
 		}
@@ -238,10 +193,10 @@ function createColumns<T extends RowData>(
 		return {
 			...columnDef,
 			accessorKey: column.accessorKey,
-			cell: (context: CellContext<DataTableFeatures, T, CellData>) =>
+			cell: (context) =>
 				formatCellValue(column, context.getValue(), context.row.original, localeCtx)
 		};
-	}) as ColumnDef<DataTableFeatures, T, CellData>[];
+	}) as ColumnDef<T>[];
 }
 
 function isGroupColumn<T extends RowData>(

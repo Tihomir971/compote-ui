@@ -1,9 +1,9 @@
 <script lang="ts" generics="T extends RowData">
-	import type { CellData, Column, RowData } from '@tanstack/svelte-table';
+	import type { RowData } from '@tanstack/table-core';
 	import * as Popover from '../popover';
 	import * as ScrollArea from '../scroll-area';
 	import Checkbox from '../checkbox/checkbox.svelte';
-	import type { DataTableFeatures, DataTableInstance } from './create-table';
+	import { getReactiveTableState, type DataTableInstance } from './data-table-utils';
 
 	type Props = {
 		table: DataTableInstance<T>;
@@ -12,22 +12,23 @@
 
 	let { table, triggerLabel = 'Columns' }: Props = $props();
 
-	const columnVisibility = $derived(table.store.state.columnVisibility);
-	const allColumnsVisible = $derived(table.getIsAllColumnsVisible());
+	const columnVisibility = $derived(getReactiveTableState(table).columnVisibility);
+	const allLeafColumns = $derived.by(() => {
+		getReactiveTableState(table);
+		return table.getAllLeafColumns();
+	});
+	const allColumnsVisible = $derived(
+		allLeafColumns.every((c) => !c.getCanHide() || columnVisibility[c.id] !== false)
+	);
 	const someColumnsVisible = $derived(
-		table.getAllLeafColumns().some((column) => column.getCanHide() && column.getIsVisible())
+		allLeafColumns.some((c) => c.getCanHide() && columnVisibility[c.id] !== false)
 	);
 	const allColumnsVisibilityState = $derived(
-		allColumnsVisible ? true : someColumnsVisible ? 'indeterminate' : false
+		allColumnsVisible ? true : someColumnsVisible ? ('indeterminate' as const) : false
 	);
 
-	function getColumnLabel(column: Column<DataTableFeatures, T, CellData>) {
+	function getColumnLabel(column: { columnDef: { header?: unknown }; id: string }) {
 		return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
-	}
-
-	function getColumnIsVisible(column: Column<DataTableFeatures, T, CellData>, state: unknown) {
-		void state;
-		return column.getIsVisible();
 	}
 </script>
 
@@ -52,12 +53,12 @@
 			<ScrollArea.Viewport>
 				<ScrollArea.Content class="py-1 pe-3">
 					<div class="flex flex-col">
-						{#each table.getAllLeafColumns() as column (column.id)}
+						{#each allLeafColumns as column (column.id)}
 							<Checkbox
 								size="md"
 								label={getColumnLabel(column)}
 								class="min-h-8 rounded-sm px-2 hover:bg-surface-2"
-								checked={getColumnIsVisible(column, columnVisibility)}
+								checked={columnVisibility[column.id] !== false}
 								disabled={!column.getCanHide()}
 								onCheckedChange={({ checked }) => column.toggleVisibility(checked === true)}
 							/>

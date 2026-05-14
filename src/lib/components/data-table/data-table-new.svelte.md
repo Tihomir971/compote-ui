@@ -234,11 +234,12 @@
 		</table>
 	</div>
 
-	<div class="shrink-0 border-t border-surface-3 bg-surface-2 px-3 py-2 text-sm text-ink-dim">
-		{#if isRowSelectionEnabled}
-			{selectedCount} of {rowModel.rows.length} rows selected
-		{:else}
-			{rowModel.rows.length} rows
-		{/if}
-	</div>
+    <div class="shrink-0 border-t border-surface-3 bg-surface-2 px-3 py-2 text-sm text-ink-dim">
+    	{#if isRowSelectionEnabled}
+    		{selectedCount} of {rowModel.rows.length} rows selected
+    	{:else}
+    		{rowModel.rows.length} rows
+    	{/if}
+    </div>
+
 </div>

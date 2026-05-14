@@ -1,4 +1,4 @@
-import type { RowData } from '@tanstack/svelte-table';
+import type { RowData } from '@tanstack/table-core';
 import type {
 	DataTableAccessorFnColumn,
 	DataTableAccessorKeyColumn,
