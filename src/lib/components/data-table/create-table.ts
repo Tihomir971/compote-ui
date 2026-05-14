@@ -122,9 +122,7 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			get data() {
 				return options.data;
 			},
-			get columns() {
-				return createColumns(options.columns, localeCtx);
-			},
+			columns: createColumns(options.columns, localeCtx),
 			...(columnVisibilityAtom ? { atoms: { columnVisibility: columnVisibilityAtom } } : {}),
 			initialState: {
 				...options.initialState,
