@@ -222,7 +222,3 @@
 		{/if}
 	</div>
 </div>
-
-<style>
-	@import './data-table-checkbox.css';
-</style>

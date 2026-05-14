@@ -164,7 +164,3 @@
 		{/each}
 	{/if}
 </tbody>
-
-<style>
-	@import './data-table-checkbox.css';
-</style>

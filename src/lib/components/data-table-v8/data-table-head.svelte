@@ -194,7 +194,3 @@
 		</tr>
 	{/each}
 </thead>
-
-<style>
-	@import './data-table-checkbox.css';
-</style>
