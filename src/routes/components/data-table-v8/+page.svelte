@@ -88,32 +88,36 @@
 
 	const personCol = DataTable.createDataTableColumnHelper<Person>();
 	const personColumns = personCol.columns([
-		personCol.accessor('firstName', {
-			header: 'First Name',
-			type: 'text',
-			grow: true,
-			enableColumnFilter: true
-		}),
-		personCol.accessor('lastName', {
-			header: 'Last Name',
-			type: 'text',
-			size: 140,
-			enableColumnFilter: true
-		}),
-		personCol.accessor('age', {
-			header: 'Age',
-			type: 'number',
-			size: 80,
-			enableColumnFilter: true
-		}),
-		personCol.accessor('visits', { header: 'Visits', type: 'number', size: 80 }),
-		personCol.accessor('progress', { header: 'Progress', type: 'number', size: 90 }),
-		personCol.accessor('status', {
-			header: 'Status',
-			type: 'select',
-			size: 130,
-			enableColumnFilter: true
-		})
+		personCol.group('Name', [
+			personCol.accessor('firstName', {
+				header: 'First Name',
+				type: 'text',
+				grow: true,
+				enableColumnFilter: true
+			}),
+			personCol.accessor('lastName', {
+				header: 'Last Name',
+				type: 'text',
+				size: 140,
+				enableColumnFilter: true
+			})
+		]),
+		personCol.group('Info', [
+			personCol.accessor('age', {
+				header: 'Age',
+				type: 'number',
+				size: 80,
+				enableColumnFilter: true
+			}),
+			personCol.accessor('visits', { header: 'Visits', type: 'number', size: 80 }),
+			personCol.accessor('progress', { header: 'Progress', type: 'number', size: 90 }),
+			personCol.accessor('status', {
+				header: 'Status',
+				type: 'select',
+				size: 130,
+				enableColumnFilter: true
+			})
+		])
 	]);
 
 	let data = $state(makeData(100));
@@ -126,7 +130,10 @@
 		columns: personColumns,
 		getRowId: (row) => row.id,
 		enableRowSelection: true,
-		enableMultiRowSelection: true
+		enableMultiRowSelection: true,
+		onColumnVisibilityChange: (visibility) => {
+			console.log('visibility:', JSON.stringify(visibility, null, 3));
+		}
 	});
 
 	const virtualTable = VirtualDataTable.createTable({
@@ -139,6 +146,7 @@
 	});
 
 	function refreshData() {
+		console.log('New data');
 		data = makeData(100);
 	}
 

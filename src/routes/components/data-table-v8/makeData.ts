@@ -1,4 +1,6 @@
-import { faker } from '@faker-js/faker';
+import { Faker, sr_RS_latin } from '@faker-js/faker';
+
+const faker = new Faker({ locale: [sr_RS_latin] });
 
 export type Person = {
 	id: string;
