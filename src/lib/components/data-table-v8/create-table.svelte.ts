@@ -14,6 +14,7 @@ import {
 	type Row,
 	type RowData,
 	type Table,
+	type TableState,
 	type Updater
 } from '@tanstack/table-core';
 import { useLocaleContext } from '@ark-ui/svelte/locale';
@@ -96,9 +97,14 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		...(options.onColumnVisibilityChange
 			? {
 					onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
-						const newVis =
-							typeof updater === 'function' ? updater(table.getState().columnVisibility) : updater;
-						options.onColumnVisibilityChange!(newVis);
+						// Without this, overriding onColumnVisibilityChange bypasses makeStateUpdater,
+						// so createSvelteTable's $state never updates and Svelte doesn't re-render.
+						table.options.onStateChange?.((old: TableState) => ({
+							...old,
+							columnVisibility:
+								typeof updater === 'function' ? updater(old.columnVisibility) : updater
+						}));
+						options.onColumnVisibilityChange!(table.getState().columnVisibility);
 					}
 				}
 			: {}),
