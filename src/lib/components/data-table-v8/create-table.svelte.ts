@@ -94,25 +94,21 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		filterFns: {
 			oneOf: oneOfFilterFn as FilterFn<T>
 		},
-		...(options.onColumnVisibilityChange
-			? {
-					onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
-						// Without this, overriding onColumnVisibilityChange bypasses makeStateUpdater,
-						// so createSvelteTable's $state never updates and Svelte doesn't re-render.
-						table.options.onStateChange?.((old: TableState) => {
-							const columnVisibility =
-								typeof updater === 'function' ? updater(old.columnVisibility) : updater;
+		onColumnVisibilityChange: (updater: Updater<VisibilityState>) => {
+			// Without this, overriding onColumnVisibilityChange bypasses makeStateUpdater,
+			// so createSvelteTable's $state never updates and Svelte doesn't re-render.
+			table.options.onStateChange?.((old: TableState) => {
+				const columnVisibility =
+					typeof updater === 'function' ? updater(old.columnVisibility) : updater;
 
-							options.onColumnVisibilityChange!(columnVisibility);
+				options.onColumnVisibilityChange?.(columnVisibility);
 
-							return {
-								...old,
-								columnVisibility
-							};
-						});
-					}
-				}
-			: {}),
+				return {
+					...old,
+					columnVisibility
+				};
+			});
+		},
 		initialState: {
 			columnVisibility: initialColumnVisibility,
 			columnSizing: {

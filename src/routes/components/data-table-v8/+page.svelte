@@ -123,7 +123,7 @@
 	let data = $state(makeData(100));
 	let virtualData = $state(makeData(1_000));
 
-	const table = DataTable.createTable({
+	const personTable = DataTable.createTable({
 		get data() {
 			return data;
 		},
@@ -174,14 +174,14 @@
 
 			{#snippet right()}
 				<Button variant="outline" onclick={refreshData}>Regenerate Data</Button>
-				<DataTable.ColumnFilter {table} />
-				<DataTable.ColumnVisibility {table} />
+				<DataTable.ColumnFilter table={personTable} />
+				<DataTable.ColumnVisibility table={personTable} />
 			{/snippet}
 		</DataTable.Toolbar>
 
 		<div class="h-96 min-h-0 max-w-3xl">
 			<DataTable.Root
-				{table}
+				table={personTable}
 				caption="People"
 				onRowClick={({ row }) => (lastClicked = row)}
 				onRowDoubleClick={({ row }) => (lastDoubleClicked = row)}
@@ -248,12 +248,12 @@
 				<DataTable.Toolbar>
 					<DataTable.Title>Regular</DataTable.Title>
 					{#snippet right()}
-						<DataTable.ColumnFilter {table} />
-						<DataTable.ColumnVisibility {table} />
+						<DataTable.ColumnFilter table={personTable} />
+						<DataTable.ColumnVisibility table={personTable} />
 					{/snippet}
 				</DataTable.Toolbar>
 				<div class="mt-2 min-h-0 flex-1">
-					<DataTable.Root {table} caption="People" />
+					<DataTable.Root table={personTable} caption="People" />
 				</div>
 			</div>
 		{/snippet}
