@@ -75,36 +75,38 @@
 	{/if}
 
 	<div class="min-h-0 flex-1 overflow-auto" bind:this={scrollContainerRef}>
-		<table
-			class="table-fixed border-separate border-spacing-0 text-sm"
-			style="display: grid; {tableSizeStyle(table, isRowSelectionEnabled)}"
-		>
-			{#if caption}
-				<caption class="sr-only">{caption}</caption>
-			{/if}
-			{#key visibleColumnIds}
-				<DataTableHead
-					{table}
-					{headerGroups}
-					{headerGroupCount}
-					{isRowSelectionEnabled}
-					{isMultiRowSelectionEnabled}
-					{allRowsSelectionState}
-					isVirtual
-				/>
-			{/key}
-			{#if scrollContainerRef}
-				<DataTableVirtualRows
-					rows={rowModel.rows}
-					scrollContainer={scrollContainerRef}
-					{isRowSelectionEnabled}
-					{table}
-					{emptyMessage}
-					{onRowClick}
-					{onRowDoubleClick}
-				/>
-			{/if}
-		</table>
+		{#key visibleColumnIds}
+			<table
+				class="table-fixed border-separate border-spacing-0 text-sm"
+				style="display: grid; {tableSizeStyle(table, isRowSelectionEnabled)}"
+			>
+				{#if caption}
+					<caption class="sr-only">{caption}</caption>
+				{/if}
+				{#key visibleColumnIds}
+					<DataTableHead
+						{table}
+						{headerGroups}
+						{headerGroupCount}
+						{isRowSelectionEnabled}
+						{isMultiRowSelectionEnabled}
+						{allRowsSelectionState}
+						isVirtual
+					/>
+				{/key}
+				{#if scrollContainerRef}
+					<DataTableVirtualRows
+						rows={rowModel.rows}
+						scrollContainer={scrollContainerRef}
+						{isRowSelectionEnabled}
+						{table}
+						{emptyMessage}
+						{onRowClick}
+						{onRowDoubleClick}
+					/>
+				{/if}
+			</table>
+		{/key}
 	</div>
 
 	<div class="shrink-0 border-t border-surface-3 bg-surface-2 px-3 py-2 text-sm text-ink-dim">
