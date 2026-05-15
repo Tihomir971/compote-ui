@@ -93,7 +93,9 @@
 				header: 'First Name',
 				type: 'text',
 				grow: true,
-				enableColumnFilter: true
+				enableColumnFilter: true,
+				pinned: 'left',
+				enableHiding: false
 			}),
 			personCol.accessor('lastName', {
 				header: 'Last Name',
@@ -130,10 +132,7 @@
 		columns: personColumns,
 		getRowId: (row) => row.id,
 		enableRowSelection: true,
-		enableMultiRowSelection: true,
-		onColumnVisibilityChange: (visibility) => {
-			console.log('visibility:', JSON.stringify(visibility, null, 3));
-		}
+		enableMultiRowSelection: true
 	});
 
 	const virtualTable = VirtualDataTable.createTable({

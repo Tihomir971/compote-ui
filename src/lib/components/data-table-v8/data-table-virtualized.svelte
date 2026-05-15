@@ -39,7 +39,8 @@
 		return table.getRowModel();
 	});
 	const headerGroups = $derived.by(() => {
-		getReactiveTableState(table);
+		const { columnVisibility } = getReactiveTableState(table);
+		void columnVisibility;
 		return table.getHeaderGroups();
 	});
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));

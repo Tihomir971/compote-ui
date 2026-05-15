@@ -48,11 +48,13 @@
 		return table.getRowModel();
 	});
 	const headerGroups = $derived.by(() => {
-		getReactiveTableState(table);
+		const { columnVisibility } = getReactiveTableState(table);
+		void columnVisibility;
 		return table.getHeaderGroups();
 	});
 	const visibleLeafColumns = $derived.by(() => {
-		getReactiveTableState(table);
+		const { columnVisibility } = getReactiveTableState(table);
+		void columnVisibility;
 		return table.getVisibleLeafColumns();
 	});
 	const growColumn = $derived(visibleLeafColumns.find((col) => getColumnMeta(col.columnDef)?.grow));
