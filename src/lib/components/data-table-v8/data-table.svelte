@@ -49,8 +49,12 @@
 	});
 	const headerGroups = $derived.by(() => {
 		const { columnVisibility } = getReactiveTableState(table);
-		void columnVisibility;
-		return table.getHeaderGroups();
+		return table.getHeaderGroups().map((group) => ({
+			...group,
+			headers: group.headers.filter(
+				(header) => header.colSpan > 0 && columnVisibility[header.column.id] !== false
+			)
+		}));
 	});
 	const visibleLeafColumns = $derived.by(() => {
 		const { columnVisibility } = getReactiveTableState(table);
@@ -140,98 +144,102 @@
 				{hasGrowColumn}
 			/>
 			<tbody>
-				{#each rowModel.rows as row (row.id)}
-					{@const rowSelected = getReactiveTableState(table).rowSelection[row.id] === true}
-					<tr
-						class={cn(
-							'group/row',
-							'[--row-bg:var(--compote-surface-1)]',
-							'hover:bg-well/60 hover:[--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
-							rowSelected &&
-								'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
-						)}
-						onclick={(event) => onRowClick?.({ row: row.original, event })}
-						ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
-					>
-						{#if isRowSelectionEnabled}
-							<td
-								class="border-b border-surface-2 bg-(--row-bg) px-3 py-2 text-center align-middle group-last/row:border-b-0"
-								style="position: sticky; left: 0; z-index: 1"
-							>
-								<input
-									type="checkbox"
-									aria-label="Select row"
-									class="table-checkbox mx-auto block size-4"
-									checked={rowSelected}
-									disabled={!row.getCanSelect()}
-									onchange={(e) => row.toggleSelected(e.currentTarget.checked)}
-								/>
-							</td>
-						{/if}
-						{#each getReactiveCells(row, getReactiveTableState(table).columnVisibility) as cell (cell.id)}
-							{@const columnDef = getColumnMeta(cell.column.columnDef)}
-							<td
-								class={cn(
-									'truncate border-b border-b-surface-2 px-3 py-2 group-last/row:border-b-0',
-									alignClass(columnDef?.align),
-									cell.column.getIsPinned() && 'bg-(--row-bg)'
-								)}
-								style={getPinningStyle(cell.column, table, false, isRowSelectionEnabled)}
-							>
-								{#if columnDef?.type === 'boolean'}
-									{@const value = getBooleanCellValue(cell.getValue())}
-									{#if value === true}
-										<span
-											class="inline-flex size-5 items-center justify-center text-success"
-											role="img"
-											aria-label="Yes"
-										>
-											<PhCheck class="size-4" />
-										</span>
-									{:else if value === false}
-										<span
-											class="inline-flex size-5 items-center justify-center text-danger"
-											role="img"
-											aria-label="No"
-										>
-											<PhX class="size-4" />
-										</span>
+				{#key visibleLeafColumns.map((column) => column.id).join('|')}
+					{#each rowModel.rows as row (row.id)}
+						{@const rowSelected = getReactiveTableState(table).rowSelection[row.id] === true}
+						<tr
+							class={cn(
+								'group/row',
+								'[--row-bg:var(--compote-surface-1)]',
+								'hover:bg-well/60 hover:[--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
+								rowSelected &&
+									'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
+							)}
+							onclick={(event) => onRowClick?.({ row: row.original, event })}
+							ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
+						>
+							{#if isRowSelectionEnabled}
+								<td
+									class="border-b border-surface-2 bg-(--row-bg) px-3 py-2 text-center align-middle group-last/row:border-b-0"
+									style="position: sticky; left: 0; z-index: 1"
+								>
+									<input
+										type="checkbox"
+										aria-label="Select row"
+										class="table-checkbox mx-auto block size-4"
+										checked={rowSelected}
+										disabled={!row.getCanSelect()}
+										onchange={(e) => row.toggleSelected(e.currentTarget.checked)}
+									/>
+								</td>
+							{/if}
+							{#each getReactiveCells(row, getReactiveTableState(table).columnVisibility) as cell (cell.id)}
+								{@const columnDef = getColumnMeta(cell.column.columnDef)}
+								<td
+									class={cn(
+										'truncate border-b border-b-surface-2 px-3 py-2 group-last/row:border-b-0',
+										alignClass(columnDef?.align),
+										cell.column.getIsPinned() && 'bg-(--row-bg)'
+									)}
+									style={getPinningStyle(cell.column, table, false, isRowSelectionEnabled)}
+								>
+									{#if columnDef?.type === 'boolean'}
+										{@const value = getBooleanCellValue(cell.getValue())}
+										{#if value === true}
+											<span
+												class="inline-flex size-5 items-center justify-center text-success"
+												role="img"
+												aria-label="Yes"
+											>
+												<PhCheck class="size-4" />
+											</span>
+										{:else if value === false}
+											<span
+												class="inline-flex size-5 items-center justify-center text-danger"
+												role="img"
+												aria-label="No"
+											>
+												<PhX class="size-4" />
+											</span>
+										{:else}
+											-
+										{/if}
+									{:else if columnDef?.type === 'url'}
+										{@const value = getUrlCellValue(cell.getValue())}
+										{#if value}
+											<button
+												type="button"
+												class={cn(
+													'inline-flex max-w-full appearance-none items-center gap-1.5 rounded-sm border-0 bg-transparent p-0 align-middle leading-5 font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+													justifyClass(columnDef.align)
+												)}
+												onclick={() => openUrlCell(value)}
+											>
+												<PhArrowSquareOut class="size-3.5 shrink-0" />
+											</button>
+										{:else}
+											-
+										{/if}
 									{:else}
-										-
+										<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
 									{/if}
-								{:else if columnDef?.type === 'url'}
-									{@const value = getUrlCellValue(cell.getValue())}
-									{#if value}
-										<button
-											type="button"
-											class={cn(
-												'inline-flex max-w-full appearance-none items-center gap-1.5 rounded-sm border-0 bg-transparent p-0 align-middle leading-5 font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-												justifyClass(columnDef.align)
-											)}
-											onclick={() => openUrlCell(value)}
-										>
-											<PhArrowSquareOut class="size-3.5 shrink-0" />
-										</button>
-									{:else}
-										-
-									{/if}
-								{:else}
-									<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
-								{/if}
+								</td>
+							{/each}
+							{#if !hasGrowColumn}
+								<td
+									aria-hidden="true"
+									class="border-b border-surface-2 p-0 group-last/row:border-b-0"
+								></td>
+							{/if}
+						</tr>
+					{:else}
+						<tr>
+							<td class="px-3 py-10 text-center text-sm text-ink-dim" colspan={renderedColumnCount}>
+								{emptyMessage}
 							</td>
-						{/each}
-						{#if !hasGrowColumn}
-							<td aria-hidden="true" class="border-b border-surface-2 p-0 group-last/row:border-b-0"
-							></td>
-						{/if}
-					</tr>
-				{:else}
-					<tr>
-						<td class="px-3 py-10 text-center text-sm text-ink-dim" colspan={renderedColumnCount}>
-							{emptyMessage}
-						</td>
-					</tr>
-				{/each}
+						</tr>
+					{/each}
+				{/key}
 			</tbody>
 		</table>
 	</div>
