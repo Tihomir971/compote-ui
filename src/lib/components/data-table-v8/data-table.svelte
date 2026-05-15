@@ -74,6 +74,26 @@
 		return getSelectedRowCount(table);
 	});
 	const isColumnResizing = $derived(tableState.columnSizingInfo.isResizingColumn !== false);
+
+	$effect(() => {
+		console.log('DATA TABLE DEBUG', {
+			columnVisibility: { ...tableState.columnVisibility },
+			visibleLeafColumns: table.getVisibleLeafColumns().map((column) => column.id),
+			allLeafColumns: table.getAllLeafColumns().map((column) => ({
+				id: column.id,
+				isVisible: column.getIsVisible()
+			})),
+			headerGroups: table.getHeaderGroups().map((group) => ({
+				id: group.id,
+				headers: group.headers.map((header) => ({
+					id: header.id,
+					columnId: header.column.id,
+					colSpan: header.colSpan,
+					isPlaceholder: header.isPlaceholder
+				}))
+			}))
+		});
+	});
 </script>
 
 <div
