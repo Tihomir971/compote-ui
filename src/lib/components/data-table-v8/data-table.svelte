@@ -69,6 +69,7 @@
 	const tableColumnCount = $derived(visibleColumnCount + (isRowSelectionEnabled ? 1 : 0));
 	const renderedColumnCount = $derived(tableColumnCount + 1);
 	const headerGroupCount = $derived(headerGroups.length);
+	const visibleColumnIds = $derived(visibleLeafColumns.map((column) => column.id).join('|'));
 	const allRowsSelectionState = $derived.by(() => {
 		getReactiveTableState(table);
 		return getAllRowsSelectionState(table);
@@ -78,26 +79,6 @@
 		return getSelectedRowCount(table);
 	});
 	const isColumnResizing = $derived(tableState.columnSizingInfo.isResizingColumn !== false);
-
-	$effect(() => {
-		console.log('DATA TABLE DEBUG', {
-			columnVisibility: { ...tableState.columnVisibility },
-			visibleLeafColumns: table.getVisibleLeafColumns().map((column) => column.id),
-			allLeafColumns: table.getAllLeafColumns().map((column) => ({
-				id: column.id,
-				isVisible: column.getIsVisible()
-			})),
-			headerGroups: table.getHeaderGroups().map((group) => ({
-				id: group.id,
-				headers: group.headers.map((header) => ({
-					id: header.id,
-					columnId: header.column.id,
-					colSpan: header.colSpan,
-					isPlaceholder: header.isPlaceholder
-				}))
-			}))
-		});
-	});
 </script>
 
 <div
@@ -134,17 +115,19 @@
 			{#if caption}
 				<caption class="sr-only">{caption}</caption>
 			{/if}
-			<DataTableHead
-				{table}
-				{headerGroups}
-				{headerGroupCount}
-				{isRowSelectionEnabled}
-				{isMultiRowSelectionEnabled}
-				{allRowsSelectionState}
-				{hasGrowColumn}
-			/>
+			{#key visibleColumnIds}
+				<DataTableHead
+					{table}
+					{headerGroups}
+					{headerGroupCount}
+					{isRowSelectionEnabled}
+					{isMultiRowSelectionEnabled}
+					{allRowsSelectionState}
+					{hasGrowColumn}
+				/>
+			{/key}
 			<tbody>
-				{#key visibleLeafColumns.map((column) => column.id).join('|')}
+				{#key visibleColumnIds}
 					{#each rowModel.rows as row (row.id)}
 						{@const rowSelected = getReactiveTableState(table).rowSelection[row.id] === true}
 						<tr

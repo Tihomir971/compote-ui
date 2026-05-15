@@ -50,6 +50,12 @@
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
 	const headerGroupCount = $derived(headerGroups.length);
+	const visibleColumnIds = $derived(
+		table
+			.getVisibleLeafColumns()
+			.map((column) => column.id)
+			.join('|')
+	);
 	const allRowsSelectionState = $derived.by(() => {
 		getReactiveTableState(table);
 		return getAllRowsSelectionState(table);
@@ -59,26 +65,6 @@
 		return getSelectedRowCount(table);
 	});
 	const isColumnResizing = $derived(tableState.columnSizingInfo.isResizingColumn !== false);
-
-	$effect(() => {
-		console.log('VIRTUAL DATA TABLE DEBUG', {
-			columnVisibility: { ...tableState.columnVisibility },
-			visibleLeafColumns: table.getVisibleLeafColumns().map((column) => column.id),
-			allLeafColumns: table.getAllLeafColumns().map((column) => ({
-				id: column.id,
-				isVisible: column.getIsVisible()
-			})),
-			headerGroups: table.getHeaderGroups().map((group) => ({
-				id: group.id,
-				headers: group.headers.map((header) => ({
-					id: header.id,
-					columnId: header.column.id,
-					colSpan: header.colSpan,
-					isPlaceholder: header.isPlaceholder
-				}))
-			}))
-		});
-	});
 </script>
 
 <div
@@ -100,15 +86,17 @@
 			{#if caption}
 				<caption class="sr-only">{caption}</caption>
 			{/if}
-			<DataTableHead
-				{table}
-				{headerGroups}
-				{headerGroupCount}
-				{isRowSelectionEnabled}
-				{isMultiRowSelectionEnabled}
-				{allRowsSelectionState}
-				isVirtual
-			/>
+			{#key visibleColumnIds}
+				<DataTableHead
+					{table}
+					{headerGroups}
+					{headerGroupCount}
+					{isRowSelectionEnabled}
+					{isMultiRowSelectionEnabled}
+					{allRowsSelectionState}
+					isVirtual
+				/>
+			{/key}
 			{#if scrollContainerRef}
 				<DataTableVirtualRows
 					rows={rowModel.rows}
