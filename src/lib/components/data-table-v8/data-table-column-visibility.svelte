@@ -42,7 +42,6 @@
 	<Popover.Content class="w-56 p-2" showArrow={false}>
 		<div class="border-b border-surface-3 px-2 pb-2">
 			<Checkbox
-				size="sm"
 				label="All columns"
 				checked={allColumnsVisibilityState}
 				onCheckedChange={({ checked }) => table.toggleAllColumnsVisible(checked === true)}
@@ -55,7 +54,6 @@
 					<div class="flex flex-col">
 						{#each allLeafColumns as column (column.id)}
 							<Checkbox
-								size="md"
 								label={getColumnLabel(column)}
 								class="min-h-8 rounded-sm px-2 hover:bg-surface-2"
 								checked={columnVisibility[column.id] !== false}
