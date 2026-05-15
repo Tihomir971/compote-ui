@@ -40,12 +40,8 @@
 	});
 	const headerGroups = $derived.by(() => {
 		const { columnVisibility } = getReactiveTableState(table);
-		return table.getHeaderGroups().map((group) => ({
-			...group,
-			headers: group.headers.filter(
-				(header) => header.colSpan > 0 && columnVisibility[header.column.id] !== false
-			)
-		}));
+		void columnVisibility;
+		return table.getHeaderGroups();
 	});
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);

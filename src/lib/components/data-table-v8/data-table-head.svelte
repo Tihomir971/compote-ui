@@ -107,7 +107,7 @@
 	class="sticky top-0 z-20 bg-surface-2 text-left text-ink-dim"
 	style={isVirtual ? 'display: grid; position: sticky; top: 0; z-index: 20' : undefined}
 >
-	{#each headerGroups as headerGroup, headerGroupIndex (headerGroup.id)}
+	{#each headerGroups as headerGroup, headerGroupIndex (`${headerGroup.id}:${headerGroup.headers.map((header) => `${header.id}:${header.colSpan}`).join('|')}`)}
 		{@const visibleHeaders = headerGroup.headers.filter((header) => header.colSpan > 0)}
 		<tr class="h-9" style={headerRowStyle()}>
 			{#if isRowSelectionEnabled}
@@ -130,7 +130,7 @@
 					{/if}
 				</th>
 			{/if}
-			{#each visibleHeaders as header, headerIndex (header.id)}
+			{#each visibleHeaders as header, headerIndex (`${header.id}:${header.colSpan}:${header.column.getIsVisible()}`)}
 				{@const columnDef = getColumnMeta(header.column.columnDef)}
 				{@const sortDirection = getHeaderSortDirection(header)}
 				<th

@@ -49,12 +49,8 @@
 	});
 	const headerGroups = $derived.by(() => {
 		const { columnVisibility } = getReactiveTableState(table);
-		return table.getHeaderGroups().map((group) => ({
-			...group,
-			headers: group.headers.filter(
-				(header) => header.colSpan > 0 && columnVisibility[header.column.id] !== false
-			)
-		}));
+		void columnVisibility;
+		return table.getHeaderGroups();
 	});
 	const visibleLeafColumns = $derived.by(() => {
 		const { columnVisibility } = getReactiveTableState(table);
