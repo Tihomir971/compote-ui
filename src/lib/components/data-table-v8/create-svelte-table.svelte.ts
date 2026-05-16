@@ -29,7 +29,7 @@ export function createSvelteTable<TData extends RowData>(options: TableOptions<T
 	function updateOptions() {
 		table.setOptions(() => {
 			return mergeObjects(resolvedOptions, options, {
-				state: mergeObjects(state, options.state || {}),
+				state: mergeObjects(() => state, options.state || {}),
 
 				onStateChange: (updater: Updater<TableState>) => {
 					if (typeof updater === 'function') state = updater(state);

@@ -56,15 +56,32 @@
 		const centerHeaderGroups = table.getCenterHeaderGroups();
 		const rightHeaderGroups = table.getRightHeaderGroups();
 
-		return centerHeaderGroups.map((headerGroup, index) => ({
-			...headerGroup,
-			id: `${leftHeaderGroups[index]?.id ?? ''}|${headerGroup.id}|${rightHeaderGroups[index]?.id ?? ''}`,
-			headers: [
+		return centerHeaderGroups.map((headerGroup, index) => {
+			const merged = [
 				...(leftHeaderGroups[index]?.headers ?? []),
 				...headerGroup.headers,
 				...(rightHeaderGroups[index]?.headers ?? [])
-			]
-		}));
+			];
+
+			// When a column group spans pinned and unpinned columns, TanStack splits it
+			// into separate header objects (one per section). Merge adjacent headers that
+			// share the same column.id so the group label renders once.
+			const headers = merged.reduce<typeof merged>((acc, header) => {
+				const prev = acc[acc.length - 1];
+				if (prev && prev.column.id === header.column.id) {
+					acc[acc.length - 1] = { ...prev, colSpan: prev.colSpan + header.colSpan };
+				} else {
+					acc.push(header);
+				}
+				return acc;
+			}, []);
+
+			return {
+				...headerGroup,
+				id: `${leftHeaderGroups[index]?.id ?? ''}|${headerGroup.id}|${rightHeaderGroups[index]?.id ?? ''}`,
+				headers
+			};
+		});
 	});
 	const visibleLeafColumns = $derived.by(() => {
 		const { columnVisibility } = getReactiveTableState(table);
