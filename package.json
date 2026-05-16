@@ -65,6 +65,7 @@
 		"@sveltejs/vite-plugin-svelte": "7.1.2",
 		"@tailwindcss/vite": "^4.2.4",
 		"@tanstack/svelte-virtual": "^3.13.24",
+		"@tanstack/table-core": "^8.21.3",
 		"@types/node": "^22.19.18",
 		"eslint": "^10.4.0",
 		"eslint-config-prettier": "^10.1.8",
