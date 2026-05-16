@@ -39,9 +39,23 @@
 		return table.getRowModel();
 	});
 	const headerGroups = $derived.by(() => {
-		const { columnVisibility } = getReactiveTableState(table);
+		const { columnPinning, columnVisibility } = getReactiveTableState(table);
+		void columnPinning;
 		void columnVisibility;
-		return table.getHeaderGroups();
+
+		const leftHeaderGroups = table.getLeftHeaderGroups();
+		const centerHeaderGroups = table.getCenterHeaderGroups();
+		const rightHeaderGroups = table.getRightHeaderGroups();
+
+		return centerHeaderGroups.map((headerGroup, index) => ({
+			...headerGroup,
+			id: `${leftHeaderGroups[index]?.id ?? ''}|${headerGroup.id}|${rightHeaderGroups[index]?.id ?? ''}`,
+			headers: [
+				...(leftHeaderGroups[index]?.headers ?? []),
+				...headerGroup.headers,
+				...(rightHeaderGroups[index]?.headers ?? [])
+			]
+		}));
 	});
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
@@ -75,38 +89,34 @@
 	{/if}
 
 	<div class="min-h-0 flex-1 overflow-auto" bind:this={scrollContainerRef}>
-		{#key visibleColumnIds}
-			<table
-				class="table-fixed border-separate border-spacing-0 text-sm"
-				style="display: grid; {tableSizeStyle(table, isRowSelectionEnabled)}"
-			>
-				{#if caption}
-					<caption class="sr-only">{caption}</caption>
-				{/if}
-				{#key visibleColumnIds}
-					<DataTableHead
-						{table}
-						{headerGroups}
-						{headerGroupCount}
-						{isRowSelectionEnabled}
-						{isMultiRowSelectionEnabled}
-						{allRowsSelectionState}
-						isVirtual
-					/>
-				{/key}
-				{#if scrollContainerRef}
-					<DataTableVirtualRows
-						rows={rowModel.rows}
-						scrollContainer={scrollContainerRef}
-						{isRowSelectionEnabled}
-						{table}
-						{emptyMessage}
-						{onRowClick}
-						{onRowDoubleClick}
-					/>
-				{/if}
-			</table>
-		{/key}
+		<table
+			class="table-fixed border-separate border-spacing-0 text-sm"
+			style="display: grid; {tableSizeStyle(table, isRowSelectionEnabled)}"
+		>
+			{#if caption}
+				<caption class="sr-only">{caption}</caption>
+			{/if}
+			<DataTableHead
+				{table}
+				{headerGroups}
+				{headerGroupCount}
+				{isRowSelectionEnabled}
+				{isMultiRowSelectionEnabled}
+				{allRowsSelectionState}
+				isVirtual
+			/>
+			{#if scrollContainerRef}
+				<DataTableVirtualRows
+					rows={rowModel.rows}
+					scrollContainer={scrollContainerRef}
+					{isRowSelectionEnabled}
+					{table}
+					{emptyMessage}
+					{onRowClick}
+					{onRowDoubleClick}
+				/>
+			{/if}
+		</table>
 	</div>
 
 	<div class="shrink-0 border-t border-surface-3 bg-surface-2 px-3 py-2 text-sm text-ink-dim">

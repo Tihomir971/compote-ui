@@ -115,7 +115,12 @@ export function getReactiveCells<T extends RowData>(
 	row: Row<T>,
 	columnVisibility: VisibilityState
 ) {
-	return row.getAllCells().filter((cell) => columnVisibility[cell.column.id] !== false);
+	void columnVisibility;
+	return [
+		...row.getLeftVisibleCells(),
+		...row.getCenterVisibleCells(),
+		...row.getRightVisibleCells()
+	];
 }
 
 export function getSelectedRowCount<T extends RowData>(table: DataTableInstance<T>) {
