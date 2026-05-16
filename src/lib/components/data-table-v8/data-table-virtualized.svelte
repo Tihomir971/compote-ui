@@ -60,12 +60,6 @@
 	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
 	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
 	const headerGroupCount = $derived(headerGroups.length);
-	const visibleColumnIds = $derived(
-		table
-			.getVisibleLeafColumns()
-			.map((column) => column.id)
-			.join('|')
-	);
 	const allRowsSelectionState = $derived.by(() => {
 		getReactiveTableState(table);
 		return getAllRowsSelectionState(table);

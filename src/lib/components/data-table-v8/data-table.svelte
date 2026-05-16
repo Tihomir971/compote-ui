@@ -79,7 +79,6 @@
 	const tableColumnCount = $derived(visibleColumnCount + (isRowSelectionEnabled ? 1 : 0));
 	const renderedColumnCount = $derived(tableColumnCount + 1);
 	const headerGroupCount = $derived(headerGroups.length);
-	const visibleColumnIds = $derived(visibleLeafColumns.map((column) => column.id).join('|'));
 	const allRowsSelectionState = $derived.by(() => {
 		getReactiveTableState(table);
 		return getAllRowsSelectionState(table);
