@@ -37,13 +37,15 @@
 					aria-label={`Resize ${panelConfig.id} and ${panels[i + 1].id}`}
 					class={cn(
 						'group relative flex shrink-0 items-center justify-center border-none bg-transparent p-0 outline-none',
-						isHorizontal ? 'w-1.5 cursor-col-resize' : 'h-1.5 cursor-row-resize'
+						isHorizontal
+							? 'w-1.5 cursor-col-resize data-disabled:cursor-default'
+							: 'h-1.5 cursor-row-resize data-disabled:cursor-default'
 					)}
 				>
 					<!-- Divider line -->
 					<div
 						class={cn(
-							'absolute bg-surface-3 transition-colors group-focus-within:bg-primary group-hover:bg-primary/40 group-data-dragging:bg-primary',
+							'absolute bg-surface-3 transition-colors group-focus-within:bg-primary group-hover:bg-primary/40 group-data-dragging:bg-primary group-data-disabled:bg-border',
 							isHorizontal
 								? 'inset-y-0 left-1/2 w-px -translate-x-1/2'
 								: 'inset-x-0 top-1/2 h-px -translate-y-1/2'
@@ -52,7 +54,7 @@
 					<!-- Handle pill -->
 					<div
 						class={cn(
-							'relative z-10 rounded-full bg-surface-3 shadow-sm transition-colors group-hover:bg-primary/40 group-data-dragging:bg-primary',
+							'relative z-10 rounded-full bg-surface-3 shadow-sm transition-colors group-hover:bg-primary/40 group-data-dragging:bg-primary group-data-disabled:invisible',
 							isHorizontal ? 'h-6 w-1' : 'h-1 w-6'
 						)}
 					></div>

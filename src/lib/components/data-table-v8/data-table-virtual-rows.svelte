@@ -69,6 +69,7 @@
 	{:else}
 		{#each $rowVirtualizer.getVirtualItems() as virtualRow (virtualRow.index)}
 			{@const row = rows[virtualRow.index]}
+			{#if row}
 			{@const rowSelected = getReactiveTableState(table).rowSelection[row.id] === true}
 			<tr
 				data-index={virtualRow.index}
@@ -161,6 +162,7 @@
 					</td>
 				{/each}
 			</tr>
+			{/if}
 		{/each}
 	{/if}
 </tbody>

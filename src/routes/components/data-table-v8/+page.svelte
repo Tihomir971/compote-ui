@@ -170,7 +170,9 @@
 	<section class="space-y-4">
 		<DataTable.Toolbar>
 			<DataTable.Title>Data Table V8</DataTable.Title>
-
+			{#snippet center()}
+				<DataTable.Search table={personTable} class="w-56" />
+			{/snippet}
 			{#snippet right()}
 				<Button variant="outline" onclick={refreshData}>Regenerate Data</Button>
 				<DataTable.ColumnFilter table={personTable} />
@@ -207,7 +209,9 @@
 	<section class="space-y-4">
 		<VirtualDataTable.Toolbar>
 			<VirtualDataTable.Title>Data Table V8 Virtualized</VirtualDataTable.Title>
-
+			{#snippet center()}
+				<VirtualDataTable.Search table={virtualTable} class="w-56" />
+			{/snippet}
 			{#snippet right()}
 				<Button variant="outline" onclick={refreshVirtualData}>Regenerate Data</Button>
 				<VirtualDataTable.ColumnFilter table={virtualTable} />

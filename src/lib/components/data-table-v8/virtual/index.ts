@@ -3,6 +3,7 @@ export {
 	ColumnFilter,
 	ColumnVisibility,
 	FlexRender,
+	Search,
 	Title,
 	Toolbar,
 	createDataTableColumnHelper,
