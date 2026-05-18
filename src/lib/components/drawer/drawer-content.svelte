@@ -14,10 +14,10 @@
 <Drawer.Content
 	{...rest}
 	class={cn(
-		'relative flex h-full max-h-[96svh] w-full flex-col rounded-t-2xl bg-surface-1 px-5 shadow-xl outline-none',
-		'data-[swipe-direction=left]:rounded-none data-[swipe-direction=left]:rounded-r-2xl',
-		'data-[swipe-direction=right]:rounded-none data-[swipe-direction=right]:rounded-l-2xl',
-		'data-[swipe-direction=up]:rounded-none data-[swipe-direction=up]:rounded-b-2xl',
+		'relative flex h-full max-h-[96svh] w-full flex-col rounded-t-xl bg-surface-1 px-5 shadow-xl outline-none',
+		'data-[swipe-direction=left]:max-h-none data-[swipe-direction=left]:max-w-100 data-[swipe-direction=left]:rounded-none data-[swipe-direction=left]:rounded-r-xl data-[swipe-direction=left]:pr-10',
+		'data-[swipe-direction=right]:max-h-none data-[swipe-direction=right]:max-w-100 data-[swipe-direction=right]:rounded-none data-[swipe-direction=right]:rounded-l-xl data-[swipe-direction=right]:pl-10',
+		'data-[swipe-direction=up]:rounded-none data-[swipe-direction=up]:rounded-b-xl',
 		className
 	)}
 >
@@ -25,15 +25,78 @@
 </Drawer.Content>
 
 <style>
-	/* Bottom bleed pseudo-element so background extends below rounded corners */
+	/* Side drawers: grabber becomes an absolutely-positioned vertical strip on the open edge */
+	:global(
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='left']
+			[data-scope='drawer'][data-part='grabber'],
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='right']
+			[data-scope='drawer'][data-part='grabber']
+	) {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: auto;
+		height: 100%;
+		padding: 0 0.75rem;
+	}
+
+	:global(
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='left']
+			[data-scope='drawer'][data-part='grabber']
+	) {
+		right: 0;
+	}
+
+	:global(
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='right']
+			[data-scope='drawer'][data-part='grabber']
+	) {
+		left: 0;
+	}
+
+	:global(
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='left']
+			[data-scope='drawer'][data-part='grabber-indicator'],
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='right']
+			[data-scope='drawer'][data-part='grabber-indicator']
+	) {
+		width: 4px;
+		height: 2.5rem;
+	}
+
+	/* Bleed pseudo-element so background extends past rounded corners on the open edge */
 	:global([data-scope='drawer'][data-part='content'])::after {
 		content: '';
 		position: absolute;
-		bottom: -50px;
 		left: 0;
 		right: 0;
+		top: 100%;
 		height: 50px;
 		background: inherit;
+		pointer-events: none;
+	}
+
+	:global([data-scope='drawer'][data-part='content'][data-swipe-direction='up'])::after {
+		top: auto;
+		bottom: 100%;
+	}
+
+	:global([data-scope='drawer'][data-part='content'][data-swipe-direction='left'])::after {
+		top: 0;
+		bottom: 0;
+		left: auto;
+		right: 100%;
+		width: 50px;
+		height: auto;
+	}
+
+	:global([data-scope='drawer'][data-part='content'][data-swipe-direction='right'])::after {
+		top: 0;
+		bottom: 0;
+		right: auto;
+		left: 100%;
+		width: 50px;
+		height: auto;
 	}
 
 	/* Slide animations for bottom drawer (default) */

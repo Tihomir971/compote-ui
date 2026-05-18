@@ -2,6 +2,7 @@
 	import { Drawer } from '@ark-ui/svelte/drawer';
 	import type { DrawerCloseTriggerBaseProps } from '@ark-ui/svelte/drawer';
 	import type { ClassValue } from 'svelte/elements';
+	import PhX from '$lib/icons/PhX.svelte';
 
 	interface Props extends DrawerCloseTriggerBaseProps {
 		class?: ClassValue;
@@ -13,7 +14,11 @@
 <Drawer.CloseTrigger
 	{...rest}
 	class={className ??
-		'absolute top-12 right-4 flex h-7 w-7 cursor-pointer items-center justify-center rounded border-none bg-transparent text-ink-dim hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-1px]'}
+		'absolute top-4 right-4 flex h-7 w-7 cursor-pointer items-center justify-center rounded border-none bg-transparent text-ink-dim hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-[-1px]'}
 >
-	{@render children?.()}
+	{#if children}
+		{@render children()}
+	{:else}
+		<PhX />
+	{/if}
 </Drawer.CloseTrigger>

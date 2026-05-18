@@ -13,11 +13,11 @@
 		<Drawer.Root bind:open={bottomOpen}>
 			<Drawer.Backdrop />
 			<Drawer.Positioner>
-				<Drawer.Content>
+				<Drawer.Content class="max-h-[50vh]">
 					<Drawer.Grabber>
 						<Drawer.GrabberIndicator />
 					</Drawer.Grabber>
-					<Drawer.CloseTrigger>✕</Drawer.CloseTrigger>
+					<Drawer.CloseTrigger />
 					<Drawer.Title>Bottom Drawer</Drawer.Title>
 					<p class="text-sm text-ink-dim">
 						Drag down or click outside to close. This drawer slides up from the bottom.
@@ -37,7 +37,7 @@
 					<Drawer.Grabber>
 						<Drawer.GrabberIndicator />
 					</Drawer.Grabber>
-					<Drawer.CloseTrigger>✕</Drawer.CloseTrigger>
+					<Drawer.CloseTrigger />
 					<Drawer.Title>Right Drawer</Drawer.Title>
 					<p class="text-sm text-ink-dim">Slides in from the right. Swipe right to close.</p>
 				</Drawer.Content>
@@ -55,7 +55,7 @@
 					<Drawer.Grabber>
 						<Drawer.GrabberIndicator />
 					</Drawer.Grabber>
-					<Drawer.CloseTrigger>✕</Drawer.CloseTrigger>
+					<Drawer.CloseTrigger />
 					<Drawer.Title>Left Drawer</Drawer.Title>
 					<p class="text-sm text-ink-dim">Slides in from the left. Swipe left to close.</p>
 				</Drawer.Content>
