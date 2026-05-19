@@ -8,16 +8,16 @@
 		class?: ClassValue;
 	}
 
-	let { class: className, children, ...rest }: Props = $props();
+	let { class: className, children, draggable = false, ...rest }: Props = $props();
 </script>
 
 <Drawer.Content
 	{...rest}
+	{draggable}
 	class={cn(
-		'relative flex h-full max-h-[96svh] w-full flex-col rounded-t-xl bg-surface-1 px-5 shadow-xl outline-none',
-		'data-[swipe-direction=left]:max-h-none data-[swipe-direction=left]:max-w-100 data-[swipe-direction=left]:rounded-none data-[swipe-direction=left]:rounded-r-xl data-[swipe-direction=left]:pr-10',
-		'data-[swipe-direction=right]:max-h-none data-[swipe-direction=right]:max-w-100 data-[swipe-direction=right]:rounded-none data-[swipe-direction=right]:rounded-l-xl data-[swipe-direction=right]:pl-10',
-		'data-[swipe-direction=up]:rounded-none data-[swipe-direction=up]:rounded-b-xl',
+		'pointer-events-auto relative flex h-full max-h-[96svh] w-full flex-col bg-surface-1 shadow-xl outline-none',
+		'data-[swipe-direction=left]:max-h-none data-[swipe-direction=left]:max-w-100',
+		'data-[swipe-direction=right]:max-h-none data-[swipe-direction=right]:max-w-100',
 		className
 	)}
 >
