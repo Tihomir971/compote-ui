@@ -45,7 +45,7 @@
 					<!-- Divider line -->
 					<div
 						class={cn(
-							'absolute bg-surface-3 transition-colors group-focus-within:bg-primary group-hover:bg-primary/40 group-data-dragging:bg-primary group-data-disabled:bg-border',
+							'absolute bg-surface-3 transition-colors group-focus-within:bg-primary group-hover:bg-primary/40 group-data-disabled:bg-border group-data-dragging:bg-primary',
 							isHorizontal
 								? 'inset-y-0 left-1/2 w-px -translate-x-1/2'
 								: 'inset-x-0 top-1/2 h-px -translate-y-1/2'
@@ -54,7 +54,7 @@
 					<!-- Handle pill -->
 					<div
 						class={cn(
-							'relative z-10 rounded-full bg-surface-3 shadow-sm transition-colors group-hover:bg-primary/40 group-data-dragging:bg-primary group-data-disabled:invisible',
+							'relative z-10 rounded-full bg-surface-3 shadow-sm transition-colors group-hover:bg-primary/40 group-data-disabled:invisible group-data-dragging:bg-primary',
 							isHorizontal ? 'h-6 w-1' : 'h-1 w-6'
 						)}
 					></div>
