@@ -5,6 +5,7 @@ import type { ToggleSize } from './toggle.variants';
 export interface ToggleProps extends ToggleRootProps {
 	class?: ClassValue | null;
 	size?: ToggleSize;
+	icon?: boolean;
 }
 
 export type { ToggleSize };

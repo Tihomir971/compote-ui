@@ -8,16 +8,23 @@
 	interface Props extends ToggleGroupItemBaseProps {
 		class?: ClassValue | null;
 		size?: ToggleSize;
+		icon?: boolean;
 	}
 
-	let { class: className, children, size, ...rest }: Props = $props();
+	let { class: className, children, size, icon, ...rest }: Props = $props();
 	const groupContext = getToggleGroupContext();
 	const itemSize = $derived(size ?? groupContext.size);
+	const itemIcon = $derived(icon ?? groupContext.icon);
+	const itemClass = $derived(
+		groupContext.variant === 'ghost'
+			? toggle({ size: itemSize, icon: itemIcon, class: className as never })
+			: toggle({ size: itemSize, icon: itemIcon, class: ['rounded-none', className] as never })
+	);
 </script>
 
 <ToggleGroup.Item
 	{...rest}
-	class={toggle({ size: itemSize, class: ['rounded-none', className] as never })}
+	class={itemClass}
 >
 	{@render children?.()}
 </ToggleGroup.Item>

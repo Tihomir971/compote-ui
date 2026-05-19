@@ -128,6 +128,44 @@
 			</div>
 
 			<div class="flex flex-col gap-2">
+				<p class="text-sm font-medium text-ink">Icon-only</p>
+				<div class="flex flex-wrap items-center gap-4">
+					<ToggleGroup.Root defaultValue={['left']} icon>
+						<ToggleGroup.Item value="left"><PhTextAlignLeft /></ToggleGroup.Item>
+						<ToggleGroup.Item value="center"><PhTextAlignCenter /></ToggleGroup.Item>
+						<ToggleGroup.Item value="right"><PhTextAlignRight /></ToggleGroup.Item>
+					</ToggleGroup.Root>
+					<ToggleGroup.Root defaultValue={['left']} icon variant="ghost">
+						<ToggleGroup.Item value="left"><PhTextAlignLeft /></ToggleGroup.Item>
+						<ToggleGroup.Item value="center"><PhTextAlignCenter /></ToggleGroup.Item>
+						<ToggleGroup.Item value="right"><PhTextAlignRight /></ToggleGroup.Item>
+					</ToggleGroup.Root>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-2">
+				<p class="text-sm font-medium text-ink">Variants</p>
+				<div class="flex flex-wrap items-center gap-4">
+					<div class="flex flex-col gap-1">
+						<p class="text-xs text-ink-dim">outline (default)</p>
+						<ToggleGroup.Root defaultValue={['left']} variant="outline">
+							<ToggleGroup.Item value="left"><PhTextAlignLeft /></ToggleGroup.Item>
+							<ToggleGroup.Item value="center"><PhTextAlignCenter /></ToggleGroup.Item>
+							<ToggleGroup.Item value="right"><PhTextAlignRight /></ToggleGroup.Item>
+						</ToggleGroup.Root>
+					</div>
+					<div class="flex flex-col gap-1">
+						<p class="text-xs text-ink-dim">ghost</p>
+						<ToggleGroup.Root defaultValue={['left']} variant="ghost">
+							<ToggleGroup.Item value="left"><PhTextAlignLeft /></ToggleGroup.Item>
+							<ToggleGroup.Item value="center"><PhTextAlignCenter /></ToggleGroup.Item>
+							<ToggleGroup.Item value="right"><PhTextAlignRight /></ToggleGroup.Item>
+						</ToggleGroup.Root>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-2">
 				<p class="text-sm font-medium text-ink">Disabled and vertical</p>
 				<div class="flex items-start gap-3">
 					<ToggleGroup.Root defaultValue={['left']}>

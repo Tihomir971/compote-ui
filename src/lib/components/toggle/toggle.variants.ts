@@ -6,9 +6,17 @@ export const toggle = tv({
 		size: {
 			sm: 'h-7 min-w-7 gap-1 px-1.5 text-xs [&_svg]:size-3.5',
 			md: 'h-8 min-w-8 gap-1.5 px-2 text-sm [&_svg]:size-4',
-			lg: 'h-10 min-w-10 gap-2 px-2.5 text-sm [&_svg]:size-5'
+			lg: 'h-9 min-w-9 gap-2 px-2.5 text-sm [&_svg]:size-5'
+		},
+		icon: {
+			true: ''
 		}
 	},
+	compoundVariants: [
+		{ size: 'sm', icon: true, class: 'w-7 px-0 [&_svg]:size-5' },
+		{ size: 'md', icon: true, class: 'w-8 px-0 [&_svg]:size-6' },
+		{ size: 'lg', icon: true, class: 'w-9 px-0 [&_svg]:size-7' }
+	],
 	defaultVariants: { size: 'md' }
 });
 
