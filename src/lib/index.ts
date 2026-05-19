@@ -84,4 +84,6 @@ export { createListCollection, createTreeCollection } from './utils/collections'
 export type { ListItem, TreeItem } from './utils/collections';
 export type { ListCollection, TreeCollection } from '@ark-ui/svelte/collection';
 
+export { PersistedState } from 'runed';
+
 export { cn } from 'tailwind-variants';
