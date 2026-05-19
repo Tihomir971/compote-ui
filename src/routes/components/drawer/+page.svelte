@@ -11,16 +11,15 @@
 		<h2 class="mb-4 text-lg font-semibold">Bottom Drawer (default)</h2>
 		<Drawer.Root bind:open={bottomOpen}>
 			<Drawer.Trigger>Open Bottom Drawer</Drawer.Trigger>
-			<Drawer.Backdrop />
-			<Drawer.Positioner>
-				<Drawer.Content class="max-h-[50vh]">
-					<Drawer.CloseTrigger />
+			<Drawer.Content maxHeight="30vh">
+				<Drawer.CloseTrigger />
+				<Drawer.Header>
 					<Drawer.Title>Bottom Drawer</Drawer.Title>
-					<p class="text-sm text-ink-dim">
+					<Drawer.Description>
 						Drag down or click outside to close. This drawer slides up from the bottom.
-					</p>
-				</Drawer.Content>
-			</Drawer.Positioner>
+					</Drawer.Description>
+				</Drawer.Header>
+			</Drawer.Content>
 		</Drawer.Root>
 	</section>
 
@@ -28,14 +27,13 @@
 		<h2 class="mb-4 text-lg font-semibold">Right Drawer</h2>
 		<Drawer.Root bind:open={rightOpen} swipeDirection="end">
 			<Drawer.Trigger>Open Right Drawer</Drawer.Trigger>
-			<Drawer.Backdrop />
-			<Drawer.Positioner>
-				<Drawer.Content>
-					<Drawer.CloseTrigger />
+			<Drawer.Content>
+				<Drawer.CloseTrigger />
+				<Drawer.Header>
 					<Drawer.Title>Right Drawer</Drawer.Title>
-					<p class="text-sm text-ink-dim">Slides in from the right. Swipe right to close.</p>
-				</Drawer.Content>
-			</Drawer.Positioner>
+					<Drawer.Description>Slides in from the right. Swipe right to close.</Drawer.Description>
+				</Drawer.Header>
+			</Drawer.Content>
 		</Drawer.Root>
 	</section>
 
@@ -43,15 +41,14 @@
 		<h2 class="mb-4 text-lg font-semibold">Left Drawer</h2>
 		<Drawer.Root bind:open={leftOpen} swipeDirection="start">
 			<Drawer.Trigger>Open Left Drawer</Drawer.Trigger>
-			<Drawer.Backdrop />
-			<Drawer.Positioner>
-				<Drawer.Content>
-					<Drawer.CloseTrigger />
+			<Drawer.Content>
+				<Drawer.CloseTrigger />
+				<Drawer.Header>
 					<Drawer.Title>Left Drawer</Drawer.Title>
-					<p class="text-sm text-ink-dim">Slides in from the left. Swipe left to close.</p>
-					<Button>Hello</Button>
-				</Drawer.Content>
-			</Drawer.Positioner>
+					<Drawer.Description>Slides in from the left. Swipe left to close.</Drawer.Description>
+				</Drawer.Header>
+				<Button>Hello</Button>
+			</Drawer.Content>
 		</Drawer.Root>
 	</section>
 </div>

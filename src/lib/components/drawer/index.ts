@@ -5,5 +5,7 @@ export { default as Positioner } from './drawer-positioner.svelte';
 export { default as Content } from './drawer-content.svelte';
 export { default as Grabber } from './drawer-grabber.svelte';
 export { default as GrabberIndicator } from './drawer-grabber-indicator.svelte';
+export { default as Header } from './drawer-header.svelte';
 export { default as Title } from './drawer-title.svelte';
+export { default as Description } from './drawer-description.svelte';
 export { default as CloseTrigger } from './drawer-close-trigger.svelte';

@@ -6,23 +6,58 @@
 
 	interface Props extends DrawerContentBaseProps {
 		class?: ClassValue;
+		backdropClass?: ClassValue;
+		positionerClass?: ClassValue;
+		maxWidth?: string;
+		maxHeight?: string;
 	}
 
-	let { class: className, children, draggable = false, ...rest }: Props = $props();
+	let {
+		class: className,
+		backdropClass,
+		positionerClass,
+		maxWidth,
+		maxHeight,
+		children,
+		draggable = false,
+		...rest
+	}: Props = $props();
 </script>
 
-<Drawer.Content
-	{...rest}
-	{draggable}
+<Drawer.Backdrop
 	class={cn(
-		'pointer-events-auto relative flex h-full max-h-[96svh] w-full flex-col bg-surface-1 shadow-xl outline-none',
-		'data-[swipe-direction=left]:max-h-none data-[swipe-direction=left]:max-w-100',
-		'data-[swipe-direction=right]:max-h-none data-[swipe-direction=right]:max-w-100',
-		className
+		'fixed inset-0 z-50 bg-black/50',
+		'data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
+		'data-[state=open]:animate-in data-[state=open]:fade-in-0',
+		backdropClass
+	)}
+/>
+<Drawer.Positioner
+	class={cn(
+		'fixed inset-0 z-50 flex items-end justify-center',
+		'data-[swipe-direction=left]:items-stretch data-[swipe-direction=left]:justify-start',
+		'data-[swipe-direction=right]:items-stretch data-[swipe-direction=right]:justify-end',
+		'data-[swipe-direction=up]:items-start',
+		positionerClass
 	)}
 >
-	{@render children?.()}
-</Drawer.Content>
+	<Drawer.Content
+		{...rest}
+		{draggable}
+		style={[
+			maxWidth && `--drawer-max-width:${maxWidth}`,
+			maxHeight && `--drawer-max-height:${maxHeight}`
+		]
+			.filter(Boolean)
+			.join(';')}
+		class={cn(
+			'pointer-events-auto relative flex h-full w-full flex-col bg-surface-1 shadow-xl outline-none',
+			className
+		)}
+	>
+		{@render children?.()}
+	</Drawer.Content>
+</Drawer.Positioner>
 
 <style>
 	/* Side drawers: grabber becomes an absolutely-positioned vertical strip on the open edge */
@@ -64,6 +99,24 @@
 		height: 2.5rem;
 	}
 
+	/* Bottom/top drawers: cap height, overridable via --drawer-max-height */
+	:global(
+		[data-scope='drawer'][data-part='content']:not([data-swipe-direction]),
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='down'],
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='up']
+	) {
+		max-height: var(--drawer-max-height, 96svh);
+	}
+
+	/* Side drawers: constrain width, remove height cap — overridable via --drawer-max-width */
+	:global(
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='left'],
+		[data-scope='drawer'][data-part='content'][data-swipe-direction='right']
+	) {
+		max-width: var(--drawer-max-width, 25rem);
+		max-height: none;
+	}
+
 	/* Bleed pseudo-element so background extends past rounded corners on the open edge */
 	:global([data-scope='drawer'][data-part='content'])::after {
 		content: '';
@@ -99,129 +152,60 @@
 		height: auto;
 	}
 
-	/* Slide animations for bottom drawer (default) */
+	:global([data-scope='drawer'][data-part='content'][data-state='open']) {
+		animation-name: enter;
+		animation-duration: 500ms;
+		animation-fill-mode: both;
+	}
+	:global([data-scope='drawer'][data-part='content'][data-state='closed']) {
+		animation-name: exit;
+		animation-duration: 300ms;
+		animation-fill-mode: both;
+	}
+
 	:global(
 		[data-scope='drawer'][data-part='content']:not([data-swipe-direction])[data-state='open'],
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='down'][data-state='open']
 	) {
-		animation: slide-in-bottom 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+		--tw-enter-translate-y: 100%;
 	}
-
 	:global(
 		[data-scope='drawer'][data-part='content']:not([data-swipe-direction])[data-state='closed'],
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='down'][data-state='closed']
 	) {
-		animation: slide-out-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		--tw-exit-translate-y: 100%;
 	}
 
-	/* Slide animations for top drawer */
 	:global(
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='up'][data-state='open']
 	) {
-		animation: slide-in-top 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+		--tw-enter-translate-y: -100%;
 	}
-
 	:global(
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='up'][data-state='closed']
 	) {
-		animation: slide-out-top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		--tw-exit-translate-y: -100%;
 	}
 
-	/* Slide animations for left drawer */
 	:global(
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='left'][data-state='open']
 	) {
-		animation: slide-in-left 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+		--tw-enter-translate-x: -100%;
 	}
-
 	:global(
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='left'][data-state='closed']
 	) {
-		animation: slide-out-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		--tw-exit-translate-x: -100%;
 	}
 
-	/* Slide animations for right drawer */
 	:global(
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='right'][data-state='open']
 	) {
-		animation: slide-in-right 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+		--tw-enter-translate-x: 100%;
 	}
-
 	:global(
 		[data-scope='drawer'][data-part='content'][data-swipe-direction='right'][data-state='closed']
 	) {
-		animation: slide-out-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	@keyframes slide-in-bottom {
-		from {
-			transform: translate3d(0, 100%, 0);
-		}
-		to {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-	}
-
-	@keyframes slide-out-bottom {
-		from {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-		to {
-			transform: translate3d(0, 100%, 0);
-		}
-	}
-
-	@keyframes slide-in-top {
-		from {
-			transform: translate3d(0, -100%, 0);
-		}
-		to {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-	}
-
-	@keyframes slide-out-top {
-		from {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-		to {
-			transform: translate3d(0, -100%, 0);
-		}
-	}
-
-	@keyframes slide-in-left {
-		from {
-			transform: translate3d(-100%, 0, 0);
-		}
-		to {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-	}
-
-	@keyframes slide-out-left {
-		from {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-		to {
-			transform: translate3d(-100%, 0, 0);
-		}
-	}
-
-	@keyframes slide-in-right {
-		from {
-			transform: translate3d(100%, 0, 0);
-		}
-		to {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-	}
-
-	@keyframes slide-out-right {
-		from {
-			transform: translate3d(var(--drawer-translate-x, 0), var(--drawer-translate-y, 0), 0);
-		}
-		to {
-			transform: translate3d(100%, 0, 0);
-		}
+		--tw-exit-translate-x: 100%;
 	}
 </style>
