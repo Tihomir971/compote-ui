@@ -65,7 +65,7 @@
 	<Portal>
 		<Select.Positioner>
 			<Select.Content
-				class="z-50 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-document p-1 text-ink shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+				class="z-200 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-document p-1 text-ink shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
 			>
 				<Select.ItemGroup>
 					{#each items as item (item.value)}
