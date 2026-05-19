@@ -10,11 +10,17 @@
 		contentClass,
 		lazyMount = true,
 		unmountOnExit = true,
+		onOpenChange,
 		...restProps
 	}: DialogProps = $props();
+
+	function handleOpenChange(details: { open: boolean }) {
+		open = details.open;
+		onOpenChange?.(details);
+	}
 </script>
 
-<Dialog.Root bind:open {lazyMount} {unmountOnExit} {...restProps}>
+<Dialog.Root {open} {lazyMount} {unmountOnExit} onOpenChange={handleOpenChange} {...restProps}>
 	<Portal>
 		<Dialog.Backdrop
 			class="fixed inset-0 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0"
