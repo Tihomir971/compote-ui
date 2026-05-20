@@ -1,13 +1,13 @@
 <script lang="ts" generics="T extends RowData">
 	import { onDestroy } from 'svelte';
 	import type { Column, RowData } from '@tanstack/table-core';
-	import * as Popover from '../popover';
-	import * as ScrollArea from '../scroll-area';
-	import Checkbox from '../checkbox/checkbox.svelte';
+	import * as Popover from '../../popover';
+	import * as ScrollArea from '../../scroll-area';
+	import Checkbox from '../../checkbox/checkbox.svelte';
 	import { cn } from 'tailwind-variants';
-	import { getReactiveTableState, type DataTableInstance } from './data-table-utils';
-	import NumberInput from '../number-input/number-input.svelte';
-	import * as Field from '../field';
+	import { getReactiveTableState, type DataTableInstance } from '../data-table-utils';
+	import NumberInput from '../../number-input/number-input.svelte';
+	import * as Field from '../../field';
 
 	type Props = {
 		table: DataTableInstance<T>;

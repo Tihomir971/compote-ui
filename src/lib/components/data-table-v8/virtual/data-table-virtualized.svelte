@@ -2,15 +2,15 @@
 	import type { RowData } from '@tanstack/table-core';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
-	import type { DataTableInstance } from './data-table-utils';
-	import DataTableHead from './data-table-head.svelte';
+	import type { DataTableInstance } from '../data-table-utils';
+	import DataTableHead from '../data-table-head.svelte';
 	import DataTableVirtualRows from './data-table-virtual-rows.svelte';
 	import {
 		getAllRowsSelectionState,
 		getReactiveTableState,
 		getSelectedRowCount,
 		tableSizeStyle
-	} from './data-table-utils';
+	} from '../data-table-utils';
 
 	type Props = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
 		table: DataTableInstance<T>;

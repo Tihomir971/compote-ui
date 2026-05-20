@@ -22,9 +22,6 @@
 	);
 </script>
 
-<ToggleGroup.Item
-	{...rest}
-	class={itemClass}
->
+<ToggleGroup.Item {...rest} class={itemClass}>
 	{@render children?.()}
 </ToggleGroup.Item>

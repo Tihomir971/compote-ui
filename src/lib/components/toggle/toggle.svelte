@@ -13,6 +13,10 @@
 	}: ToggleProps = $props();
 </script>
 
-<ArkToggle.Root {...rootProps} bind:pressed class={toggle({ size, icon, class: className as never })}>
+<ArkToggle.Root
+	{...rootProps}
+	bind:pressed
+	class={toggle({ size, icon, class: className as never })}
+>
 	{@render children?.()}
 </ArkToggle.Root>

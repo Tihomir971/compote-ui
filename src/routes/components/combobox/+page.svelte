@@ -11,6 +11,15 @@
 
 	let selectedLanguage = $state(languageItems[0].value);
 	let selectedLanguages = $state([languageItems[0].value]);
+
+	const largeItems = $derived(
+		Array.from({ length: 200 }, (_, i) => ({
+			value: `item-${i + 1}`,
+			label: `Item ${i + 1}`
+		}))
+	);
+
+	let selectedLargeItem = $state<string | null>('item-1');
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -39,6 +48,23 @@
 			</Field.Root>
 			<p class="text-sm text-ink-dim">
 				Selected: <strong>{selectedLanguages.join(', ')}</strong>
+			</p>
+		</div>
+	</section>
+
+	<section>
+		<h2 class="mb-4 text-lg font-semibold">Virtualized (large dataset)</h2>
+		<div class="flex flex-col gap-4">
+			<Combobox
+				items={largeItems}
+				label="Select an item"
+				bind:value={selectedLargeItem}
+				placeholder="Search 200 items..."
+				virtualized
+				multiple
+			/>
+			<p class="text-sm text-ink-dim">
+				Selected: <strong>{selectedLargeItem}</strong>
 			</p>
 		</div>
 	</section>

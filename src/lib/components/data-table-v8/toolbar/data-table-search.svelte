@@ -3,8 +3,8 @@
 	import type { RowData } from '@tanstack/table-core';
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhMagnifyingGlass, PhX } from '$lib/icons';
-	import * as Field from '../field';
-	import { getReactiveTableState, type DataTableInstance } from './data-table-utils';
+	import * as Field from '../../field';
+	import { getReactiveTableState, type DataTableInstance } from '../data-table-utils';
 
 	type Props = {
 		table: DataTableInstance<T>;

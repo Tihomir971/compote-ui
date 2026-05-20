@@ -4,8 +4,8 @@
 	import { untrack } from 'svelte';
 	import { cn } from 'tailwind-variants';
 	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
-	import type { DataTableInstance } from './data-table-utils';
-	import FlexRender from './flex-render.svelte';
+	import type { DataTableInstance } from '../data-table-utils';
+	import FlexRender from '../flex-render.svelte';
 	import {
 		alignClass,
 		getBooleanCellValue,
@@ -20,7 +20,7 @@
 		virtualColumnSizeStyle,
 		virtualGrowColumnSizeStyle,
 		virtualSelectionColumnSizeStyle
-	} from './data-table-utils';
+	} from '../data-table-utils';
 
 	type Props = {
 		rows: Row<T>[];

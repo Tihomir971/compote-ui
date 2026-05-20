@@ -1,9 +1,9 @@
 <script lang="ts" generics="T extends RowData">
 	import type { RowData } from '@tanstack/table-core';
-	import * as Popover from '../popover';
-	import * as ScrollArea from '../scroll-area';
-	import Checkbox from '../checkbox/checkbox.svelte';
-	import { getReactiveTableState, type DataTableInstance } from './data-table-utils';
+	import * as Popover from '../../popover';
+	import * as ScrollArea from '../../scroll-area';
+	import Checkbox from '../../checkbox/checkbox.svelte';
+	import { getReactiveTableState, type DataTableInstance } from '../data-table-utils';
 
 	type Props = {
 		table: DataTableInstance<T>;

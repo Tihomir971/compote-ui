@@ -3,6 +3,8 @@
 	import { Field } from '@ark-ui/svelte/field';
 	import { useFilter } from '@ark-ui/svelte/locale';
 	import { Portal } from '@ark-ui/svelte/portal';
+	import { createVirtualizer } from '@tanstack/svelte-virtual';
+	import { untrack } from 'svelte';
 	import type { ComboboxProps } from './types';
 	import { createListCollection, type ListItem } from '../../utils/collections';
 	import { cn } from 'tailwind-variants';
@@ -18,26 +20,22 @@
 		readOnly,
 		multiple,
 		loading = false,
+		virtualized = false,
 		class: className,
 		onValueChange,
 		...restProps
 	}: ComboboxProps<T> = $props();
 
-	// Client-side filtering state
 	let filterText = $state('');
+
 	const filters = useFilter({ sensitivity: 'base' });
-
-	// Base collection — only rebuilds when items prop changes
 	const baseCollection = $derived(createListCollection(items));
-
-	// Filtered view — lightweight .filter() on keystroke, full collection when empty
 	const collection = $derived(
 		filterText
 			? baseCollection.filter((itemString) => filters().contains(itemString, filterText))
 			: baseCollection
 	);
 
-	// Handle input change — only filter on actual user typing, not on selection/clear events
 	function handleInputChange(details: Combobox.InputValueChangeDetails) {
 		if (details.reason === 'input-change') {
 			filterText = details.inputValue;
@@ -78,6 +76,29 @@
 		}
 		onValueChange?.(details);
 	}
+
+	let contentRef = $state<HTMLDivElement | null>(null);
+
+	const virtualizer = createVirtualizer({
+		get count() {
+			return virtualized ? collection.size : 0;
+		},
+		getScrollElement: () => contentRef,
+		estimateSize: () => 36,
+		overscan: 10
+	});
+
+	$effect(() => {
+		const count = virtualized ? collection.size : 0;
+		const scrollElement = contentRef;
+
+		if (!scrollElement) return;
+
+		untrack(() => {
+			$virtualizer.setOptions({ ...$virtualizer.options, count });
+			$virtualizer.measure();
+		});
+	});
 </script>
 
 <Combobox.Root
@@ -86,6 +107,9 @@
 	inputValue={controlledInputValue}
 	onValueChange={handleValueChange}
 	onInputValueChange={handleInputChange}
+	scrollToIndexFn={virtualized
+		? (d) => $virtualizer.scrollToIndex(d.index, { align: 'center' })
+		: undefined}
 	openOnClick
 	{multiple}
 	{readOnly}
@@ -140,31 +164,78 @@
 	<Portal>
 		<Combobox.Positioner class="data-[state=closed]:pointer-events-none">
 			<Combobox.Content
-				class="z-200 max-h-60 min-w-(--reference-width) overflow-auto rounded-md border bg-surface-document p-1 shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0  data-[state=open]:zoom-in-95"
+				class={cn(
+					'z-200 min-w-(--reference-width) rounded-md border bg-surface-document p-1 shadow-md',
+					'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+					'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+					virtualized ? 'overflow-hidden' : 'max-h-60 overflow-auto'
+				)}
 			>
-				{#if loading}
-					<div class="flex items-center justify-center py-4">
-						<span
-							class="size-5 animate-spin rounded-full border-2 border-surface-3 border-t-ink-dim"
-						></span>
-					</div>
+				{#if virtualized}
+					{#if loading}
+						<div class="flex items-center justify-center py-4">
+							<span
+								class="size-5 animate-spin rounded-full border-2 border-surface-3 border-t-ink-dim"
+							></span>
+						</div>
+					{:else if collection.size === 0}
+						<Combobox.Empty class="py-2 text-center text-sm text-ink-dim">
+							No results found
+						</Combobox.Empty>
+					{:else}
+						<div
+							bind:this={contentRef}
+							class="overflow-auto overscroll-contain"
+							style="height: min(15rem, {$virtualizer.getTotalSize()}px);"
+						>
+							<div
+								style="height: {$virtualizer.getTotalSize()}px; width: 100%; position: relative;"
+							>
+								{#each $virtualizer.getVirtualItems() as vItem (vItem.key)}
+									{@const item = collection.items[vItem.index]}
+									{#if item}
+										<Combobox.Item
+											{item}
+											aria-setsize={collection.size}
+											aria-posinset={vItem.index + 1}
+											style="position:absolute;top:0;left:0;width:100%;height:{vItem.size}px;transform:translateY({vItem.start}px)"
+											class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-1 data-[state=checked]:bg-surface-1"
+										>
+											<Combobox.ItemText>{item.label}</Combobox.ItemText>
+											<Combobox.ItemIndicator class="absolute right-2 items-center justify-center">
+												<PhCheck class="size-3.5" />
+											</Combobox.ItemIndicator>
+										</Combobox.Item>
+									{/if}
+								{/each}
+							</div>
+						</div>
+					{/if}
 				{:else}
-					<Combobox.Empty class="py-2 text-center text-sm text-ink-dim">
-						No results found
-					</Combobox.Empty>
-				{/if}
+					{#if loading}
+						<div class="flex items-center justify-center py-4">
+							<span
+								class="size-5 animate-spin rounded-full border-2 border-surface-3 border-t-ink-dim"
+							></span>
+						</div>
+					{:else}
+						<Combobox.Empty class="py-2 text-center text-sm text-ink-dim">
+							No results found
+						</Combobox.Empty>
+					{/if}
 
-				{#each loading ? [] : collection.items as item (item.value)}
-					<Combobox.Item
-						{item}
-						class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-1 data-[state=checked]:bg-surface-1"
-					>
-						<Combobox.ItemText>{item.label}</Combobox.ItemText>
-						<Combobox.ItemIndicator class="absolute right-2 items-center justify-center">
-							<PhCheck class="size-3.5" />
-						</Combobox.ItemIndicator>
-					</Combobox.Item>
-				{/each}
+					{#each loading ? [] : collection.items as item (item.value)}
+						<Combobox.Item
+							{item}
+							class="relative flex cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-1 data-[state=checked]:bg-surface-1"
+						>
+							<Combobox.ItemText>{item.label}</Combobox.ItemText>
+							<Combobox.ItemIndicator class="absolute right-2 items-center justify-center">
+								<PhCheck class="size-3.5" />
+							</Combobox.ItemIndicator>
+						</Combobox.Item>
+					{/each}
+				{/if}
 			</Combobox.Content>
 		</Combobox.Positioner>
 	</Portal>

@@ -1,4 +1,4 @@
-export { default as Root } from '../data-table-virtualized.svelte';
+export { default as Root } from './data-table-virtualized.svelte';
 export {
 	ColumnFilter,
 	ColumnVisibility,
