@@ -28,7 +28,7 @@
 	{...restProps}
 	allowMouseWheel
 	locale={locale().locale}
-	value={value?.toString()}
+	value={value != null ? new Intl.NumberFormat(locale().locale, { useGrouping: false, maximumFractionDigits: 20 }).format(value) : undefined}
 	readOnly={readonly}
 	onValueChange={(valueChangeDetails) => {
 		onValueChange?.(valueChangeDetails);

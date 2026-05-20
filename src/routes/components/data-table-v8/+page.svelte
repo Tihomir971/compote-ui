@@ -160,6 +160,9 @@
 <div class="max-w-5xl space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">
 	<DataTable.Toolbar>
 		<DataTable.Title>Column Types</DataTable.Title>
+		{#snippet right()}
+			<DataTable.ColumnFilter table={personTable} />
+		{/snippet}
 	</DataTable.Toolbar>
 	<div class="h-48 min-h-0">
 		<DataTable.Root table={typesTable} caption="Column type examples" />
