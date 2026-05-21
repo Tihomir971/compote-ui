@@ -8,6 +8,7 @@
 	import { getReactiveTableState, type DataTableInstance } from '../data-table-utils';
 	import NumberInput from '../../number-input/number-input.svelte';
 	import * as Field from '../../field';
+	import { PhX, PhMagnifyingGlass } from '$lib/icons';
 
 	type Props = {
 		table: DataTableInstance<T>;
@@ -19,13 +20,33 @@
 	let localText: Record<string, string> = $state({});
 	let localNumMin: Record<string, number> = $state({});
 	let localNumMax: Record<string, number> = $state({});
+	let localSelectSearch: Record<string, string> = $state({});
 	const timers: Record<string, ReturnType<typeof setTimeout>> = {};
 
 	const columnFilters = $derived(getReactiveTableState(table).columnFilters);
 	const activeCount = $derived(columnFilters.length);
-	const filterableColumns = $derived.by(() => {
+
+	let activeFilterIds: string[] = $derived(columnFilters.map((f) => f.id));
+	let showColumnPicker = $state(false);
+	let columnSearchText = $state('');
+
+	const activeColumns = $derived.by(() => {
 		getReactiveTableState(table);
-		return table.getAllLeafColumns().filter((col) => col.getCanFilter());
+		return activeFilterIds
+			.map((id) => table.getColumn(id))
+			.filter((col): col is Column<T, unknown> => col != null);
+	});
+
+	const availableColumns = $derived.by(() => {
+		getReactiveTableState(table);
+		return table
+			.getAllLeafColumns()
+			.filter((col) => col.getCanFilter() && !activeFilterIds.includes(col.id))
+			.filter(
+				(col) =>
+					!columnSearchText ||
+					getColumnLabel(col).toLowerCase().includes(columnSearchText.toLowerCase())
+			);
 	});
 
 	onDestroy(() => {
@@ -42,12 +63,33 @@
 		return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
 	}
 
+	function addFilter(column: Column<T, unknown>) {
+		activeFilterIds = [...activeFilterIds, column.id];
+		showColumnPicker = false;
+		columnSearchText = '';
+	}
+
+	function removeFilter(column: Column<T, unknown>) {
+		activeFilterIds = activeFilterIds.filter((id) => id !== column.id);
+		column.setFilterValue(undefined);
+		delete localText[column.id];
+		delete localNumMin[column.id];
+		delete localNumMax[column.id];
+		delete localSelectSearch[column.id];
+		clearTimeout(timers[column.id]);
+		clearTimeout(timers[`${column.id}_min`]);
+		clearTimeout(timers[`${column.id}_max`]);
+	}
+
 	function clearFilters() {
 		Object.values(timers).forEach(clearTimeout);
 		for (const key of Object.keys(timers)) delete timers[key];
 		localText = {};
 		localNumMin = {};
 		localNumMax = {};
+		localSelectSearch = {};
+		showColumnPicker = false;
+		columnSearchText = '';
 		table.resetColumnFilters();
 	}
 
@@ -117,8 +159,8 @@
 		{/if}
 	</Popover.Trigger>
 
-	<Popover.Content class="w-72 px-0" showArrow={false}>
-		<div class="mb-2 flex items-center justify-between px-4">
+	<Popover.Content class="w-72 p-0" showArrow={false}>
+		<div class="flex items-center justify-between px-3 py-2.5">
 			<span class="text-sm font-medium text-ink">Filters</span>
 			{#if activeCount > 0}
 				<button type="button" onclick={clearFilters} class="text-xs text-primary hover:underline">
@@ -126,123 +168,208 @@
 				</button>
 			{/if}
 		</div>
-		<div class="mb-2 border-b border-surface-3"></div>
 
-		<ScrollArea.Root class="h-80">
-			<ScrollArea.Viewport>
-				<ScrollArea.Content>
-					{#each filterableColumns as column (column.id)}
-						<div class="mb-3">
-							<p class="mb-1 text-xs font-medium text-ink">{getColumnLabel(column)}</p>
+		{#if activeColumns.length > 0}
+			<div class="overflow-hidden border-t border-surface-3">
+				<ScrollArea.Root class="h-96">
+					<ScrollArea.Viewport>
+						<ScrollArea.Content>
+							{#each activeColumns as column (column.id)}
+								<div class="border border-surface-3 p-3">
+									<div class="mb-2 flex items-center justify-between">
+										<span class="text-sm font-medium text-ink">{getColumnLabel(column)}</span>
+										<button
+											type="button"
+											onclick={() => removeFilter(column)}
+											class="text-ink-dim transition-colors hover:text-ink"
+										>
+											<PhX class="size-3.5" />
+										</button>
+									</div>
 
-							{#if getColumnType(column) === 'number' || getColumnType(column) === 'currency' || getColumnType(column) === 'percent'}
-								{@const [facetMin, facetMax] = getFacetedMinMax(column)}
-								{@const colFormatOptions = getColumnFormatOptions(column)}
-								<div class="flex gap-1.5">
-									<div class="min-w-0 flex-1">
-										<p class="mb-1 text-xs text-ink-dim">From</p>
-										<NumberInput
-											value={localNumMin[column.id] ?? facetMin ?? null}
-											min={facetMin}
-											max={facetMax}
-											formatOptions={colFormatOptions}
-											onValueChange={({ valueAsNumber }) =>
-												handleNumericInput(
-													column,
-													'min',
-													isNaN(valueAsNumber) ? null : valueAsNumber
+									{#if getColumnType(column) === 'number' || getColumnType(column) === 'currency' || getColumnType(column) === 'percent'}
+										{@const [facetMin, facetMax] = getFacetedMinMax(column)}
+										{@const colFormatOptions = getColumnFormatOptions(column)}
+										<div class="flex flex-col gap-1.5">
+											<div class="min-w-0 flex-1">
+												<NumberInput
+													layout="horizontal"
+													label="From"
+													value={localNumMin[column.id] ?? facetMin ?? null}
+													min={facetMin}
+													max={facetMax}
+													formatOptions={colFormatOptions}
+													onValueChange={({ valueAsNumber }) =>
+														handleNumericInput(
+															column,
+															'min',
+															isNaN(valueAsNumber) ? null : valueAsNumber
+														)}
+												/>
+											</div>
+											<div class="min-w-0 flex-1">
+												<NumberInput
+													layout="horizontal"
+													label="To"
+													value={localNumMax[column.id] ?? facetMax ?? null}
+													min={facetMin}
+													max={facetMax}
+													formatOptions={colFormatOptions}
+													onValueChange={({ valueAsNumber }) =>
+														handleNumericInput(
+															column,
+															'max',
+															isNaN(valueAsNumber) ? null : valueAsNumber
+														)}
+												/>
+											</div>
+										</div>
+									{:else if getColumnType(column) === 'boolean'}
+										{@const boolFilter = column.getFilterValue() as boolean | undefined}
+										<div class="flex overflow-hidden rounded border border-border text-xs">
+											<button
+												type="button"
+												onclick={() => column.setFilterValue(undefined)}
+												class={cn(
+													'flex-1 px-2 py-1',
+													boolFilter === undefined
+														? 'bg-surface-3 font-medium text-ink'
+														: 'text-ink-dim hover:bg-surface-2'
 												)}
-										/>
-									</div>
-									<div class="min-w-0 flex-1">
-										<p class="mb-1 text-xs text-ink-dim">To</p>
-										<NumberInput
-											value={localNumMax[column.id] ?? facetMax ?? null}
-											min={facetMin}
-											max={facetMax}
-											formatOptions={colFormatOptions}
-											onValueChange={({ valueAsNumber }) =>
-												handleNumericInput(
-													column,
-													'max',
-													isNaN(valueAsNumber) ? null : valueAsNumber
+											>
+												All
+											</button>
+											<button
+												type="button"
+												onclick={() =>
+													column.setFilterValue(boolFilter === true ? undefined : true)}
+												class={cn(
+													'flex-1 border-x border-border px-2 py-1',
+													boolFilter === true
+														? 'bg-surface-3 font-medium text-ink'
+														: 'text-ink-dim hover:bg-surface-2'
 												)}
-										/>
-									</div>
+											>
+												Yes
+											</button>
+											<button
+												type="button"
+												onclick={() =>
+													column.setFilterValue(boolFilter === false ? undefined : false)}
+												class={cn(
+													'flex-1 px-2 py-1',
+													boolFilter === false
+														? 'bg-surface-3 font-medium text-ink'
+														: 'text-ink-dim hover:bg-surface-2'
+												)}
+											>
+												No
+											</button>
+										</div>
+									{:else if getColumnType(column) === 'select'}
+										{@const allOptions = getFacetedValues(column)}
+										{@const search = localSelectSearch[column.id] ?? ''}
+										{@const options = search
+											? allOptions.filter((o) => o.toLowerCase().includes(search.toLowerCase()))
+											: allOptions}
+										{@const selected = getSelectValues(column)}
+										<div class="flex flex-col gap-1">
+											<Field.Root>
+												<Field.Input
+													placeholder="Search..."
+													value={search}
+													oninput={(e: Event) => {
+														localSelectSearch[column.id] = (
+															e.currentTarget as HTMLInputElement
+														).value;
+													}}
+												/>
+											</Field.Root>
+											<div class="max-h-44 overflow-hidden">
+												<ScrollArea.Root class="h-full">
+													<ScrollArea.Viewport>
+														<ScrollArea.Content>
+															<div class="flex flex-col gap-0.5">
+																{#each options as option (option)}
+																	<Checkbox
+																		size="sm"
+																		label={option}
+																		class="min-h-7 rounded-sm px-2 hover:bg-surface-2"
+																		checked={selected.includes(option)}
+																		onCheckedChange={({ checked }) =>
+																			handleSelectChange(column, option, checked === true)}
+																	/>
+																{/each}
+															</div>
+														</ScrollArea.Content>
+													</ScrollArea.Viewport>
+													<ScrollArea.Scrollbar orientation="vertical">
+														<ScrollArea.Thumb />
+													</ScrollArea.Scrollbar>
+													<ScrollArea.Corner />
+												</ScrollArea.Root>
+											</div>
+										</div>
+									{:else}
+										<Field.Root>
+											<Field.Input
+												placeholder="Search..."
+												value={localText[column.id] ?? ''}
+												oninput={(e: Event) =>
+													handleTextInput(column, (e.currentTarget as HTMLInputElement).value)}
+											/>
+										</Field.Root>
+									{/if}
 								</div>
-							{:else if getColumnType(column) === 'boolean'}
-								{@const boolFilter = column.getFilterValue() as boolean | undefined}
-								<div class="flex overflow-hidden rounded border border-border text-xs">
-									<button
-										type="button"
-										onclick={() => column.setFilterValue(undefined)}
-										class={cn(
-											'flex-1 px-2 py-1',
-											boolFilter === undefined
-												? 'bg-surface-3 font-medium text-ink'
-												: 'text-ink-dim hover:bg-surface-2'
-										)}
-									>
-										All
-									</button>
-									<button
-										type="button"
-										onclick={() => column.setFilterValue(boolFilter === true ? undefined : true)}
-										class={cn(
-											'flex-1 border-x border-border px-2 py-1',
-											boolFilter === true
-												? 'bg-surface-3 font-medium text-ink'
-												: 'text-ink-dim hover:bg-surface-2'
-										)}
-									>
-										Yes
-									</button>
-									<button
-										type="button"
-										onclick={() => column.setFilterValue(boolFilter === false ? undefined : false)}
-										class={cn(
-											'flex-1 px-2 py-1',
-											boolFilter === false
-												? 'bg-surface-3 font-medium text-ink'
-												: 'text-ink-dim hover:bg-surface-2'
-										)}
-									>
-										No
-									</button>
-								</div>
-							{:else if getColumnType(column) === 'select'}
-								{@const options = getFacetedValues(column)}
-								{@const selected = getSelectValues(column)}
-								<div class="flex flex-col gap-0.5">
-									{#each options as option (option)}
-										<Checkbox
-											size="sm"
-											label={option}
-											class="min-h-7 rounded-sm px-2 hover:bg-surface-2"
-											checked={selected.includes(option)}
-											onCheckedChange={({ checked }) =>
-												handleSelectChange(column, option, checked === true)}
-										/>
-									{/each}
-								</div>
-							{:else}
-								<Field.Root>
-									<Field.Input
-										placeholder="Search..."
-										value={localText[column.id] ?? ''}
-										oninput={(e: Event) =>
-											handleTextInput(column, (e.currentTarget as HTMLInputElement).value)}
-									/>
-								</Field.Root>
-							{/if}
-						</div>
+							{/each}
+						</ScrollArea.Content>
+					</ScrollArea.Viewport>
+					<ScrollArea.Scrollbar orientation="vertical">
+						<ScrollArea.Thumb />
+					</ScrollArea.Scrollbar>
+					<ScrollArea.Corner />
+				</ScrollArea.Root>
+			</div>
+		{/if}
+
+		{#if showColumnPicker}
+			<div class="border-t border-surface-3 p-3">
+				<div class="relative mb-1">
+					<PhMagnifyingGlass
+						class="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-ink-dim"
+					/>
+					<input
+						type="text"
+						placeholder="Search columns..."
+						bind:value={columnSearchText}
+						class="h-8 w-full rounded border border-border bg-surface-1 pr-3 pl-7 text-sm text-ink outline-none placeholder:text-ink-dim focus:ring-1 focus:ring-ring"
+					/>
+				</div>
+				<div class="max-h-48 overflow-y-auto">
+					{#each availableColumns as column (column.id)}
+						<button
+							type="button"
+							onclick={() => addFilter(column)}
+							class="w-full rounded px-2 py-1.5 text-left text-sm text-ink hover:bg-surface-2"
+						>
+							{getColumnLabel(column)}
+						</button>
+					{:else}
+						<p class="px-2 py-3 text-center text-sm text-ink-dim">No more columns</p>
 					{/each}
-				</ScrollArea.Content>
-			</ScrollArea.Viewport>
-			<ScrollArea.Scrollbar orientation="vertical">
-				<ScrollArea.Thumb />
-			</ScrollArea.Scrollbar>
-			<ScrollArea.Corner />
-		</ScrollArea.Root>
+				</div>
+			</div>
+		{:else}
+			<div class="border-t border-surface-3">
+				<button
+					type="button"
+					onclick={() => (showColumnPicker = true)}
+					class="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-ink-dim hover:bg-surface-2 hover:text-ink"
+				>
+					<span class="text-base leading-none">+</span>
+					Add Filter
+				</button>
+			</div>
+		{/if}
 	</Popover.Content>
 </Popover.Root>

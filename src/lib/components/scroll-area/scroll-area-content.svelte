@@ -10,6 +10,6 @@
 	let { class: className, children, ...rest }: Props = $props();
 </script>
 
-<ScrollArea.Content {...rest} class={cn('py-3 ps-4 pe-6', className)}>
+<ScrollArea.Content {...rest} class={cn('p-3', className)}>
 	{@render children?.()}
 </ScrollArea.Content>

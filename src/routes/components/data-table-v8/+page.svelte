@@ -161,7 +161,7 @@
 	<DataTable.Toolbar>
 		<DataTable.Title>Column Types</DataTable.Title>
 		{#snippet right()}
-			<DataTable.ColumnFilter table={personTable} />
+			<DataTable.ColumnFilter table={typesTable} />
 		{/snippet}
 	</DataTable.Toolbar>
 	<div class="h-48 min-h-0">

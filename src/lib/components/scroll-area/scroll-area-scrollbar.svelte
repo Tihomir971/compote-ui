@@ -13,7 +13,7 @@
 <ScrollArea.Scrollbar
 	{...rest}
 	class={cn(
-		'group pointer-events-none relative m-2 flex rounded-md bg-well opacity-0 transition-opacity duration-150',
+		'group pointer-events-none relative m-1 flex rounded-md bg-well opacity-0 transition-opacity duration-150',
 		'data-hover:pointer-events-auto data-hover:opacity-100',
 		'data-scrolling:pointer-events-auto data-scrolling:opacity-100 data-scrolling:duration-0',
 		'data-[orientation=vertical]:w-1 data-[orientation=vertical]:[&:not([data-overflow-y])]:hidden',

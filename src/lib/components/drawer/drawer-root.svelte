@@ -2,13 +2,20 @@
 	import { Drawer } from '@ark-ui/svelte/drawer';
 	import type { DrawerRootProps } from '@ark-ui/svelte/drawer';
 
-	interface Props extends Omit<DrawerRootProps, 'open' | 'onOpenChange'> {
+	interface Props extends Omit<DrawerRootProps, 'open'> {
 		open?: boolean;
 	}
 
-	let { children, open = $bindable(), ...rest }: Props = $props();
+	let { children, open = $bindable(), onOpenChange, ...rest }: Props = $props();
 </script>
 
-<Drawer.Root bind:open {...rest}>
+<Drawer.Root
+	{open}
+	onOpenChange={(details) => {
+		open = details.open;
+		onOpenChange?.(details);
+	}}
+	{...rest}
+>
 	{@render children?.()}
 </Drawer.Root>
