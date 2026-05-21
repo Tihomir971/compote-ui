@@ -9,3 +9,5 @@ export { default as Header } from './drawer-header.svelte';
 export { default as Title } from './drawer-title.svelte';
 export { default as Description } from './drawer-description.svelte';
 export { default as CloseTrigger } from './drawer-close-trigger.svelte';
+export { default as Body } from './drawer-body.svelte';
+export { default as Footer } from './drawer-footer.svelte';

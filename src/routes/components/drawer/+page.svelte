@@ -41,25 +41,38 @@
 					<Drawer.Title>Right Drawer</Drawer.Title>
 					<Drawer.Description>Slides in from the right. Swipe right to close.</Drawer.Description>
 				</Drawer.Header>
-				<div class="p-4">
-					<Button onclick={() => (dialogOpen = true)}>Open Dialog</Button>
-					<Dialog.Root bind:open={dialogOpen}>
-						<Dialog.Title>Select a Fruit</Dialog.Title>
-						<Dialog.Description>Choose your favourite fruit from the list below.</Dialog.Description
-						>
-						<Select
-							items={fruits}
-							label="Fruit"
-							bind:value={selectedFruit}
-							placeholder="Select a fruit"
-						/>
-						<Dialog.Footer>
-							<Button variant="outline" onclick={() => (dialogOpen = false)}>Cancel</Button>
-							<Button onclick={() => (dialogOpen = false)}>Confirm</Button>
-						</Dialog.Footer>
-						<Dialog.CloseTrigger />
-					</Dialog.Root>
-				</div>
+				<Drawer.Body>
+					<div class="p-4">
+						<Button onclick={() => (dialogOpen = true)}>Open Dialog</Button>
+						<Dialog.Root bind:open={dialogOpen}>
+							<Dialog.Title>Select a Fruit</Dialog.Title>
+							<Dialog.Description
+								>Choose your favourite fruit from the list below.</Dialog.Description
+							>
+							<Select
+								items={fruits}
+								label="Fruit"
+								bind:value={selectedFruit}
+								placeholder="Select a fruit"
+							/>
+							<Dialog.Footer>
+								<Button variant="outline" onclick={() => (dialogOpen = false)}>Cancel</Button>
+								<Button onclick={() => (dialogOpen = false)}>Confirm</Button>
+							</Dialog.Footer>
+							<Dialog.CloseTrigger />
+						</Dialog.Root>
+					</div>
+					<div class="mb-2 h-50 bg-amber-700"></div>
+					<div class="mb-2 h-50 bg-amber-700"></div>
+					<div class="mb-2 h-50 bg-amber-700"></div>
+					<div class="mb-2 h-50 bg-amber-700"></div>
+					<div class="mb-2 h-50 bg-amber-700"></div>
+					<div class="mb-2 h-50 bg-amber-700"></div>
+				</Drawer.Body>
+				<Drawer.Footer>
+					<Button variant="ghost">Cancel</Button>
+					<Button>Save</Button>
+				</Drawer.Footer>
 			</Drawer.Content>
 		</Drawer.Root>
 	</section>
