@@ -17,7 +17,7 @@
 	const locale = useLocaleContext();
 	const rootClass = $derived(
 		layout === 'horizontal'
-			? 'flex items-center gap-1.5 justify-between w-full w-full data-disabled:opacity-50 data-disabled:grayscale'
+			? 'flex items-center justify-between gap-1.5 w-full data-disabled:opacity-50 data-disabled:grayscale'
 			: 'flex flex-col gap-1.5 w-full max-w-48 data-disabled:opacity-50 data-disabled:grayscale'
 	);
 </script>
@@ -53,7 +53,7 @@
 	{/if}
 	<NumberInput.Control class="relative isolate">
 		<NumberInput.Input
-			class="h-9 max-w-40 rounded-md border bg-surface-1 px-3 pr-8 text-right text-sm font-medium tabular-nums shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-invalid:border-danger data-invalid:focus-visible:ring-danger"
+			class="h-9 w-full max-w-48 rounded-md border bg-surface-1 px-3 pr-8 text-right text-sm font-medium tabular-nums shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-invalid:border-danger data-invalid:focus-visible:ring-danger"
 		/>
 		<div
 			class="absolute top-px right-px bottom-px z-10 flex w-6 flex-col overflow-hidden rounded-r border-l"

@@ -19,6 +19,14 @@
 			/>
 
 			<NumberInput
+				label="Price horizontal"
+				bind:value={numberInputValue}
+				min={0}
+				step={0.01}
+				formatOptions={{ minimumFractionDigits: 2 }}
+				layout="horizontal"
+			/>
+			<NumberInput
 				label="Custom step"
 				bind:value={numberCurrency}
 				min={0}
