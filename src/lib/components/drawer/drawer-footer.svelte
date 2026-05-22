@@ -11,6 +11,11 @@
 	let { class: className, children }: Props = $props();
 </script>
 
-<div class={cn('mt-auto flex flex-row items-center justify-end gap-2 border-t border-border p-4', className)}>
+<div
+	class={cn(
+		'mt-auto flex flex-row items-center justify-end gap-2 border-t border-border p-4',
+		className
+	)}
+>
 	{@render children()}
 </div>
