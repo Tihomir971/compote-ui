@@ -20,6 +20,7 @@ export const navItems: NavItem[] = [
 	{ label: 'File Upload', slug: 'file-upload' },
 	{ label: 'Hover Card', slug: 'hover-card' },
 	{ label: 'Image Cropper', slug: 'image-cropper' },
+	{ label: 'Json Tree View', slug: 'json-tree-view' },
 	{ label: 'Listbox', slug: 'listbox' },
 	{ label: 'Menu', slug: 'menu' },
 	{ label: 'Number Input', slug: 'number-input' },
