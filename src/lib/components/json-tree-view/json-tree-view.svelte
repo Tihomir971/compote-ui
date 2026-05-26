@@ -21,11 +21,15 @@
 		defaultExpandedDepth = 1,
 		indentGuide = true,
 		renderValue,
+		data,
 		...rootProps
 	}: Props = $props();
+
+	const snapshotData = $derived($state.snapshot(data));
 </script>
 
 <JsonTreeView.Root
+	data={snapshotData}
 	{defaultExpandedDepth}
 	class={cn(
 		'w-full overflow-auto font-mono text-xs text-ink',
