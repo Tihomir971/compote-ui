@@ -18,7 +18,6 @@
 		bind:value
 		{defaultValue}
 		{orientation}
-		lazyMount
 		class="flex data-[orientation='horizontal']:flex-col data-[orientation='vertical']:flex-row"
 	>
 		{@render children?.()}
