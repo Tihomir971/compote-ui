@@ -12,7 +12,7 @@
 		PhMinus,
 		PhX
 	} from '$lib/icons';
-	import { Button, Field } from '$lib';
+	import { Button, Field, ScrollArea } from '$lib';
 	import { SvelteSet } from 'svelte/reactivity';
 
 	import Icon from '@iconify/svelte';
@@ -137,13 +137,24 @@
 		</div>
 	</div>
 
-	<div class="flex-1 overflow-x-hidden overflow-y-auto">
-		<TreeView.Tree class="flex flex-col text-sm">
-			{#each collection.rootNode.children ?? [] as node, index (node.value)}
-				{@render renderNode(node as T, [index])}
-			{/each}
-		</TreeView.Tree>
-	</div>
+	<ScrollArea.Root class="flex-1">
+		<ScrollArea.Viewport>
+			<ScrollArea.Content class="p-0">
+				<TreeView.Tree class="flex flex-col text-sm">
+					{#each collection.rootNode.children ?? [] as node, index (node.value)}
+						{@render renderNode(node as T, [index])}
+					{/each}
+				</TreeView.Tree>
+			</ScrollArea.Content>
+		</ScrollArea.Viewport>
+		<ScrollArea.Scrollbar orientation="vertical">
+			<ScrollArea.Thumb />
+		</ScrollArea.Scrollbar>
+		<ScrollArea.Scrollbar orientation="horizontal">
+			<ScrollArea.Thumb />
+		</ScrollArea.Scrollbar>
+		<ScrollArea.Corner />
+	</ScrollArea.Root>
 </TreeView.Root>
 
 {#snippet nodeCheckbox()}
