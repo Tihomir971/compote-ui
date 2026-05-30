@@ -23,6 +23,18 @@ export { default as CheckboxGroup } from './components/checkbox/checkbox-group.s
 
 export { default as Combobox } from './components/combobox/combobox.svelte';
 
+export { default as DateField } from './components/date-field/date-field.svelte';
+export type { DateFieldProps } from './components/date-field/types';
+
+export { default as DateRangeField } from './components/date-range-field/date-range-field.svelte';
+export type { DateRangeFieldProps } from './components/date-range-field/types';
+
+export { default as DateInput } from './components/date-input/date-input.svelte';
+export type { DateInputProps } from './components/date-input/types';
+
+export { default as DatePicker } from './components/date-picker/date-picker.svelte';
+export type { DatePickerProps } from './components/date-picker/types';
+
 export * as Dialog from './components/dialog';
 export { default as AlertDialog } from './components/dialog/alert-dialog.svelte';
 export type { AlertDialogProps } from './components/dialog/dialog.types';

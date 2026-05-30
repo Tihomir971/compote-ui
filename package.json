@@ -88,7 +88,7 @@
 		"svelte"
 	],
 	"dependencies": {
-		"@ark-ui/svelte": "^5.21.2",
+		"@ark-ui/svelte": "^5.22.0",
 		"@fontsource-variable/nunito-sans": "^5.2.7",
 		"@iconify/svelte": "^5.2.1",
 		"runed": "^0.37.1",

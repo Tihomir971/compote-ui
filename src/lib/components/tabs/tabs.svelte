@@ -18,7 +18,7 @@
 		bind:value
 		{defaultValue}
 		{orientation}
-		class="flex data-[orientation='horizontal']:flex-col data-[orientation='vertical']:flex-row"
+		class="flex h-full data-[orientation='horizontal']:flex-col data-[orientation='vertical']:flex-row"
 	>
 		{@render children?.()}
 	</Tabs.Root>

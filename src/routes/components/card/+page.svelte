@@ -1,21 +1,26 @@
 <script lang="ts">
-	import { Card, Button } from '$lib';
+	import { Card, Button, Splitter } from '$lib';
 </script>
 
+{#snippet leftPanel()}
+	<div class="flex h-full items-center justify-center font-medium">Left Panel</div>
+{/snippet}
+{#snippet rightPanel()}
+	<div class="flex h-full items-center justify-center font-medium">Right Panel</div>
+{/snippet}
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Basic Card</h2>
 		<Card.Root class="max-w-sm">
-			<Card.Header>
-				<Card.Title>Card Title</Card.Title>
-				<Card.Description>Card Description</Card.Description>
-			</Card.Header>
 			<Card.Content>
-				<p>This is the card content area. You can put any content here.</p>
+				<Splitter
+					defaultSize={[40, 60]}
+					panels={[
+						{ id: 'left', minSize: 20, content: leftPanel },
+						{ id: 'right', minSize: 30, content: rightPanel }
+					]}
+				/>
 			</Card.Content>
-			<Card.Footer>
-				<p class="text-sm text-ink-dim">Card Footer</p>
-			</Card.Footer>
 		</Card.Root>
 	</section>
 

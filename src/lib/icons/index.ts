@@ -1,5 +1,6 @@
 export { default as PhArrowClockwise } from './PhArrowClockwise.svelte';
 export { default as PhArrowCounterClockwise } from './PhArrowCounterClockwise.svelte';
+export { default as PhCalendarBlank } from './PhCalendarBlank.svelte';
 export { default as PhArrowLeft } from './PhArrowLeft.svelte';
 export { default as PhArrowRight } from './PhArrowRight.svelte';
 export { default as PhArrowSquareOut } from './PhArrowSquareOut.svelte';
