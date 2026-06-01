@@ -4,13 +4,25 @@
 	import { CalendarDateTime } from '@internationalized/date';
 	import { PhArrowLeft, PhArrowRight } from '$lib/icons';
 	import type { DateValue } from '@ark-ui/svelte/date-picker';
+	import Select from '../select/select.svelte';
 
-	let { showTimeInput = false }: { showTimeInput?: boolean } = $props();
+	let { showTimeInput = false, hourCycle = 24 }: { showTimeInput?: boolean; hourCycle?: 12 | 24 } =
+		$props();
 
-	function getTimeValue(v: DateValue | undefined): string {
-		if (!v || !('hour' in v)) return '';
-		const dt = v as CalendarDateTime;
-		return `${String(dt.hour).padStart(2, '0')}:${String(dt.minute).padStart(2, '0')}`;
+	function getHour(v: DateValue | undefined): number {
+		if (!v || !('hour' in v)) return 0;
+		const h = (v as CalendarDateTime).hour;
+		return hourCycle === 12 ? h % 12 || 12 : h;
+	}
+
+	function getMinute(v: DateValue | undefined): number {
+		if (!v || !('hour' in v)) return 0;
+		return (v as CalendarDateTime).minute;
+	}
+
+	function isPM(v: DateValue | undefined): boolean {
+		if (!v || !('hour' in v)) return false;
+		return (v as CalendarDateTime).hour >= 12;
 	}
 
 	function setTime(v: DateValue | undefined, hours: number, minutes: number): CalendarDateTime {
@@ -18,6 +30,32 @@
 		const d = v ?? new CalendarDateTime(new Date().getFullYear(), 1, 1, 0, 0);
 		return new CalendarDateTime(d.year, d.month, d.day, hours, minutes);
 	}
+
+	function updateHour(v: DateValue | undefined, displayHour: number): CalendarDateTime {
+		let h = displayHour;
+		if (hourCycle === 12) {
+			const pm = isPM(v);
+			h = pm ? (displayHour % 12) + 12 : displayHour % 12;
+		}
+		return setTime(v, h, getMinute(v));
+	}
+
+	function togglePeriod(v: DateValue | undefined): CalendarDateTime {
+		const cur = v && 'hour' in v ? (v as CalendarDateTime).hour : 0;
+		return setTime(v, cur >= 12 ? cur - 12 : cur + 12, getMinute(v));
+	}
+
+	const minuteItems = Array.from({ length: 60 }, (_, m) => ({
+		value: m,
+		label: String(m).padStart(2, '0')
+	}));
+
+	const hourItems = $derived(
+		Array.from({ length: hourCycle === 12 ? 12 : 24 }, (_, i) => {
+			const h = hourCycle === 12 ? i + 1 : i;
+			return { value: h, label: String(h).padStart(2, '0') };
+		})
+	);
 </script>
 
 <Portal>
@@ -74,15 +112,43 @@
 							</DatePicker.TableBody>
 						</DatePicker.Table>
 						{#if showTimeInput}
-							<input
-								type="time"
-								value={getTimeValue(datePicker().value[0])}
-								oninput={(e) => {
-									const [h, m] = e.currentTarget.value.split(':').map(Number);
-									datePicker().setValue([setTime(datePicker().value[0], h, m)]);
-								}}
-								class="mt-3 h-9 w-full rounded-md border border-border bg-surface-1 px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-							/>
+							{@const cur = datePicker().value[0]}
+							<div class="mt-3 flex items-center justify-center gap-1">
+								<Select
+									items={hourItems}
+									value={getHour(cur)}
+									size="sm"
+									placeholder="HH"
+									onValueChange={(d) =>
+										datePicker().setValue([updateHour(cur, Number(d.items[0]?.value))])}
+								/>
+								<span class="text-ink-dim">:</span>
+								<Select
+									items={minuteItems}
+									value={getMinute(cur)}
+									size="sm"
+									placeholder="mm"
+									onValueChange={(d) => {
+										const m = Number(d.items[0]?.value);
+										const h24 =
+											hourCycle === 12
+												? isPM(cur)
+													? (getHour(cur) % 12) + 12
+													: getHour(cur) % 12
+												: getHour(cur);
+										datePicker().setValue([setTime(cur, h24, m)]);
+									}}
+								/>
+								{#if hourCycle === 12}
+									<button
+										type="button"
+										onclick={() => datePicker().setValue([togglePeriod(cur)])}
+										class="h-8 rounded-md border border-border bg-surface-1 px-2 text-sm shadow-sm hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+									>
+										{isPM(cur) ? 'PM' : 'AM'}
+									</button>
+								{/if}
+							</div>
 						{/if}
 					{/snippet}
 				</DatePicker.Context>

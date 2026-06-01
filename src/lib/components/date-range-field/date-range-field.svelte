@@ -19,6 +19,7 @@
 		required,
 		invalid,
 		timeZone,
+		hourCycle,
 		onValueChange
 	}: DateRangeFieldProps = $props();
 
@@ -48,6 +49,7 @@
 		id,
 		locale: locale().locale,
 		selectionMode: 'range',
+		hourCycle,
 		value: datePicker().value,
 		min,
 		max,

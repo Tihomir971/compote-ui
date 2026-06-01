@@ -8,4 +8,5 @@ export interface DatePickerProps extends Omit<DatePickerRootBaseProps, 'value' |
 	placeholder?: string;
 	name?: string;
 	granularity?: 'day' | 'hour' | 'minute' | 'second';
+	hourCycle?: 12 | 24;
 }

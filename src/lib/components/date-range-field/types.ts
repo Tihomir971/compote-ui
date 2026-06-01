@@ -9,4 +9,6 @@ export interface DateRangeFieldProps extends Omit<
 	defaultValue?: DateValue[];
 	label?: string;
 	name?: string;
+	granularity?: 'day' | 'hour' | 'minute' | 'second';
+	hourCycle?: 12 | 24;
 }

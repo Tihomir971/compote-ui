@@ -21,12 +21,21 @@
 		invalid,
 		timeZone,
 		granularity,
+		hourCycle,
 		onValueChange
 	}: DateFieldProps = $props();
 
 	const locale = useLocaleContext();
 	const id = $props.id();
 	const showTimeInput = $derived(!!granularity && granularity !== 'day');
+	const resolvedHourCycle = $derived(
+		hourCycle ??
+			(new Intl.DateTimeFormat(locale().locale, { hour: 'numeric' })
+				.formatToParts(new Date(2024, 0, 1, 14))
+				.some((p) => p.type === 'dayPeriod')
+				? 12
+				: 24)
+	);
 
 	const datePicker = useDatePicker(() => ({
 		id,
@@ -60,6 +69,7 @@
 		id,
 		locale: locale().locale,
 		granularity: granularity ?? 'day',
+		hourCycle,
 		value: datePicker().value,
 		min,
 		max,
@@ -102,7 +112,7 @@
 					<PhCalendarBlank class="size-4" />
 				</DatePicker.Trigger>
 			</DatePicker.Control>
-			<DatePickerCalendar {showTimeInput} />
+			<DatePickerCalendar {showTimeInput} hourCycle={resolvedHourCycle} />
 		</DatePicker.RootProvider>
 	</DateInput.Control>
 	<DateInput.HiddenInput {name} />

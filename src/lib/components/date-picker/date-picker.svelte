@@ -14,12 +14,21 @@
 		placeholder,
 		name,
 		granularity,
+		hourCycle,
 		onValueChange,
 		...restProps
 	}: DatePickerProps = $props();
 
 	const locale = useLocaleContext();
 	const showTimeInput = $derived(!!granularity && granularity !== 'day');
+	const resolvedHourCycle = $derived(
+		hourCycle ??
+			(new Intl.DateTimeFormat(locale().locale, { hour: 'numeric' })
+				.formatToParts(new Date(2024, 0, 1, 14))
+				.some((p) => p.type === 'dayPeriod')
+				? 12
+				: 24)
+	);
 </script>
 
 <DatePicker.Root
@@ -30,7 +39,7 @@
 	defaultValue={defaultValue ? [defaultValue] : undefined}
 	onValueChange={(details) => {
 		const picked = details.value[0] ?? null;
-		if (picked && showTimeInput) {
+		if (picked && showTimeInput && !('hour' in picked)) {
 			const h = value && 'hour' in value ? (value as CalendarDateTime).hour : 0;
 			const m = value && 'hour' in value ? (value as CalendarDateTime).minute : 0;
 			value = new CalendarDateTime(picked.year, picked.month, picked.day, h, m);
@@ -62,7 +71,7 @@
 			<PhX class="size-3.5" />
 		</DatePicker.ClearTrigger>
 	</DatePicker.Control>
-	<DatePickerCalendar {showTimeInput} />
+	<DatePickerCalendar {showTimeInput} hourCycle={resolvedHourCycle} />
 	{#if name}
 		<input type="hidden" {name} value={value ?? ''} />
 	{/if}
