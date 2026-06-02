@@ -267,12 +267,12 @@
 											</button>
 										</div>
 									{:else if getColumnType(column) === 'select'}
-										{@const allOptions = getFacetedValues(column)}
-										{@const search = localSelectSearch[column.id] ?? ''}
-										{@const options = search
+										{const allOptions = getFacetedValues(column)}
+										{const search = localSelectSearch[column.id] ?? ''}
+										{const options = search
 											? allOptions.filter((o) => o.toLowerCase().includes(search.toLowerCase()))
 											: allOptions}
-										{@const selected = getSelectValues(column)}
+										{const selected = getSelectValues(column)}
 										<div class="flex flex-col gap-1">
 											<Field.Root>
 												<Field.Input
@@ -285,30 +285,28 @@
 													}}
 												/>
 											</Field.Root>
-											<div class="max-h-44 overflow-hidden">
-												<ScrollArea.Root class="h-full">
-													<ScrollArea.Viewport>
-														<ScrollArea.Content>
-															<div class="flex flex-col gap-0.5">
-																{#each options as option (option)}
-																	<Checkbox
-																		size="sm"
-																		label={option}
-																		class="min-h-7 rounded-sm px-2 hover:bg-surface-2"
-																		checked={selected.includes(option)}
-																		onCheckedChange={({ checked }) =>
-																			handleSelectChange(column, option, checked === true)}
-																	/>
-																{/each}
-															</div>
-														</ScrollArea.Content>
-													</ScrollArea.Viewport>
-													<ScrollArea.Scrollbar orientation="vertical">
-														<ScrollArea.Thumb />
-													</ScrollArea.Scrollbar>
-													<ScrollArea.Corner />
-												</ScrollArea.Root>
-											</div>
+											<ScrollArea.Root class="max-h-44">
+												<ScrollArea.Viewport>
+													<ScrollArea.Content>
+														<div class="flex flex-col gap-0.5">
+															{#each options as option (option)}
+																<Checkbox
+																	size="sm"
+																	label={option}
+																	class="min-h-7 rounded-sm px-2 hover:bg-surface-2"
+																	checked={selected.includes(option)}
+																	onCheckedChange={({ checked }) =>
+																		handleSelectChange(column, option, checked === true)}
+																/>
+															{/each}
+														</div>
+													</ScrollArea.Content>
+												</ScrollArea.Viewport>
+												<ScrollArea.Scrollbar orientation="vertical">
+													<ScrollArea.Thumb />
+												</ScrollArea.Scrollbar>
+												<ScrollArea.Corner />
+											</ScrollArea.Root>
 										</div>
 									{:else}
 										<Field.Root>
