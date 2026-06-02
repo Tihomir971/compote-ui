@@ -5,6 +5,7 @@
 	"scripts": {
 		"dev": "vite dev --open",
 		"build": "vite build && npm run prepack",
+		"build:docs": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"prepack": "svelte-kit sync && svelte-package && publint",
@@ -60,6 +61,7 @@
 		"@faker-js/faker": "^10.4.0",
 		"@iconify-json/ph": "^1.2.2",
 		"@sveltejs/adapter-auto": "^7.0.0",
+		"@sveltejs/adapter-cloudflare": "^7.2.8",
 		"@sveltejs/kit": "^2.61.1",
 		"@sveltejs/package": "^2.5.7",
 		"@sveltejs/vite-plugin-svelte": "7.1.2",
