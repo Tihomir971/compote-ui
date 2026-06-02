@@ -1,5 +1,8 @@
 name = "compote-ui"
+main = ".svelte-kit/cloudflare/_worker.js"
 compatibility_date = "2025-01-01"
-compatibility_flags = ["nodejs_compat"]
+compatibility_flags = ["nodejs_als"]
 
-pages_build_output_dir = ".svelte-kit/cloudflare"
+[assets]
+binding = "ASSETS"
+directory = ".svelte-kit/cloudflare"
