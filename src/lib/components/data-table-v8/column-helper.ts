@@ -33,9 +33,9 @@ type GroupColumnOptions<T extends RowData> = Omit<
 type TypeDefaults = { align?: string; size?: number; enableSorting?: boolean };
 
 const TYPE_DEFAULTS: Partial<Record<string, TypeDefaults>> = {
-	number: { align: 'right' },
-	currency: { align: 'right' },
-	percent: { align: 'right' },
+	number: { align: 'right', size: 120 },
+	currency: { align: 'right', size: 120 },
+	percent: { align: 'right', size: 100 },
 	date: { align: 'center', size: 110 },
 	time: { align: 'center', size: 80 },
 	'date-time': { align: 'center', size: 160 },
