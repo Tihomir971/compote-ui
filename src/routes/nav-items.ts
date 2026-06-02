@@ -30,6 +30,7 @@ export const navItems: NavItem[] = [
 	{ label: 'Number Input', slug: 'number-input' },
 	{ label: 'Palette', slug: 'palette' },
 	{ label: 'Popover', slug: 'popover' },
+	{ label: 'QR Code', slug: 'qr-code' },
 	{ label: 'Scroll Area', slug: 'scroll-area' },
 	{ label: 'Select', slug: 'select' },
 	{ label: 'Splitter', slug: 'splitter' },

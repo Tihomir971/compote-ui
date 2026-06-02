@@ -64,6 +64,8 @@ export type { NumberInputProps } from './components/number-input/types';
 
 export * as Popover from './components/popover';
 
+export { default as QrCode } from './components/qr-code/qr-code.svelte';
+
 export { default as Select } from './components/select/select.svelte';
 
 export { default as Splitter } from './components/splitter/splitter.svelte';
