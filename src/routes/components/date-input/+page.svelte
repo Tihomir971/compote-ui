@@ -4,7 +4,7 @@
 	import type { DateValue } from '@ark-ui/svelte/date-picker';
 
 	let value = $state<DateValue | null>(null);
-	let datetimeValue = $state<DateValue | null>(null);
+	let datetimeValue = $state('2025-07-11T10:12:01.982258+00:00');
 	let invalidValue = $state<DateValue | null>(null);
 
 	const todayDate = today(getLocalTimeZone());
