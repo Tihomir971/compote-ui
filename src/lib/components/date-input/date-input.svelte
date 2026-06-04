@@ -7,7 +7,7 @@
 		getLocalTimeZone,
 		parseAbsoluteToLocal,
 		parseDate,
-		parseDateTime,
+		parseDateTime
 	} from '@internationalized/date';
 	import type { DateValue, DateInputProps, NativeDateInput } from './types';
 
