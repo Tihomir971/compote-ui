@@ -16,11 +16,17 @@
 		defaultValue,
 		label,
 		name,
+		timeZone = getLocalTimeZone(),
+		hideTimeZone,
 		onValueChange,
 		...restProps
 	}: DateInputProps = $props();
 
 	const absoluteDateTimeRe = /(?:Z|[+-]\d{2}:\d{2})$/;
+
+	function isAbsoluteDateTime(v: NativeDateInput): boolean {
+		return typeof v === 'string' && v.includes('T') && absoluteDateTimeRe.test(v);
+	}
 
 	function toDateValue(v: NativeDateInput): DateValue | null {
 		if (v == null) return null;
@@ -29,7 +35,7 @@
 			if (v.includes('T')) {
 				// ZonedDateTime.toString() format: "2024-01-15T10:30:00+02:00[Europe/Belgrade]"
 				if (v.includes('[')) return parseZonedDateTime(v);
-				if (absoluteDateTimeRe.test(v)) return parseAbsolute(v, 'UTC');
+				if (absoluteDateTimeRe.test(v)) return parseAbsolute(v, timeZone);
 				return parseDateTime(v);
 			}
 			return parseDate(v);
@@ -41,7 +47,7 @@
 	function fromDateValue(dv: DateValue | null, source: NativeDateInput): NativeDateInput {
 		if (dv == null) return null;
 		if (typeof source === 'string') {
-			if (absoluteDateTimeRe.test(source)) return dv.toDate('UTC').toISOString();
+			if (absoluteDateTimeRe.test(source)) return dv.toDate(timeZone).toISOString();
 			return dv.toString();
 		}
 		if (source instanceof Date) return dv.toDate(getLocalTimeZone());
@@ -50,10 +56,13 @@
 
 	const arkValue = $derived(toDateValue(value));
 	const arkDefault = $derived(toDateValue(defaultValue));
+	const shouldHideTimeZone = $derived(hideTimeZone ?? isAbsoluteDateTime(value));
 </script>
 
 <DateInput.Root
 	{...restProps}
+	{timeZone}
+	hideTimeZone={shouldHideTimeZone}
 	value={arkValue ? [arkValue] : []}
 	defaultValue={arkDefault ? [arkDefault] : undefined}
 	onValueChange={(details) => {
