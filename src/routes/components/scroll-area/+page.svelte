@@ -50,14 +50,14 @@
 		<div class="flex gap-6">
 			<ScrollArea.Root class="h-80 w-56 shrink-0 rounded-lg border border-border bg-surface-2">
 				<ScrollArea.Viewport>
-					<ScrollArea.Content class="p-3">
+					<ScrollArea.Content class="px-2">
 						<div class="space-y-5">
 							<div>
 								<p class="mb-2 text-xs font-semibold tracking-wide text-ink-dim uppercase">
 									Categories
 								</p>
 								<ul class="space-y-1">
-									{#each ['All', 'Clothing', 'Shoes', 'Accessories', 'Bags', 'Watches', 'Jewelry', 'Sunglasses'] as category (category)}
+									{#each ['All', 'Clothing Clothing Clothing C', 'Shoes', 'Accessories', 'Bags', 'Watches', 'Jewelry', 'Sunglasses'] as category (category)}
 										<li>
 											<label
 												class="flex cursor-pointer items-center gap-2 text-sm hover:text-primary"

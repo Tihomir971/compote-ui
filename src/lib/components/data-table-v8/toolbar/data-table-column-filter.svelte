@@ -159,8 +159,8 @@
 		{/if}
 	</Popover.Trigger>
 
-	<Popover.Content class="w-72 p-0" showArrow={false}>
-		<div class="flex items-center justify-between px-3 py-2.5">
+	<Popover.Content class="w-70 p-3 flex flex-col gap-3" showArrow={false}>
+		<div class="flex items-center justify-between py-2.5 mr-1">
 			<span class="text-sm font-medium text-ink">Filters</span>
 			{#if activeCount > 0}
 				<button type="button" onclick={clearFilters} class="text-xs text-primary hover:underline">
@@ -170,10 +170,10 @@
 		</div>
 
 		{#if activeColumns.length > 0}
-			<div class="overflow-hidden border-t border-surface-3">
+			<div class="overflow-hidden border-t border-surface-2">
 				<ScrollArea.Root class="h-96">
 					<ScrollArea.Viewport>
-						<ScrollArea.Content>
+						<ScrollArea.Content class="flex flex-col gap-3">
 							{#each activeColumns as column (column.id)}
 								<div class="border border-surface-3 p-3">
 									<div class="mb-2 flex items-center justify-between">
@@ -285,8 +285,8 @@
 													}}
 												/>
 											</Field.Root>
-											<ScrollArea.Root class="max-h-44">
-												<ScrollArea.Viewport>
+											<ScrollArea.Root>
+												<ScrollArea.Viewport class="max-h-40">
 													<ScrollArea.Content>
 														<div class="flex flex-col gap-0.5">
 															{#each options as option (option)}

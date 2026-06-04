@@ -18,7 +18,7 @@
 	<Popover.Positioner>
 		<Popover.Content
 			class={cn(
-				'z-50 w-72 rounded-md border bg-surface-1 p-4 shadow-md outline-none [--arrow-background:var(--compote-surface-1)] [--arrow-size:10px]',
+				'z-50 w-72 rounded-md border bg-surface-document p-4 shadow-md outline-none [--arrow-background:var(--compote-surface-1)] [--arrow-size:10px]',
 				'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
 				'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
 				className

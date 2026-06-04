@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Toggle as ArkToggle } from '@ark-ui/svelte/toggle';
+	import { Toggle } from '@ark-ui/svelte/toggle';
 	import type { ToggleProps } from './types';
 	import { toggle } from './toggle.variants';
 
@@ -8,15 +8,16 @@
 		children,
 		pressed = $bindable(),
 		size,
+		variant,
 		icon,
 		...rootProps
 	}: ToggleProps = $props();
 </script>
 
-<ArkToggle.Root
+<Toggle.Root
 	{...rootProps}
 	bind:pressed
-	class={toggle({ size, icon, class: className as never })}
+	class={toggle({ size, variant, icon, class: className as never })}
 >
 	{@render children?.()}
-</ArkToggle.Root>
+</Toggle.Root>

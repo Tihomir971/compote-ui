@@ -49,6 +49,23 @@
 					Disabled
 				</Toggle>
 			</div>
+
+			<div class="flex flex-col gap-2">
+				<p class="text-sm font-medium text-ink">Variants</p>
+				<div class="flex flex-wrap items-center gap-3">
+					<Toggle variant="ghost" defaultPressed aria-label="Ghost toggle">
+						<PhTextBolder />
+						Ghost
+					</Toggle>
+					<Toggle variant="outline" defaultPressed aria-label="Outline toggle">
+						<PhTextBolder />
+						Outline
+					</Toggle>
+					<Toggle variant="outline" icon defaultPressed aria-label="Outline icon toggle">
+						<PhHeart />
+					</Toggle>
+				</div>
+			</div>
 		</div>
 	</section>
 
