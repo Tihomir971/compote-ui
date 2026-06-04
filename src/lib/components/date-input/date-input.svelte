@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { DateInput } from '@ark-ui/svelte/date-input';
 	import { Field } from '@ark-ui/svelte/field';
-	import { useLocaleContext } from '@ark-ui/svelte/locale';
 	import {
 		fromDateToLocal,
 		getLocalTimeZone,
-		parseAbsoluteToLocal,
+		parseAbsolute,
 		parseDate,
-		parseDateTime
+		parseDateTime,
+		parseZonedDateTime
 	} from '@internationalized/date';
 	import type { DateValue, DateInputProps, NativeDateInput } from './types';
 
@@ -20,14 +20,16 @@
 		...restProps
 	}: DateInputProps = $props();
 
-	const locale = useLocaleContext();
+	const absoluteDateTimeRe = /(?:Z|[+-]\d{2}:\d{2})$/;
 
 	function toDateValue(v: NativeDateInput): DateValue | null {
 		if (v == null) return null;
 		if (typeof v === 'string') {
 			if (!v) return null;
 			if (v.includes('T')) {
-				if (v.endsWith('Z') || /[+-]\d{2}:\d{2}$/.test(v)) return parseAbsoluteToLocal(v);
+				// ZonedDateTime.toString() format: "2024-01-15T10:30:00+02:00[Europe/Belgrade]"
+				if (v.includes('[')) return parseZonedDateTime(v);
+				if (absoluteDateTimeRe.test(v)) return parseAbsolute(v, 'UTC');
 				return parseDateTime(v);
 			}
 			return parseDate(v);
@@ -38,7 +40,10 @@
 
 	function fromDateValue(dv: DateValue | null, source: NativeDateInput): NativeDateInput {
 		if (dv == null) return null;
-		if (typeof source === 'string') return dv.toString();
+		if (typeof source === 'string') {
+			if (absoluteDateTimeRe.test(source)) return dv.toDate('UTC').toISOString();
+			return dv.toString();
+		}
 		if (source instanceof Date) return dv.toDate(getLocalTimeZone());
 		return dv;
 	}
@@ -49,11 +54,12 @@
 
 <DateInput.Root
 	{...restProps}
-	locale={locale().locale}
 	value={arkValue ? [arkValue] : []}
 	defaultValue={arkDefault ? [arkDefault] : undefined}
 	onValueChange={(details) => {
 		const dv = details.value[0] ?? null;
+		// Guard: skip if Ark UI echoes back the same date (prevents reactive loop)
+		if (dv?.toString() === arkValue?.toString()) return;
 		value = fromDateValue(dv, value);
 		onValueChange?.(details);
 	}}
