@@ -1,6 +1,6 @@
 <script lang="ts" generics="T extends ListItem">
 	import { Combobox } from '@ark-ui/svelte/combobox';
-	import { Field } from '@ark-ui/svelte/field';
+	import { Field, useFieldContext } from '@ark-ui/svelte/field';
 	import { useFilter } from '@ark-ui/svelte/locale';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { createVirtualizer } from '@tanstack/svelte-virtual';
@@ -17,7 +17,9 @@
 		placeholder,
 		layout = 'vertical',
 		name,
+		invalid,
 		readOnly,
+		disabled,
 		multiple,
 		loading = false,
 		virtualized = false,
@@ -25,6 +27,11 @@
 		onValueChange,
 		...restProps
 	}: ComboboxProps<T> = $props();
+
+	const field = useFieldContext();
+	const isInvalid = $derived(invalid ?? field?.()?.invalid ?? false);
+	const isReadOnly = $derived(readOnly ?? field?.()?.readOnly ?? false);
+	const isDisabled = $derived(disabled ?? field?.()?.disabled ?? false);
 
 	let filterText = $state('');
 
@@ -112,7 +119,9 @@
 		: undefined}
 	openOnClick
 	{multiple}
-	{readOnly}
+	invalid={isInvalid}
+	readOnly={isReadOnly}
+	disabled={isDisabled}
 	{...restProps}
 	class={cn(
 		layout === 'horizontal' ? 'flex items-center gap-1.5' : 'grid gap-1.5',
@@ -151,7 +160,7 @@
 			placeholder={placeholder ?? 'Search...'}
 			class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-dim disabled:cursor-not-allowed disabled:opacity-50"
 		/>
-		{#if !readOnly}
+		{#if !isReadOnly}
 			<Combobox.ClearTrigger class="text-ink-dim transition-colors hover:text-ink">
 				<PhX class="size-4" />
 			</Combobox.ClearTrigger>

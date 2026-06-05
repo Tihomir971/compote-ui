@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { DateInput } from '$lib';
-	import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
-	import type { DateValue } from '@ark-ui/svelte/date-picker';
+	import { DateInput, getLocalTimeZone, parseAbsolute } from '$lib';
+	import { CalendarDate, today } from '@internationalized/date';
+	import type { DateInputDateValue } from '$lib';
 
-	let value = $state<DateValue | null>(null);
-	let datetimeValue = $state('2025-07-11T10:12:01.982258+00:00');
-	let invalidValue = $state<DateValue | null>(null);
+	const localTimeZone = getLocalTimeZone();
 
-	const todayDate = today(getLocalTimeZone());
+	let value = $state<DateInputDateValue | null>(null);
+	let datetimeValue = $state<DateInputDateValue | null>(
+		parseAbsolute('2025-07-11T10:12:01.982258+00:00', localTimeZone)
+	);
+	let invalidValue = $state<DateInputDateValue | null>(null);
+
+	const todayDate = today(localTimeZone);
 	const minDate = todayDate;
 	const maxDate = todayDate.add({ months: 6 });
 </script>

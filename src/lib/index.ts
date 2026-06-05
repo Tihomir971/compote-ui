@@ -30,7 +30,10 @@ export { default as DateRangeField } from './components/date-range-field/date-ra
 export type { DateRangeFieldProps } from './components/date-range-field/types';
 
 export { default as DateInput } from './components/date-input/date-input.svelte';
-export type { DateInputProps } from './components/date-input/types';
+export type {
+	DateInputProps,
+	DateValue as DateInputDateValue
+} from './components/date-input/types';
 
 export { default as DatePicker } from './components/date-picker/date-picker.svelte';
 export type { DatePickerProps } from './components/date-picker/types';
@@ -92,6 +95,7 @@ export * as Fieldset from './components/fieldset';
 export { default as TreeView } from './components/tree-view/tree-view.svelte';
 
 export { LocaleProvider, useLocaleContext } from '@ark-ui/svelte/locale';
+export { getLocalTimeZone, parseAbsolute, parseDateTime } from '@internationalized/date';
 
 export { Portal } from '@ark-ui/svelte/portal';
 export type { PortalProps } from '@ark-ui/svelte/portal';

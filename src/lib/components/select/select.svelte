@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends ListItem">
-	import { Field } from '@ark-ui/svelte/field';
+	import { Field, useFieldContext } from '@ark-ui/svelte/field';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { Select } from '@ark-ui/svelte/select';
 	import type { SelectProps } from './types';
@@ -15,8 +15,16 @@
 		layout = 'vertical',
 		size = 'default',
 		name,
+		invalid,
+		readOnly,
+		disabled,
 		...restProps
 	}: SelectProps<T> = $props();
+
+	const field = useFieldContext();
+	const isInvalid = $derived(invalid ?? field?.()?.invalid ?? false);
+	const isReadOnly = $derived(readOnly ?? field?.()?.readOnly ?? false);
+	const isDisabled = $derived(disabled ?? field?.()?.disabled ?? false);
 
 	const collection = $derived(createListCollection(items));
 </script>
@@ -24,6 +32,9 @@
 <Select.Root
 	{collection}
 	{...restProps}
+	invalid={isInvalid}
+	readOnly={isReadOnly}
+	disabled={isDisabled}
 	deselectable
 	value={value ? [value.toString()] : []}
 	onValueChange={(valueChangeDetails) => {

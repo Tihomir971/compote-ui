@@ -14,7 +14,7 @@
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Field Inputs</h2>
 		<div class="flex flex-col gap-4">
-			<Field.Root>
+			<Field.Root readOnly>
 				<Field.Label>Name</Field.Label>
 				<Field.Input bind:value={fieldName} placeholder="John Doe" />
 			</Field.Root>
