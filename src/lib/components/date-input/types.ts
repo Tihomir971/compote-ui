@@ -1,5 +1,5 @@
 import type { DateInputRootBaseProps } from '@ark-ui/svelte/date-input';
-import type { DateInputDateValue as DateValue } from '@ark-ui/svelte/date-input';
+import type { DateValue } from '@internationalized/date';
 
 export type { DateValue };
 
