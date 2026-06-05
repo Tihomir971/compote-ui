@@ -5,6 +5,7 @@
 	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
 	import type { DataTableInstance } from './data-table-utils';
 	import DataTableHead from './data-table-head.svelte';
+	import DataTableFoot from './data-table-foot.svelte';
 	import FlexRender from './flex-render.svelte';
 	import {
 		alignClass,
@@ -105,6 +106,12 @@
 		return getSelectedRowCount(table);
 	});
 	const isColumnResizing = $derived(tableState.columnSizingInfo.isResizingColumn !== false);
+	const hasFooter = $derived(
+		visibleLeafColumns.some((col) => {
+			const meta = getColumnMeta(col.columnDef);
+			return !!(meta?.sum || meta?.footer);
+		})
+	);
 </script>
 
 <div
@@ -244,6 +251,15 @@
 					</tr>
 				{/each}
 			</tbody>
+			{#if hasFooter}
+				<DataTableFoot
+					{table}
+					{visibleLeafColumns}
+					rows={rowModel.rows}
+					{isRowSelectionEnabled}
+					{hasGrowColumn}
+				/>
+			{/if}
 		</table>
 	</div>
 

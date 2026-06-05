@@ -54,6 +54,8 @@ export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<
 		formatLocale?: string;
 		pinned?: 'left' | 'right';
 		grow?: boolean;
+		sum?: boolean;
+		footer?: (values: unknown[]) => string | number | undefined;
 		columns?: never;
 	};
 
@@ -95,4 +97,6 @@ export type DataTableColumnMeta = {
 	formatOptions?: Intl.NumberFormatOptions | Intl.DateTimeFormatOptions;
 	formatLocale?: string;
 	grow?: boolean;
+	sum?: boolean;
+	footer?: (values: unknown[]) => string | number | undefined;
 };

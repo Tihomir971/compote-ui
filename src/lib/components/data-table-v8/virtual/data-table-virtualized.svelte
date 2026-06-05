@@ -4,9 +4,11 @@
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import type { DataTableInstance } from '../data-table-utils';
 	import DataTableHead from '../data-table-head.svelte';
+	import DataTableFoot from '../data-table-foot.svelte';
 	import DataTableVirtualRows from './data-table-virtual-rows.svelte';
 	import {
 		getAllRowsSelectionState,
+		getColumnMeta,
 		getReactiveTableState,
 		getSelectedRowCount,
 		tableSizeStyle
@@ -69,6 +71,17 @@
 		return getSelectedRowCount(table);
 	});
 	const isColumnResizing = $derived(tableState.columnSizingInfo.isResizingColumn !== false);
+	const visibleLeafColumns = $derived.by(() => {
+		const { columnVisibility } = getReactiveTableState(table);
+		void columnVisibility;
+		return table.getVisibleLeafColumns();
+	});
+	const hasFooter = $derived(
+		visibleLeafColumns.some((col) => {
+			const meta = getColumnMeta(col.columnDef);
+			return !!(meta?.sum || meta?.footer);
+		})
+	);
 </script>
 
 <div
@@ -108,6 +121,16 @@
 					{emptyMessage}
 					{onRowClick}
 					{onRowDoubleClick}
+				/>
+			{/if}
+			{#if hasFooter}
+				<DataTableFoot
+					{table}
+					{visibleLeafColumns}
+					rows={rowModel.rows}
+					{isRowSelectionEnabled}
+					hasGrowColumn={false}
+					isVirtual
 				/>
 			{/if}
 		</table>

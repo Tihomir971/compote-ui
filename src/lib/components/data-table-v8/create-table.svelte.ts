@@ -184,7 +184,9 @@ function createColumns<T extends RowData>(
 				type: column.type,
 				formatOptions: column.formatOptions,
 				formatLocale: column.formatLocale,
-				grow: column.grow
+				grow: column.grow,
+				sum: column.sum,
+				footer: column.footer
 			} satisfies DataTableColumnMeta
 		} satisfies Partial<ColumnDef<T>>;
 

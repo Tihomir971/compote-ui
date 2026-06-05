@@ -186,3 +186,36 @@ export function getColumnMeta(columnDef: { meta?: unknown }): DataTableColumnMet
 export function joinStyles(...styles: Array<string | undefined>) {
 	return styles.filter(Boolean).join('; ');
 }
+
+const FOOTER_SUM_FORMAT_DEFAULTS: Record<string, Intl.NumberFormatOptions> = {
+	currency: { style: 'currency', currency: 'USD' },
+	percent: { style: 'percent' },
+	number: {}
+};
+
+export function formatColumnFooter(
+	meta: DataTableColumnMeta,
+	values: unknown[],
+	locale: string
+): string | undefined {
+	if (meta.footer) {
+		const result = meta.footer(values);
+		if (result === null || result === undefined) return undefined;
+		return String(result);
+	}
+	if (meta.sum) {
+		const sum = values.reduce<number>(
+			(acc, val) => acc + (typeof val === 'number' ? val : Number(val) || 0),
+			0
+		);
+		const numDefaults = meta.type ? FOOTER_SUM_FORMAT_DEFAULTS[meta.type] : undefined;
+		if (numDefaults !== undefined) {
+			return new Intl.NumberFormat(meta.formatLocale ?? locale, {
+				...numDefaults,
+				...(meta.formatOptions as Intl.NumberFormatOptions | undefined)
+			}).format(sum);
+		}
+		return String(sum);
+	}
+	return undefined;
+}

@@ -86,6 +86,45 @@
 		getRowId: (row) => row.label
 	});
 
+	type SaleRow = {
+		product: string;
+		units: number;
+		price: number;
+		revenue: number;
+		margin: number;
+	};
+
+	const salesRows: SaleRow[] = [
+		{ product: 'Widget A', units: 120, price: 9.99, revenue: 1198.8, margin: 0.42 },
+		{ product: 'Widget B', units: 45, price: 24.5, revenue: 1102.5, margin: 0.31 },
+		{ product: 'Gadget Pro', units: 8, price: 199.0, revenue: 1592.0, margin: 0.58 },
+		{ product: 'Gadget Lite', units: 200, price: 14.99, revenue: 2998.0, margin: 0.27 },
+		{ product: 'Doohickey', units: 33, price: 49.95, revenue: 1648.35, margin: 0.49 }
+	];
+
+	const salesCol = DataTable.createDataTableColumnHelper<SaleRow>();
+	const salesColumns = salesCol.columns([
+		salesCol.accessor('product', { header: 'Product', type: 'text', grow: true }),
+		salesCol.accessor('units', { header: 'Units', type: 'number', size: 90, sum: true }),
+		salesCol.accessor('price', { header: 'Unit Price', type: 'currency', size: 110 }),
+		salesCol.accessor('revenue', { header: 'Revenue', type: 'currency', size: 120, sum: true }),
+		salesCol.accessor('margin', {
+			header: 'Avg Margin',
+			type: 'percent',
+			size: 120,
+			footer: (values) => {
+				const nums = values.filter((v) => typeof v === 'number') as number[];
+				return nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : undefined;
+			}
+		})
+	]);
+
+	const salesTable = DataTable.createTable({
+		data: salesRows,
+		columns: salesColumns,
+		getRowId: (row) => row.product
+	});
+
 	const personCol = DataTable.createDataTableColumnHelper<Person>();
 	const personColumns = personCol.columns([
 		personCol.group('Name', [
@@ -166,6 +205,15 @@
 	</DataTable.Toolbar>
 	<div class="h-48 min-h-0">
 		<DataTable.Root table={typesTable} caption="Column type examples" />
+	</div>
+</div>
+
+<div class="max-w-2xl space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">
+	<DataTable.Toolbar>
+		<DataTable.Title>Column Footer / Sum</DataTable.Title>
+	</DataTable.Toolbar>
+	<div class="h-56 min-h-0">
+		<DataTable.Root table={salesTable} caption="Sales summary" />
 	</div>
 </div>
 
