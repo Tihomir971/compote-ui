@@ -31,7 +31,13 @@
 	<section>
 		<h2 class="mb-4 text-lg font-semibold">Date & Time</h2>
 		<div class="flex flex-col gap-4">
-			<DateInput label="Date & time" granularity="minute" bind:value={datetimeValue} />
+			<DateInput
+				label="Date & time"
+				granularity="minute"
+				timeZone={localTimeZone}
+				hideTimeZone
+				bind:value={datetimeValue}
+			/>
 			<p class="text-sm text-ink-dim">
 				Value: <strong>{datetimeValue?.toString() ?? 'none'}</strong>
 			</p>

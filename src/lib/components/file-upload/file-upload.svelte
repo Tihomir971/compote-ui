@@ -27,7 +27,7 @@
 
 <FileUpload.Root {maxFiles} {accept} class="flex flex-col gap-1.5" {...restProps}>
 	{#if label}
-		<FileUpload.Label class="text-sm font-medium">{label}</FileUpload.Label>
+		<FileUpload.Label class="text-sm font-medium leading-none">{label}</FileUpload.Label>
 	{/if}
 
 	<FileUpload.Context>
