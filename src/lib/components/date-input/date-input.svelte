@@ -12,6 +12,7 @@
 		invalid,
 		readOnly,
 		disabled,
+		hideTimeZone = true,
 		...restProps
 	}: DateInputProps = $props();
 
@@ -26,6 +27,7 @@
 
 <DateInput.Root
 	{...restProps}
+	{hideTimeZone}
 	invalid={isInvalid}
 	readOnly={isReadOnly}
 	disabled={isDisabled}

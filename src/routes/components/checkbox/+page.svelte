@@ -9,8 +9,15 @@
 		{ value: 'vue', label: 'Vue' },
 		{ value: 'angular', label: 'Angular' }
 	];
+	const numericItems = [
+		{ value: 1, label: 'Svelte' },
+		{ value: 2, label: 'React' },
+		{ value: 3, label: 'Vue' },
+		{ value: 4, label: 'Angular' }
+	];
 
 	let selectedFrameworks = $state(['svelte']);
+	let numericFrameworks = $state([1]);
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -28,6 +35,14 @@
 		<h2 class="mb-4 text-lg font-semibold">Checkbox Group</h2>
 		<CheckboxGroup items={frameworkItems} bind:value={selectedFrameworks} />
 		<CheckboxGroup items={frameworkItems} bind:value={selectedFrameworks} orientation="vertical" />
+		<CheckboxGroup
+			items={numericItems}
+			bind:value={numericFrameworks}
+			orientation="vertical"
+			onValueChange={(d) => {
+				console.log(d);
+			}}
+		/>
 		<p class="mt-4 text-sm text-ink-dim">
 			Selected frameworks: {selectedFrameworks.join(', ')}
 		</p>
