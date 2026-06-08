@@ -125,6 +125,43 @@
 		getRowId: (row) => row.product
 	});
 
+	// Reactive columns demo — the columns array lives in $state and is passed
+	// through a getter, so adding/removing/reordering columns updates the table.
+	const reactiveCol = DataTable.createDataTableColumnHelper<SaleRow>();
+	const productColumn = reactiveCol.accessor('product', { header: 'Product', type: 'text', grow: true });
+	const unitsColumn = reactiveCol.accessor('units', { header: 'Units', type: 'number', size: 90 });
+	const priceColumn = reactiveCol.accessor('price', { header: 'Unit Price', type: 'currency', size: 110 });
+	const revenueColumn = reactiveCol.accessor('revenue', { header: 'Revenue', type: 'currency', size: 120 });
+	const marginColumn = reactiveCol.accessor('margin', { header: 'Margin', type: 'percent', size: 100 });
+
+	// $state.raw keeps the column objects un-proxied so identity comparisons
+	// (includes / !==) work and the table receives the original column defs.
+	let reactiveColumns = $state.raw([productColumn, unitsColumn, priceColumn]);
+
+	const reactiveTable = DataTable.createTable({
+		data: salesRows,
+		get columns() {
+			return reactiveColumns;
+		},
+		getRowId: (row) => row.product
+	});
+
+	function toggleRevenueColumn() {
+		reactiveColumns = reactiveColumns.includes(revenueColumn)
+			? reactiveColumns.filter((c) => c !== revenueColumn)
+			: [...reactiveColumns, revenueColumn];
+	}
+
+	function toggleMarginColumn() {
+		reactiveColumns = reactiveColumns.includes(marginColumn)
+			? reactiveColumns.filter((c) => c !== marginColumn)
+			: [...reactiveColumns, marginColumn];
+	}
+
+	function reverseColumns() {
+		reactiveColumns = [...reactiveColumns].reverse();
+	}
+
 	const personCol = DataTable.createDataTableColumnHelper<Person>();
 	const personColumns = personCol.columns([
 		personCol.group('Name', [
@@ -214,6 +251,20 @@
 	</DataTable.Toolbar>
 	<div class="h-56 min-h-0">
 		<DataTable.Root table={salesTable} caption="Sales summary" />
+	</div>
+</div>
+
+<div class="max-w-2xl space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">
+	<DataTable.Toolbar>
+		<DataTable.Title>Reactive Columns</DataTable.Title>
+		{#snippet right()}
+			<Button variant="outline" onclick={toggleRevenueColumn}>Toggle Revenue</Button>
+			<Button variant="outline" onclick={toggleMarginColumn}>Toggle Margin</Button>
+			<Button variant="outline" onclick={reverseColumns}>Reverse Order</Button>
+		{/snippet}
+	</DataTable.Toolbar>
+	<div class="h-56 min-h-0">
+		<DataTable.Root table={reactiveTable} caption="Reactive columns" />
 	</div>
 </div>
 

@@ -74,11 +74,19 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		...options.initialState?.columnVisibility
 	};
 
+	// Recompute the resolved column defs only when the source columns change.
+	// $derived keeps the reference stable between changes so TanStack's column
+	// memoization isn't invalidated on every access. Pass `columns` through a
+	// getter (like `data`) to make adding/removing/reordering columns reactive.
+	const columnDefs = $derived(createColumns(options.columns, localeCtx));
+
 	const table = createSvelteTable<T>({
 		get data() {
 			return options.data;
 		},
-		columns: createColumns(options.columns, localeCtx),
+		get columns() {
+			return columnDefs;
+		},
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
