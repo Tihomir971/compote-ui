@@ -23,6 +23,7 @@
         "@sveltejs/package": "^2.5.8",
         "@sveltejs/vite-plugin-svelte": "7.1.2",
         "@tailwindcss/vite": "^4.2.4",
+        "@tanstack/svelte-table": "9.0.0-beta.6",
         "@tanstack/svelte-virtual": "^3.13.28",
         "@tanstack/table-core": "^8.21.3",
         "@types/node": "^22.19.18",
@@ -340,6 +341,12 @@
     "@tailwindcss/oxide-win32-x64-msvc": ["@tailwindcss/oxide-win32-x64-msvc@4.3.0", "", { "os": "win32", "cpu": "x64" }, "sha512-Mvrf2kXW/yeW/OTezZlCGOirXRcUuLIBx/5Y12BaPM7wJoryG6dfS/NJL8aBPqtTEx/Vm4T4vKzFUcKDT+TKUA=="],
 
     "@tailwindcss/vite": ["@tailwindcss/vite@4.3.0", "", { "dependencies": { "@tailwindcss/node": "4.3.0", "@tailwindcss/oxide": "4.3.0", "tailwindcss": "4.3.0" }, "peerDependencies": { "vite": "^5.2.0 || ^6 || ^7 || ^8" } }, "sha512-t6J3OrB5Fc0ExuhohouH0fWUGMYL6PTLhW+E7zIk/pdbnJARZDCwjBznFnkh5ynRnIRSI4YjtTH0t6USjJISrw=="],
+
+    "@tanstack/store": ["@tanstack/store@0.11.0", "", {}, "sha512-WlzzCt3xi0G6pCAJu1U+2jiECwabETDpQDi3hfkFZvJii9AuZqEKbOiVarX1/bWhTNjU486yQtJCCasi/0q+Cw=="],
+
+    "@tanstack/svelte-store": ["@tanstack/svelte-store@0.12.0", "", { "dependencies": { "@tanstack/store": "0.11.0" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-XhXlU3jIO/WxikfeVczRdsAvRWzsLBh8Ic6sC7nzfzvMbPut7ZSdCbE7/usfm0bMjVGMmZmyzZy2xRu73QYWAA=="],
+
+    "@tanstack/svelte-table": ["@tanstack/svelte-table@9.0.0-beta.6", "", { "dependencies": { "@tanstack/svelte-store": "^0.12.0", "@tanstack/table-core": "^9.0.0-beta.5" }, "peerDependencies": { "svelte": "^5.0.0" } }, "sha512-/h4wuOvYFHEaOZCvV/wzQRdUR1lMG+4q4pK7+ql/Rwmx5i9KWlZt95NFrkJE3sq2fMuWuB966GvbChK7i+H+ow=="],
 
     "@tanstack/svelte-virtual": ["@tanstack/svelte-virtual@3.13.28", "", { "dependencies": { "@tanstack/virtual-core": "3.17.0" }, "peerDependencies": { "svelte": "^3.48.0 || ^4.0.0 || ^5.0.0" } }, "sha512-8gI6SVgnWV6uxje8HyFtYK3xDO8UFxiEcKvWCliyz1QYsqM0wScA5vD6vvKJotPwKR4HKmrfLhb5OlDesbgqZw=="],
 
@@ -894,6 +901,8 @@
     "@tailwindcss/oxide-wasm32-wasi/@tybys/wasm-util": ["@tybys/wasm-util@0.10.2", "", { "dependencies": { "tslib": "^2.4.0" }, "bundled": true }, "sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg=="],
 
     "@tailwindcss/oxide-wasm32-wasi/tslib": ["tslib@2.8.1", "", { "bundled": true }, "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="],
+
+    "@tanstack/svelte-table/@tanstack/table-core": ["@tanstack/table-core@9.0.0-beta.5", "", { "dependencies": { "@tanstack/store": "^0.11.0" } }, "sha512-C0xCtAET9lVOcmq+j0NXfRn5NlhGsERoazzWNOYlRzrtE7dN7Djkz5FaD5E/yPFC1D+q2XKCP/BfJInayLGNdg=="],
 
     "@typescript-eslint/eslint-plugin/ignore": ["ignore@7.0.5", "", {}, "sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg=="],
 

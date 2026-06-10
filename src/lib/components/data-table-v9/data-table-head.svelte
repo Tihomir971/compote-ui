@@ -1,10 +1,10 @@
 <script lang="ts" generics="T extends RowData">
-	import { FlexRender } from '@tanstack/svelte-table';
 	import type { HeaderGroup, RowData } from '@tanstack/svelte-table';
+	import { FlexRender } from '@tanstack/svelte-table';
 	import { cn } from 'tailwind-variants';
 	import { PhCaretDown, PhCaretUp } from '$lib/icons';
-	import Checkbox from '../checkbox/checkbox.svelte';
-	import type { DataTableFeatures, DataTableInstance } from './create-table';
+	import type { DataTableInstance } from './data-table-utils';
+	import type { DataTableFeatures } from './features';
 	import {
 		alignClass,
 		getColumnMeta,
@@ -76,7 +76,7 @@
 
 		return joinStyles(
 			virtualSizeStyle,
-			canPinHeader ? getPinningStyle(header.column, true, isRowSelectionEnabled) : undefined
+			canPinHeader ? getPinningStyle(header.column, table, true, isRowSelectionEnabled) : undefined
 		);
 	}
 
@@ -108,7 +108,7 @@
 	class="sticky top-0 z-20 bg-surface-2 text-left text-ink-dim"
 	style={isVirtual ? 'display: grid; position: sticky; top: 0; z-index: 20' : undefined}
 >
-	{#each headerGroups as headerGroup, headerGroupIndex (headerGroup.id)}
+	{#each headerGroups as headerGroup, headerGroupIndex (`${headerGroup.id}:${headerGroup.headers.map((header) => `${header.id}:${header.colSpan}`).join('|')}`)}
 		{@const visibleHeaders = headerGroup.headers.filter((header) => header.colSpan > 0)}
 		<tr class="h-9" style={headerRowStyle()}>
 			{#if isRowSelectionEnabled}
@@ -120,19 +120,20 @@
 					style={selectionHeaderStyle()}
 				>
 					{#if shouldRenderSelectionCheckbox(headerGroupIndex)}
-						<Checkbox
-							size="sm"
+						<input
+							type="checkbox"
 							aria-label="Select all rows"
-							class="mx-auto size-4"
-							checked={allRowsSelectionState}
-							onCheckedChange={({ checked }) => table.toggleAllRowsSelected(checked === true)}
+							class="table-checkbox mx-auto block size-4"
+							checked={allRowsSelectionState === true}
+							indeterminate={allRowsSelectionState === 'indeterminate'}
+							onchange={(e) => table.toggleAllRowsSelected(e.currentTarget.checked)}
 						/>
 					{/if}
 				</th>
 			{/if}
-			{#each visibleHeaders as header, headerIndex (header.id)}
+			{#each visibleHeaders as header, headerIndex (`${header.id}:${header.colSpan}:${header.column.getIsVisible()}`)}
 				{@const columnDef = getColumnMeta(header.column.columnDef)}
-				{@const sortDirection = getHeaderSortDirection(header, table.store.state.sorting)}
+				{@const sortDirection = getHeaderSortDirection(header)}
 				<th
 					class={cn(
 						'relative h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 align-middle leading-5 font-medium',

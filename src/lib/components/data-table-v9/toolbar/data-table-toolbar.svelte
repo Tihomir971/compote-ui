@@ -21,20 +21,19 @@
 		{@render children?.()}
 	</div>
 
-    {#if center}
-    	<div
-    		class="col-start-2 row-start-1 flex min-w-0 flex-wrap items-center justify-center gap-3 justify-self-center"
-    	>
-    		{@render center()}
-    	</div>
-    {/if}
+	{#if center}
+		<div
+			class="col-start-2 row-start-1 flex min-w-0 flex-wrap items-center justify-center gap-3 justify-self-center"
+		>
+			{@render center()}
+		</div>
+	{/if}
 
-    {#if right}
-    	<div
-    		class="col-start-3 row-start-1 flex min-w-0 flex-wrap items-center justify-end gap-3 justify-self-end"
-    	>
-    		{@render right()}
-    	</div>
-    {/if}
-
+	{#if right}
+		<div
+			class="col-start-3 row-start-1 flex min-w-0 flex-wrap items-center justify-end gap-3 justify-self-end"
+		>
+			{@render right()}
+		</div>
+	{/if}
 </div>
