@@ -134,6 +134,9 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 	// Notify consumers of visibility changes without taking control of the slice.
 	// v9 setters are atom-aware, so we observe the reactive state instead of
 	// overriding `onColumnVisibilityChange` (which would suppress internal updates).
+	// The callback runs untracked: it must only depend on the visibility atom,
+	// otherwise consumer-side reads (e.g. a persisted-state proxy the callback
+	// writes into) become dependencies of this effect and re-trigger it forever.
 	if (options.onColumnVisibilityChange) {
 		let first = true;
 		$effect(() => {
@@ -142,7 +145,7 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 				first = false;
 				return;
 			}
-			options.onColumnVisibilityChange?.(visibility);
+			untrack(() => options.onColumnVisibilityChange?.(visibility));
 		});
 	}
 
