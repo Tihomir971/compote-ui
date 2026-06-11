@@ -82,6 +82,10 @@ export { default as Switch } from './components/switch/switch.svelte';
 
 export * as Tabs from './components/tabs';
 
+export * as Toast from './components/toast';
+export { createToaster } from '@ark-ui/svelte/toast';
+export type { CreateToasterReturn } from '@ark-ui/svelte/toast';
+
 export { default as Toggle } from './components/toggle/toggle.svelte';
 export type { ToggleProps, ToggleSize } from './components/toggle/types';
 

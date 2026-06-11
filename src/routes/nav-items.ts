@@ -34,6 +34,7 @@ export const navItems: NavItem[] = [
 	{ label: 'Select', slug: 'select' },
 	{ label: 'Splitter', slug: 'splitter' },
 	{ label: 'Switch', slug: 'switch' },
+	{ label: 'Toast', slug: 'toast' },
 	{ label: 'Toggle', slug: 'toggle' },
 	{ label: 'Tooltip', slug: 'tooltip' },
 	{ label: 'Tree View', slug: 'tree-view' }
