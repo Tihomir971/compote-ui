@@ -62,8 +62,10 @@
 
 	const typesCol = DataTable.createDataTableColumnHelper<TypesRow>();
 	const typesColumns = typesCol.columns([
-		typesCol.accessor('label', { header: 'Label', type: 'text' }),
-		typesCol.accessor('textVal', { header: 'Text', type: 'text' }),
+		typesCol.group('Group', [
+			typesCol.accessor('label', { header: 'Label', type: 'text', pinned: 'left' }),
+			typesCol.accessor('textVal', { header: 'Text', type: 'text' })
+		]),
 		typesCol.accessor('numberVal', {
 			header: 'Number',
 			type: 'number',

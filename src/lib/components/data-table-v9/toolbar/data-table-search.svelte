@@ -4,18 +4,19 @@
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import { PhMagnifyingGlass, PhX } from '$lib/icons';
 	import * as Field from '../../field';
-	import { getReactiveTableState, type DataTableInstance } from '../data-table-utils';
+	import type { DataTableInstance } from '../data-table-utils';
 
 	type Props = {
 		table: DataTableInstance<T>;
 		placeholder?: string;
 		class?: ClassValue;
+		debounceMs?: number;
 	};
 
-	let { table, placeholder = 'Search...', class: className }: Props = $props();
+	let { table, placeholder = 'Search...', class: className, debounceMs = 300 }: Props = $props();
 
-	const globalFilter = $derived(
-		(getReactiveTableState(table).globalFilter as string | undefined) ?? ''
+	const globalFilter = $derived.by(
+		() => (table.atoms.globalFilter.get() as string | undefined) ?? ''
 	);
 
 	let timer: ReturnType<typeof setTimeout> | undefined;
@@ -27,7 +28,7 @@
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			table.setGlobalFilter(value || undefined);
-		}, 300);
+		}, debounceMs);
 	}
 
 	function clearFilter() {

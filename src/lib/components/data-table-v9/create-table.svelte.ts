@@ -16,13 +16,13 @@ import {
 	type FilterFnOption,
 	type Row,
 	type RowData,
-	type RowSelectionState,
-	type SvelteTable
+	type RowSelectionState
 } from '@tanstack/svelte-table';
 import { useLocaleContext } from '@ark-ui/svelte/locale';
 import { untrack, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
+import { TYPE_NUMBER_FORMAT_DEFAULTS, type DataTableInstance } from './data-table-utils';
 import type {
 	DataTableColumn,
 	DataTableColumnType,
@@ -40,7 +40,7 @@ const oneOfFilterFn: FilterFn<DataTableFeatures, RowData> = (
 };
 oneOfFilterFn.autoRemove = (val: unknown): boolean => !Array.isArray(val) || val.length === 0;
 
-export type DataTableInstance<T extends RowData> = SvelteTable<DataTableFeatures, T>;
+export type { DataTableInstance };
 
 export type CreateDataTableOptions<T extends RowData> = {
 	data: T[];
@@ -114,6 +114,10 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 	// `columns` — so reactive add/remove/reorder of columns never reaches the table.
 	// Track the derived column defs here and push them through setOptions ourselves.
 	// Re-supply the `data` getter so spreading `prev` doesn't freeze data reactivity.
+	// CAUTION: upstream guidance says a second setOptions sync can race the adapter's
+	// own $effect.pre (which getter-merges the original options on data/state change).
+	// Both syncs write consistent values here, but revisit if the beta adapter ever
+	// starts tracking `columns` itself.
 	$effect.pre(() => {
 		const columns = columnDefs;
 		untrack(() => {
@@ -133,12 +137,12 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 	if (options.onColumnVisibilityChange) {
 		let first = true;
 		$effect(() => {
-			const columnVisibility = table.state.columnVisibility;
+			const visibility = table.atoms.columnVisibility.get();
 			if (first) {
 				first = false;
 				return;
 			}
-			options.onColumnVisibilityChange?.(columnVisibility);
+			options.onColumnVisibilityChange?.(visibility);
 		});
 	}
 
@@ -194,7 +198,7 @@ function createColumns<T extends RowData>(
 			minSize: column.minSize,
 			maxSize: column.maxSize,
 			enableResizing: column.enableResizing,
-			enableHiding: getColumnEnableHiding(column, columnId),
+			enableHiding: column.enableHiding,
 			enableSorting: column.enableSorting,
 			sortDescFirst: column.sortDescFirst,
 			enableColumnFilter: column.enableColumnFilter,
@@ -246,26 +250,11 @@ function getGroupColumnId<T extends RowData>(column: DataTableGroupColumn<T>) {
 	return column.id ?? column.header;
 }
 
-function getColumnEnableHiding<T extends RowData>(
-	column: DataTableLeafColumn<T>,
-	columnId: string
-) {
-	if (column.enableHiding !== undefined) return column.enableHiding;
-	if (columnId === 'id') return false;
-	return undefined;
-}
-
 export function getColumnId<T extends RowData>(column: DataTableLeafColumn<T>): string {
 	if (column.id !== undefined) return column.id;
 	if ('accessorKey' in column && column.accessorKey !== undefined) return column.accessorKey;
 	throw new Error('DataTableColumn with accessorFn requires an id.');
 }
-
-const TYPE_FORMAT_DEFAULTS: Partial<Record<DataTableColumnType, Intl.NumberFormatOptions>> = {
-	currency: { style: 'currency', currency: 'USD' },
-	percent: { style: 'percent' },
-	number: {}
-};
 
 const TYPE_DATE_FORMAT_DEFAULTS: Record<'date' | 'time' | 'date-time', Intl.DateTimeFormatOptions> =
 	{
@@ -304,13 +293,15 @@ function applyTypeFormat<T extends RowData>(
 ): string | number | boolean | null | undefined {
 	if (value === null || value === undefined || value === '') return undefined;
 
-	const numDefaults = column.type ? TYPE_FORMAT_DEFAULTS[column.type] : undefined;
+	const numDefaults = column.type ? TYPE_NUMBER_FORMAT_DEFAULTS[column.type] : undefined;
 	if (numDefaults !== undefined) {
+		const numericValue = Number(value);
+		if (isNaN(numericValue)) return undefined;
 		const locale = column.formatLocale ?? localeCtx().locale;
 		return new Intl.NumberFormat(locale, {
 			...numDefaults,
 			...(column.formatOptions as Intl.NumberFormatOptions | undefined)
-		}).format(Number(value));
+		}).format(numericValue);
 	}
 
 	if (column.type === 'date' || column.type === 'time' || column.type === 'date-time') {

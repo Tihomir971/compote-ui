@@ -1,5 +1,5 @@
 import type { FilterFnOption, RowData } from '@tanstack/svelte-table';
-import type { Snippet } from 'svelte';
+import type { Component, Snippet } from 'svelte';
 import type { DataTableFeatures } from './features';
 
 export type DataTableAlign = 'left' | 'center' | 'right';
@@ -47,7 +47,10 @@ export type DataTableColumnBase = {
 export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<T> &
 	DataTableColumnBase & {
 		cell?: DataTableCellRenderer<T>;
-		cellComponent?: unknown;
+		// Component<never> accepts any Svelte component (props are contravariant)
+		// while still rejecting non-component values. Without `cellProps`, the
+		// component receives DataTableCellRenderProps<T>.
+		cellComponent?: Component<DataTableCellRenderProps<T>> | Component<never>;
 		cellProps?: DataTableCellPropsResolver<T>;
 		cellSnippet?: Snippet<[DataTableCellRenderProps<T>]>;
 		type?: DataTableColumnType;

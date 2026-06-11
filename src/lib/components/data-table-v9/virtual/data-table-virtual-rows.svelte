@@ -1,47 +1,36 @@
 <script lang="ts" generics="T extends RowData">
-	import type { Row, RowData } from '@tanstack/svelte-table';
-	import { FlexRender } from '@tanstack/svelte-table';
+	import type { RowData } from '@tanstack/svelte-table';
 	import { createVirtualizer } from '@tanstack/svelte-virtual';
 	import { untrack } from 'svelte';
 	import { cn } from 'tailwind-variants';
-	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
 	import type { DataTableInstance } from '../data-table-utils';
-	import type { DataTableFeatures } from '../features';
+	import type { DataTableViewState } from '../table-view-state.svelte';
+	import DataTableCellContent from '../data-table-cell-content.svelte';
 	import {
 		alignClass,
-		getBooleanCellValue,
 		getColumnMeta,
 		getPinningStyle,
-		getReactiveCells,
-		getReactiveTableState,
-		getUrlCellValue,
+		getRowCells,
 		joinStyles,
 		justifyClass,
-		openUrlCell,
 		virtualColumnSizeStyle,
 		virtualGrowColumnSizeStyle,
 		virtualSelectionColumnSizeStyle
 	} from '../data-table-utils';
 
 	type Props = {
-		rows: Row<DataTableFeatures, T>[];
-		scrollContainer: HTMLDivElement;
-		isRowSelectionEnabled: boolean;
 		table: DataTableInstance<T>;
+		view: DataTableViewState<T>;
+		scrollContainer: HTMLDivElement;
 		emptyMessage: string;
 		onRowClick?: (details: { row: T; event: MouseEvent }) => void;
 		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
 	};
 
-	let {
-		rows,
-		scrollContainer,
-		isRowSelectionEnabled,
-		table,
-		emptyMessage,
-		onRowClick,
-		onRowDoubleClick
-	}: Props = $props();
+	let { table, view, scrollContainer, emptyMessage, onRowClick, onRowDoubleClick }: Props =
+		$props();
+
+	const rows = $derived(view.rowModel.rows);
 
 	const rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLTableRowElement>({
 		get count() {
@@ -49,6 +38,8 @@
 		},
 		estimateSize: () => 37,
 		getScrollElement: () => scrollContainer,
+		// Upstream-recommended workaround: dynamic measurement is skipped on
+		// Firefox because its sub-pixel row heights make the virtualizer jitter.
 		measureElement:
 			typeof window !== 'undefined' && !navigator.userAgent.includes('Firefox')
 				? (element) => element.getBoundingClientRect().height
@@ -79,7 +70,7 @@
 		{#each $rowVirtualizer.getVirtualItems() as virtualRow (virtualRow.index)}
 			{@const row = rows[virtualRow.index]}
 			{#if row}
-				{@const rowSelected = getReactiveTableState(table).rowSelection[row.id] === true}
+				{@const rowSelected = view.rowSelection[row.id] === true}
 				<tr
 					data-index={virtualRow.index}
 					use:measureRowElement
@@ -94,13 +85,15 @@
 					onclick={(event) => onRowClick?.({ row: row.original, event })}
 					ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
 				>
-					{#if isRowSelectionEnabled}
+					{#if view.isRowSelectionEnabled}
 						<td
 							class="items-center justify-center bg-(--row-bg) px-3 py-2 text-center align-middle"
 							style={joinStyles(
 								virtualSelectionColumnSizeStyle(),
 								'position: sticky; left: 0; z-index: 1'
 							)}
+							onclick={(event) => event.stopPropagation()}
+							ondblclick={(event) => event.stopPropagation()}
 						>
 							<input
 								type="checkbox"
@@ -112,62 +105,23 @@
 							/>
 						</td>
 					{/if}
-					{#each getReactiveCells(row, getReactiveTableState(table).columnVisibility) as cell (cell.id)}
-						{@const columnDef = getColumnMeta(cell.column.columnDef)}
+					{#each getRowCells(row, view) as cell (cell.id)}
+						{@const meta = getColumnMeta(cell.column.columnDef)}
 						<td
 							class={cn(
 								'items-center truncate px-3 py-2',
-								alignClass(columnDef?.align),
-								justifyClass(columnDef?.align),
+								alignClass(meta?.align),
+								justifyClass(meta?.align),
 								cell.column.getIsPinned() && 'bg-(--row-bg)'
 							)}
 							style={joinStyles(
-								getColumnMeta(cell.column.columnDef)?.grow
+								meta?.grow
 									? virtualGrowColumnSizeStyle()
 									: virtualColumnSizeStyle(cell.column.getSize()),
-								getPinningStyle(cell.column, table, false, isRowSelectionEnabled)
+								getPinningStyle(cell.column, table, view, false, view.isRowSelectionEnabled)
 							)}
 						>
-							{#if columnDef?.type === 'boolean'}
-								{@const value = getBooleanCellValue(cell.getValue())}
-								{#if value === true}
-									<span
-										class="inline-flex size-5 items-center justify-center text-success"
-										role="img"
-										aria-label="Yes"
-									>
-										<PhCheck class="size-4" />
-									</span>
-								{:else if value === false}
-									<span
-										class="inline-flex size-5 items-center justify-center text-danger"
-										role="img"
-										aria-label="No"
-									>
-										<PhX class="size-4" />
-									</span>
-								{:else}
-									-
-								{/if}
-							{:else if columnDef?.type === 'url'}
-								{@const value = getUrlCellValue(cell.getValue())}
-								{#if value}
-									<button
-										type="button"
-										class={cn(
-											'inline-flex max-w-full appearance-none items-center gap-1.5 rounded-sm border-0 bg-transparent p-0 align-middle leading-5 font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-											justifyClass(columnDef.align)
-										)}
-										onclick={() => openUrlCell(value)}
-									>
-										<PhArrowSquareOut class="size-3.5 shrink-0" />
-									</button>
-								{:else}
-									-
-								{/if}
-							{:else}
-								<FlexRender {cell} />
-							{/if}
+							<DataTableCellContent {cell} />
 						</td>
 					{/each}
 				</tr>

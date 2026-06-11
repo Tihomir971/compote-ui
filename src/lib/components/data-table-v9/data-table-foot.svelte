@@ -1,8 +1,9 @@
 <script lang="ts" generics="T extends RowData">
-	import type { Column, Row, RowData } from '@tanstack/svelte-table';
+	import type { Column, RowData } from '@tanstack/svelte-table';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
 	import { cn } from 'tailwind-variants';
 	import type { DataTableInstance } from './data-table-utils';
+	import type { DataTableViewState } from './table-view-state.svelte';
 	import type { DataTableFeatures } from './features';
 	import {
 		alignClass,
@@ -18,31 +19,46 @@
 
 	type Props = {
 		table: DataTableInstance<T>;
-		visibleLeafColumns: Column<DataTableFeatures, T, unknown>[];
-		rows: Row<DataTableFeatures, T>[];
-		isRowSelectionEnabled: boolean;
+		view: DataTableViewState<T>;
 		hasGrowColumn: boolean;
 		isVirtual?: boolean;
 	};
 
-	let {
-		table,
-		visibleLeafColumns,
-		rows,
-		isRowSelectionEnabled,
-		hasGrowColumn,
-		isVirtual = false
-	}: Props = $props();
+	let { table, view, hasGrowColumn, isVirtual = false }: Props = $props();
 
 	const localeCtx = useLocaleContext();
 	const locale = $derived(localeCtx().locale);
 
+	// One pass over the rows collects values for every footer column, instead of
+	// re-reading all rows per column on each render.
+	const footerTexts = $derived.by(() => {
+		const footerColumns = view.visibleLeafColumns.filter((column) => {
+			const meta = getColumnMeta(column.columnDef);
+			return !!(meta?.sum || meta?.footer);
+		});
+		const valuesByColumn: Record<string, unknown[]> = {};
+		for (const column of footerColumns) {
+			valuesByColumn[column.id] = [];
+		}
+		for (const row of view.rowModel.rows) {
+			for (const columnId in valuesByColumn) {
+				valuesByColumn[columnId].push(row.getValue(columnId));
+			}
+		}
+		const texts: Record<string, string | undefined> = {};
+		for (const column of footerColumns) {
+			const meta = getColumnMeta(column.columnDef);
+			texts[column.id] = formatColumnFooter(meta ?? {}, valuesByColumn[column.id], locale);
+		}
+		return texts;
+	});
+
 	function footCellStyle(column: Column<DataTableFeatures, T, unknown>) {
 		const meta = getColumnMeta(column.columnDef);
-		if (!isVirtual) return getPinningStyle(column, table, true, isRowSelectionEnabled);
+		if (!isVirtual) return getPinningStyle(column, table, view, true, view.isRowSelectionEnabled);
 		return joinStyles(
 			meta?.grow ? virtualGrowColumnSizeStyle() : virtualColumnSizeStyle(column.getSize()),
-			getPinningStyle(column, table, true, isRowSelectionEnabled)
+			getPinningStyle(column, table, view, true, view.isRowSelectionEnabled)
 		);
 	}
 
@@ -65,7 +81,7 @@
 	style={isVirtual ? 'display: grid; position: sticky; bottom: 0; z-index: 20' : undefined}
 >
 	<tr class="h-9" style={isVirtual ? 'display: flex; width: 100%' : undefined}>
-		{#if isRowSelectionEnabled}
+		{#if view.isRowSelectionEnabled}
 			<td
 				class={cn(
 					'h-9 border-t border-surface-3 bg-surface-2 px-3 py-0',
@@ -74,10 +90,8 @@
 				style={selectionCellStyle()}
 			></td>
 		{/if}
-		{#each visibleLeafColumns as column (column.id)}
+		{#each view.visibleLeafColumns as column (column.id)}
 			{@const meta = getColumnMeta(column.columnDef)}
-			{@const values = rows.map((row) => row.getValue(column.id))}
-			{@const footerText = formatColumnFooter(meta ?? {}, values, locale)}
 			<td
 				class={cn(
 					'h-9 truncate border-t border-surface-3 bg-surface-2 px-3 py-0 align-middle text-sm font-medium',
@@ -87,7 +101,7 @@
 				)}
 				style={footCellStyle(column)}
 			>
-				{footerText ?? ''}
+				{footerTexts[column.id] ?? ''}
 			</td>
 		{/each}
 		{#if !isVirtual && !hasGrowColumn}

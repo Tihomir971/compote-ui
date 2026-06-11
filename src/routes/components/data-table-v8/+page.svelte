@@ -128,11 +128,27 @@
 	// Reactive columns demo — the columns array lives in $state and is passed
 	// through a getter, so adding/removing/reordering columns updates the table.
 	const reactiveCol = DataTable.createDataTableColumnHelper<SaleRow>();
-	const productColumn = reactiveCol.accessor('product', { header: 'Product', type: 'text', grow: true });
+	const productColumn = reactiveCol.accessor('product', {
+		header: 'Product',
+		type: 'text',
+		grow: true
+	});
 	const unitsColumn = reactiveCol.accessor('units', { header: 'Units', type: 'number', size: 90 });
-	const priceColumn = reactiveCol.accessor('price', { header: 'Unit Price', type: 'currency', size: 110 });
-	const revenueColumn = reactiveCol.accessor('revenue', { header: 'Revenue', type: 'currency', size: 120 });
-	const marginColumn = reactiveCol.accessor('margin', { header: 'Margin', type: 'percent', size: 100 });
+	const priceColumn = reactiveCol.accessor('price', {
+		header: 'Unit Price',
+		type: 'currency',
+		size: 110
+	});
+	const revenueColumn = reactiveCol.accessor('revenue', {
+		header: 'Revenue',
+		type: 'currency',
+		size: 120
+	});
+	const marginColumn = reactiveCol.accessor('margin', {
+		header: 'Margin',
+		type: 'percent',
+		size: 100
+	});
 
 	// $state.raw keeps the column objects un-proxied so identity comparisons
 	// (includes / !==) work and the table receives the original column defs.

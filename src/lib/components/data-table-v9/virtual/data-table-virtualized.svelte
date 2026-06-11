@@ -3,16 +3,11 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
 	import type { DataTableInstance } from '../data-table-utils';
+	import { createTableViewState } from '../table-view-state.svelte';
 	import DataTableHead from '../data-table-head.svelte';
 	import DataTableFoot from '../data-table-foot.svelte';
 	import DataTableVirtualRows from './data-table-virtual-rows.svelte';
-	import {
-		getAllRowsSelectionState,
-		getColumnMeta,
-		getReactiveTableState,
-		getSelectedRowCount,
-		tableSizeStyle
-	} from '../data-table-utils';
+	import { tableSizeStyle } from '../data-table-utils';
 
 	type Props = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
 		table: DataTableInstance<T>;
@@ -35,53 +30,7 @@
 
 	let scrollContainerRef = $state<HTMLDivElement | undefined>(undefined);
 
-	const tableState = $derived(getReactiveTableState(table));
-	const rowModel = $derived.by(() => {
-		getReactiveTableState(table);
-		return table.getRowModel();
-	});
-	const headerGroups = $derived.by(() => {
-		const { columnPinning, columnVisibility } = getReactiveTableState(table);
-		void columnPinning;
-		void columnVisibility;
-
-		const leftHeaderGroups = table.getLeftHeaderGroups();
-		const centerHeaderGroups = table.getCenterHeaderGroups();
-		const rightHeaderGroups = table.getRightHeaderGroups();
-
-		return centerHeaderGroups.map((headerGroup, index) => ({
-			...headerGroup,
-			id: `${leftHeaderGroups[index]?.id ?? ''}|${headerGroup.id}|${rightHeaderGroups[index]?.id ?? ''}`,
-			headers: [
-				...(leftHeaderGroups[index]?.headers ?? []),
-				...headerGroup.headers,
-				...(rightHeaderGroups[index]?.headers ?? [])
-			]
-		}));
-	});
-	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
-	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
-	const headerGroupCount = $derived(headerGroups.length);
-	const allRowsSelectionState = $derived.by(() => {
-		getReactiveTableState(table);
-		return getAllRowsSelectionState(table);
-	});
-	const selectedRowCount = $derived.by(() => {
-		getReactiveTableState(table);
-		return getSelectedRowCount(table);
-	});
-	const isColumnResizing = $derived(tableState.columnResizing.isResizingColumn !== false);
-	const visibleLeafColumns = $derived.by(() => {
-		const { columnVisibility } = getReactiveTableState(table);
-		void columnVisibility;
-		return table.getVisibleLeafColumns();
-	});
-	const hasFooter = $derived(
-		visibleLeafColumns.some((col) => {
-			const meta = getColumnMeta(col.columnDef);
-			return !!(meta?.sum || meta?.footer);
-		})
-	);
+	const view = createTableViewState(() => table);
 </script>
 
 <div
@@ -91,56 +40,40 @@
 	)}
 	{...rest}
 >
-	{#if isColumnResizing}
+	{#if view.isColumnResizing}
 		<div aria-hidden="true" class="fixed inset-0 z-50 cursor-col-resize select-none"></div>
 	{/if}
 
 	<div class="min-h-0 flex-1 overflow-auto" bind:this={scrollContainerRef}>
 		<table
 			class="table-fixed border-separate border-spacing-0 text-sm"
-			style="display: grid; {tableSizeStyle(table, isRowSelectionEnabled)}"
+			style="display: grid; {tableSizeStyle(table, view.isRowSelectionEnabled, view)}"
 		>
 			{#if caption}
 				<caption class="sr-only">{caption}</caption>
 			{/if}
-			<DataTableHead
-				{table}
-				{headerGroups}
-				{headerGroupCount}
-				{isRowSelectionEnabled}
-				{isMultiRowSelectionEnabled}
-				{allRowsSelectionState}
-				isVirtual
-			/>
+			<DataTableHead {table} {view} isVirtual />
 			{#if scrollContainerRef}
 				<DataTableVirtualRows
-					rows={rowModel.rows}
-					scrollContainer={scrollContainerRef}
-					{isRowSelectionEnabled}
 					{table}
+					{view}
+					scrollContainer={scrollContainerRef}
 					{emptyMessage}
 					{onRowClick}
 					{onRowDoubleClick}
 				/>
 			{/if}
-			{#if hasFooter}
-				<DataTableFoot
-					{table}
-					{visibleLeafColumns}
-					rows={rowModel.rows}
-					{isRowSelectionEnabled}
-					hasGrowColumn={false}
-					isVirtual
-				/>
+			{#if view.hasFooter}
+				<DataTableFoot {table} {view} hasGrowColumn={false} isVirtual />
 			{/if}
 		</table>
 	</div>
 
 	<div class="shrink-0 border-t border-surface-3 bg-surface-2 px-3 py-2 text-sm text-ink-dim">
-		{#if isRowSelectionEnabled}
-			{selectedRowCount} of {rowModel.rows.length} rows selected
+		{#if view.isRowSelectionEnabled}
+			{view.selectedRowCount} of {view.rowModel.rows.length} rows selected
 		{:else}
-			{rowModel.rows.length} rows
+			{view.rowModel.rows.length} rows
 		{/if}
 	</div>
 </div>

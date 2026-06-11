@@ -14,7 +14,9 @@
 			"Skill(compote-ui)",
 			"Skill(compote-ui:*)",
 			"Skill(svelte:svelte-code-writer)",
-			"Skill(svelte:svelte-code-writer:*)"
+			"Skill(svelte:svelte-code-writer:*)",
+			"PowerShell(bunx @tanstack/intent@latest load \"@tanstack/svelte-table#svelte/table-state\")",
+			"PowerShell(bunx @tanstack/intent@latest load \"@tanstack/svelte-table#svelte/production-readiness\")"
 		]
 	},
 	"plansDirectory": "./docs/plans"

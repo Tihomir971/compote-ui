@@ -1,11 +1,13 @@
 import type {
 	Column,
+	ColumnPinningState,
+	ColumnSizingState,
+	ColumnVisibilityState,
 	Header,
 	Row,
 	RowData,
 	SvelteTable,
-	TableState,
-	ColumnVisibilityState
+	TableState
 } from '@tanstack/svelte-table';
 import { cn } from 'tailwind-variants';
 import type { DataTableColumnMeta } from './types';
@@ -13,13 +15,17 @@ import type { DataTableFeatures } from './features';
 
 export type DataTableInstance<T extends RowData> = SvelteTable<DataTableFeatures, T>;
 
-// The svelte adapter exposes the reactive selected state on `table.state`; reading it
-// inside a reactive context (template / $derived) subscribes to table updates.
-export function getReactiveTableState<T extends RowData>(
-	table: DataTableInstance<T>
-): TableState<DataTableFeatures> {
-	return table.state;
-}
+// Structural subset of the view state (see table-view-state.svelte.ts) that the
+// style helpers below read to register reactive dependencies. The beta adapter
+// does not reliably track derived table APIs (getStart, getSize, …) inside
+// $derived/template expressions, so each helper explicitly reads the slices its
+// output depends on.
+export type DataTableTrackedState = {
+	columnPinning: ColumnPinningState;
+	columnResizing: TableState<DataTableFeatures>['columnResizing'];
+	columnSizing: ColumnSizingState;
+	columnVisibility: ColumnVisibilityState;
+};
 
 export function alignClass(align: DataTableColumnMeta['align']) {
 	return align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left';
@@ -55,8 +61,11 @@ export function virtualSelectionColumnSizeStyle() {
 
 export function tableSizeStyle<T extends RowData>(
 	table: DataTableInstance<T>,
-	isRowSelectionEnabled: boolean
+	isRowSelectionEnabled: boolean,
+	state: DataTableTrackedState
 ) {
+	void state.columnSizing;
+	void state.columnVisibility;
 	return `width: max(100%, ${table.getTotalSize() + (isRowSelectionEnabled ? 40 : 0)}px)`;
 }
 
@@ -70,10 +79,11 @@ export function virtualGroupWithGrowSizeStyle(fixedPortion: number) {
 
 export function resizeHandleStyle<T extends RowData>(
 	table: DataTableInstance<T>,
-	header: Header<DataTableFeatures, T, unknown>
+	header: Header<DataTableFeatures, T, unknown>,
+	columnResizing: TableState<DataTableFeatures>['columnResizing']
 ) {
 	if (table.options.columnResizeMode !== 'onEnd') return undefined;
-	const deltaOffset = table.state.columnResizing.deltaOffset;
+	const deltaOffset = columnResizing.deltaOffset;
 	if (!header.column.getIsResizing() || deltaOffset === null) return undefined;
 	return `transform: translateX(${deltaOffset}px)`;
 }
@@ -83,12 +93,6 @@ export function resizeHandleClass(headerIndex: number, headerCount: number) {
 		'absolute top-0 z-10 flex h-full w-2 cursor-col-resize touch-none items-center justify-center select-none before:h-4 before:w-px before:bg-border before:content-[""]',
 		headerIndex === headerCount - 1 ? 'right-0' : '-right-1'
 	);
-}
-
-export function getHeaderSortDirection<T extends RowData>(
-	header: Header<DataTableFeatures, T, unknown>
-) {
-	return header.column.getIsSorted();
 }
 
 export function getHeaderSortLabel(sortDirection: false | 'asc' | 'desc') {
@@ -103,35 +107,18 @@ export function getHeaderAriaSort(sortDirection: false | 'asc' | 'desc') {
 	return 'none';
 }
 
-export function getAllRowsSelectionState<T extends RowData>(
-	table: DataTableInstance<T>
-): boolean | 'indeterminate' {
-	const allRowsSelected = table.getIsAllRowsSelected();
-	const someRowsSelected = table.getIsSomeRowsSelected();
-	return allRowsSelected ? true : someRowsSelected ? 'indeterminate' : false;
-}
-
-export function getRowSelectionState<T extends RowData>(
-	table: DataTableInstance<T>,
-	rowId: string
-) {
-	return table.getRow(rowId).getIsSelected();
-}
-
-export function getReactiveCells<T extends RowData>(
+export function getRowCells<T extends RowData>(
 	row: Row<DataTableFeatures, T>,
-	columnVisibility: ColumnVisibilityState
+	state: DataTableTrackedState
 ) {
-	void columnVisibility;
+	void state.columnVisibility;
+	void state.columnPinning;
+	void state.columnSizing;
 	return [
 		...row.getLeftVisibleCells(),
 		...row.getCenterVisibleCells(),
 		...row.getRightVisibleCells()
 	];
-}
-
-export function getSelectedRowCount<T extends RowData>(table: DataTableInstance<T>) {
-	return table.getSelectedRowModel().rows.length;
 }
 
 export function getBooleanCellValue(value: unknown) {
@@ -143,9 +130,12 @@ export function getBooleanCellValue(value: unknown) {
 export function getPinningStyle<T extends RowData>(
 	column: Column<DataTableFeatures, T, unknown>,
 	table: DataTableInstance<T>,
+	state: DataTableTrackedState,
 	isHeader = false,
 	isRowSelectionEnabled = false
 ): string | undefined {
+	void state.columnPinning;
+	void state.columnSizing;
 	const isPinned = column.getIsPinned();
 	if (!isPinned) return undefined;
 
@@ -177,6 +167,43 @@ export function getPinningStyle<T extends RowData>(
 	}
 }
 
+function collectLeafHeaders<T extends RowData>(
+	header: Header<DataTableFeatures, T, unknown>
+): Header<DataTableFeatures, T, unknown>[] {
+	if (header.subHeaders.length === 0) return [header];
+	return header.subHeaders.flatMap((sub) => collectLeafHeaders(sub));
+}
+
+/**
+ * Sticky positioning for a group header whose leaf columns are pinned.
+ *
+ * A split fragment's subHeaders contain only its own section's children, so the
+ * fragment over the pinned columns sticks at the first/last pinned leaf's offset
+ * while the fragment over the scrolling columns gets no style.
+ */
+export function getGroupPinningStyle<T extends RowData>(
+	header: Header<DataTableFeatures, T, unknown>,
+	section: 'left' | 'center' | 'right' | undefined,
+	state: DataTableTrackedState,
+	isRowSelectionEnabled = false
+): string | undefined {
+	void state.columnPinning;
+	void state.columnSizing;
+	if (section !== 'left' && section !== 'right') return undefined;
+	const leafHeaders = collectLeafHeaders(header);
+
+	if (section === 'left') {
+		const first = leafHeaders[0];
+		if (first?.column.getIsPinned() !== 'left') return undefined;
+		const left = first.column.getStart('left') + (isRowSelectionEnabled ? 40 : 0);
+		return `position: sticky; z-index: 15; left: ${left}px`;
+	}
+
+	const last = leafHeaders[leafHeaders.length - 1];
+	if (last?.column.getIsPinned() !== 'right') return undefined;
+	return `position: sticky; z-index: 15; right: ${last.column.getAfter('right')}px`;
+}
+
 export function getUrlCellValue(value: unknown) {
 	if (typeof value !== 'string' || value.trim() === '') return undefined;
 	return value;
@@ -194,7 +221,9 @@ export function joinStyles(...styles: Array<string | undefined>) {
 	return styles.filter(Boolean).join('; ');
 }
 
-const FOOTER_SUM_FORMAT_DEFAULTS: Record<string, Intl.NumberFormatOptions> = {
+// Shared with the cell formatter in create-table.svelte.ts — keep number-typed
+// columns and their footer sums formatted identically.
+export const TYPE_NUMBER_FORMAT_DEFAULTS: Partial<Record<string, Intl.NumberFormatOptions>> = {
 	currency: { style: 'currency', currency: 'USD' },
 	percent: { style: 'percent' },
 	number: {}
@@ -215,7 +244,7 @@ export function formatColumnFooter(
 			(acc, val) => acc + (typeof val === 'number' ? val : Number(val) || 0),
 			0
 		);
-		const numDefaults = meta.type ? FOOTER_SUM_FORMAT_DEFAULTS[meta.type] : undefined;
+		const numDefaults = meta.type ? TYPE_NUMBER_FORMAT_DEFAULTS[meta.type] : undefined;
 		if (numDefaults !== undefined) {
 			return new Intl.NumberFormat(meta.formatLocale ?? locale, {
 				...numDefaults,

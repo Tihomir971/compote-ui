@@ -2,6 +2,7 @@ import type { RowData } from '@tanstack/svelte-table';
 import type {
 	DataTableAccessorFnColumn,
 	DataTableAccessorKeyColumn,
+	DataTableAlign,
 	DataTableColumn,
 	DataTableGroupColumn
 } from './types';
@@ -30,7 +31,7 @@ type GroupColumnOptions<T extends RowData> = Omit<
 	| 'formatLocale'
 >;
 
-type TypeDefaults = { align?: string; size?: number; enableSorting?: boolean };
+type TypeDefaults = { align?: DataTableAlign; size?: number; enableSorting?: boolean };
 
 const TYPE_DEFAULTS: Partial<Record<string, TypeDefaults>> = {
 	number: { align: 'right', size: 120 },

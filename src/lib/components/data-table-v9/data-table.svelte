@@ -1,25 +1,18 @@
 <script lang="ts" generics="T extends RowData">
 	import type { RowData } from '@tanstack/svelte-table';
-	import { FlexRender } from '@tanstack/svelte-table';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type ClassValue } from 'tailwind-variants';
-	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
 	import type { DataTableInstance } from './data-table-utils';
+	import { createTableViewState } from './table-view-state.svelte';
 	import DataTableHead from './data-table-head.svelte';
 	import DataTableFoot from './data-table-foot.svelte';
+	import DataTableCellContent from './data-table-cell-content.svelte';
 	import {
 		alignClass,
 		columnSizeStyle,
-		getBooleanCellValue,
 		getColumnMeta,
 		getPinningStyle,
-		getAllRowsSelectionState,
-		getReactiveCells,
-		getReactiveTableState,
-		getSelectedRowCount,
-		getUrlCellValue,
-		justifyClass,
-		openUrlCell,
+		getRowCells,
 		selectionColumnSizeStyle,
 		tableSizeStyle
 	} from './data-table-utils';
@@ -43,81 +36,11 @@
 		...rest
 	}: Props = $props();
 
-	const tableState = $derived(getReactiveTableState(table));
-	const rowModel = $derived.by(() => {
-		getReactiveTableState(table);
-		return table.getRowModel();
-	});
-	const headerGroups = $derived.by(() => {
-		const { columnPinning, columnVisibility } = getReactiveTableState(table);
-		void columnPinning;
-		void columnVisibility;
+	const view = createTableViewState(() => table);
 
-		const leftHeaderGroups = table.getLeftHeaderGroups();
-		const centerHeaderGroups = table.getCenterHeaderGroups();
-		const rightHeaderGroups = table.getRightHeaderGroups();
-
-		return centerHeaderGroups.map((headerGroup, index) => {
-			const merged = [
-				...(leftHeaderGroups[index]?.headers ?? []),
-				...headerGroup.headers,
-				...(rightHeaderGroups[index]?.headers ?? [])
-			];
-
-			// When a column group spans pinned and unpinned columns, TanStack splits it
-			// into separate header objects (one per section). Merge adjacent headers that
-			// share the same column.id so the group label renders once. The clone preserves
-			// the header's prototype so its methods (getContext, getSize, …) survive the merge.
-			const headers = merged.reduce<typeof merged>((acc, header) => {
-				const prev = acc[acc.length - 1];
-				if (prev && prev.column.id === header.column.id) {
-					const clone = Object.assign(
-						Object.create(Object.getPrototypeOf(prev)),
-						prev
-					) as typeof prev;
-					clone.colSpan = prev.colSpan + header.colSpan;
-					acc[acc.length - 1] = clone;
-				} else {
-					acc.push(header);
-				}
-				return acc;
-			}, []);
-
-			return {
-				...headerGroup,
-				id: `${leftHeaderGroups[index]?.id ?? ''}|${headerGroup.id}|${rightHeaderGroups[index]?.id ?? ''}`,
-				headers
-			};
-		});
-	});
-	const visibleLeafColumns = $derived.by(() => {
-		const { columnVisibility } = getReactiveTableState(table);
-		void columnVisibility;
-		return table.getVisibleLeafColumns();
-	});
-	const growColumn = $derived(visibleLeafColumns.find((col) => getColumnMeta(col.columnDef)?.grow));
-	const hasGrowColumn = $derived(growColumn !== undefined);
-	const visibleColumnCount = $derived(visibleLeafColumns.length);
-	const isRowSelectionEnabled = $derived(Boolean(table.options.enableRowSelection));
-	const isMultiRowSelectionEnabled = $derived(table.options.enableMultiRowSelection !== false);
-	const tableColumnCount = $derived(visibleColumnCount + (isRowSelectionEnabled ? 1 : 0));
+	const visibleColumnCount = $derived(view.visibleLeafColumns.length);
+	const tableColumnCount = $derived(visibleColumnCount + (view.isRowSelectionEnabled ? 1 : 0));
 	const renderedColumnCount = $derived(tableColumnCount + 1);
-	const headerGroupCount = $derived(headerGroups.length);
-	const allRowsSelectionState = $derived.by(() => {
-		getReactiveTableState(table);
-		return getAllRowsSelectionState(table);
-	});
-	const selectedRowCount = $derived.by(() => {
-		getReactiveTableState(table);
-		return getSelectedRowCount(table);
-	});
-	const isColumnResizing = $derived(tableState.columnResizing.isResizingColumn !== false);
-	const hasFooter = $derived(
-		visibleLeafColumns.some((col) => {
-			const meta = getColumnMeta(col.columnDef);
-			return !!(meta?.sum || meta?.footer);
-		})
-	);
 </script>
 
 <div
@@ -127,45 +50,37 @@
 	)}
 	{...rest}
 >
-	{#if isColumnResizing}
+	{#if view.isColumnResizing}
 		<div aria-hidden="true" class="fixed inset-0 z-50 cursor-col-resize select-none"></div>
 	{/if}
 
 	<div class="min-h-0 flex-1 overflow-auto">
 		<table
 			class="table-fixed border-separate border-spacing-0 text-sm"
-			style={tableSizeStyle(table, isRowSelectionEnabled)}
+			style={tableSizeStyle(table, view.isRowSelectionEnabled, view)}
 		>
 			<colgroup>
-				{#if isRowSelectionEnabled}
+				{#if view.isRowSelectionEnabled}
 					<col style={selectionColumnSizeStyle()} />
 				{/if}
-				{#each visibleLeafColumns as column (column.id)}
+				{#each view.visibleLeafColumns as column (column.id)}
 					<col
 						style={getColumnMeta(column.columnDef)?.grow
 							? undefined
 							: columnSizeStyle(column.getSize())}
 					/>
 				{/each}
-				{#if !hasGrowColumn}
+				{#if !view.hasGrowColumn}
 					<col />
 				{/if}
 			</colgroup>
 			{#if caption}
 				<caption class="sr-only">{caption}</caption>
 			{/if}
-			<DataTableHead
-				{table}
-				{headerGroups}
-				{headerGroupCount}
-				{isRowSelectionEnabled}
-				{isMultiRowSelectionEnabled}
-				{allRowsSelectionState}
-				{hasGrowColumn}
-			/>
+			<DataTableHead {table} {view} hasGrowColumn={view.hasGrowColumn} />
 			<tbody>
-				{#each rowModel.rows as row (row.id)}
-					{@const rowSelected = getReactiveTableState(table).rowSelection[row.id] === true}
+				{#each view.rowModel.rows as row (row.id)}
+					{@const rowSelected = view.rowSelection[row.id] === true}
 					<tr
 						class={cn(
 							'group/row',
@@ -177,10 +92,12 @@
 						onclick={(event) => onRowClick?.({ row: row.original, event })}
 						ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}
 					>
-						{#if isRowSelectionEnabled}
+						{#if view.isRowSelectionEnabled}
 							<td
 								class="border-b border-surface-2 bg-(--row-bg) px-3 py-2 text-center align-middle group-last/row:border-b-0"
 								style="position: sticky; left: 0; z-index: 1"
+								onclick={(event) => event.stopPropagation()}
+								ondblclick={(event) => event.stopPropagation()}
 							>
 								<input
 									type="checkbox"
@@ -192,59 +109,20 @@
 								/>
 							</td>
 						{/if}
-						{#each getReactiveCells(row, getReactiveTableState(table).columnVisibility) as cell (cell.id)}
-							{@const columnDef = getColumnMeta(cell.column.columnDef)}
+						{#each getRowCells(row, view) as cell (cell.id)}
+							{@const meta = getColumnMeta(cell.column.columnDef)}
 							<td
 								class={cn(
 									'truncate border-b border-b-surface-2 px-3 py-2 group-last/row:border-b-0',
-									alignClass(columnDef?.align),
+									alignClass(meta?.align),
 									cell.column.getIsPinned() && 'bg-(--row-bg)'
 								)}
-								style={getPinningStyle(cell.column, table, false, isRowSelectionEnabled)}
+								style={getPinningStyle(cell.column, table, view, false, view.isRowSelectionEnabled)}
 							>
-								{#if columnDef?.type === 'boolean'}
-									{@const value = getBooleanCellValue(cell.getValue())}
-									{#if value === true}
-										<span
-											class="inline-flex size-5 items-center justify-center text-success"
-											role="img"
-											aria-label="Yes"
-										>
-											<PhCheck class="size-4" />
-										</span>
-									{:else if value === false}
-										<span
-											class="inline-flex size-5 items-center justify-center text-danger"
-											role="img"
-											aria-label="No"
-										>
-											<PhX class="size-4" />
-										</span>
-									{:else}
-										-
-									{/if}
-								{:else if columnDef?.type === 'url'}
-									{@const value = getUrlCellValue(cell.getValue())}
-									{#if value}
-										<button
-											type="button"
-											class={cn(
-												'inline-flex max-w-full appearance-none items-center gap-1.5 rounded-sm border-0 bg-transparent p-0 align-middle leading-5 font-medium text-ink underline decoration-border decoration-dotted underline-offset-4 outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-												justifyClass(columnDef.align)
-											)}
-											onclick={() => openUrlCell(value)}
-										>
-											<PhArrowSquareOut class="size-3.5 shrink-0" />
-										</button>
-									{:else}
-										-
-									{/if}
-								{:else}
-									<FlexRender {cell} />
-								{/if}
+								<DataTableCellContent {cell} />
 							</td>
 						{/each}
-						{#if !hasGrowColumn}
+						{#if !view.hasGrowColumn}
 							<td aria-hidden="true" class="border-b border-surface-2 p-0 group-last/row:border-b-0"
 							></td>
 						{/if}
@@ -257,23 +135,17 @@
 					</tr>
 				{/each}
 			</tbody>
-			{#if hasFooter}
-				<DataTableFoot
-					{table}
-					{visibleLeafColumns}
-					rows={rowModel.rows}
-					{isRowSelectionEnabled}
-					{hasGrowColumn}
-				/>
+			{#if view.hasFooter}
+				<DataTableFoot {table} {view} hasGrowColumn={view.hasGrowColumn} />
 			{/if}
 		</table>
 	</div>
 
 	<div class="shrink-0 border-t border-surface-3 bg-surface-2 px-3 py-2 text-sm text-ink-dim">
-		{#if isRowSelectionEnabled}
-			{selectedRowCount} of {rowModel.rows.length} rows selected
+		{#if view.isRowSelectionEnabled}
+			{view.selectedRowCount} of {view.rowModel.rows.length} rows selected
 		{:else}
-			{rowModel.rows.length} rows
+			{view.rowModel.rows.length} rows
 		{/if}
 	</div>
 </div>

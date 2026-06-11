@@ -5,7 +5,7 @@
 	import * as ScrollArea from '../../scroll-area';
 	import Checkbox from '../../checkbox/checkbox.svelte';
 	import { cn } from 'tailwind-variants';
-	import { getReactiveTableState, type DataTableInstance } from '../data-table-utils';
+	import type { DataTableInstance } from '../data-table-utils';
 	import type { DataTableFeatures } from '../features';
 	import NumberInput from '../../number-input/number-input.svelte';
 	import * as Field from '../../field';
@@ -24,7 +24,8 @@
 	let localSelectSearch: Record<string, string> = $state({});
 	const timers: Record<string, ReturnType<typeof setTimeout>> = {};
 
-	const columnFilters = $derived(getReactiveTableState(table).columnFilters);
+	const columnFilters = $derived.by(() => table.atoms.columnFilters.get());
+	const columnVisibility = $derived.by(() => table.atoms.columnVisibility.get());
 	const activeCount = $derived(columnFilters.length);
 
 	let activeFilterIds: string[] = $derived(columnFilters.map((f) => f.id));
@@ -32,14 +33,13 @@
 	let columnSearchText = $state('');
 
 	const activeColumns = $derived.by(() => {
-		getReactiveTableState(table);
 		return activeFilterIds
 			.map((id) => table.getColumn(id))
 			.filter((col): col is Column<DataTableFeatures, T, unknown> => col != null);
 	});
 
 	const availableColumns = $derived.by(() => {
-		getReactiveTableState(table);
+		void columnVisibility;
 		return table
 			.getAllLeafColumns()
 			.filter((col) => col.getCanFilter() && !activeFilterIds.includes(col.id))
@@ -202,7 +202,7 @@
 												<NumberInput
 													layout="horizontal"
 													label="From"
-													value={localNumMin[column.id] ?? facetMin ?? null}
+													value={localNumMin[column.id] ?? null}
 													min={facetMin}
 													max={facetMax}
 													formatOptions={colFormatOptions}
@@ -218,7 +218,7 @@
 												<NumberInput
 													layout="horizontal"
 													label="To"
-													value={localNumMax[column.id] ?? facetMax ?? null}
+													value={localNumMax[column.id] ?? null}
 													min={facetMin}
 													max={facetMax}
 													formatOptions={colFormatOptions}
@@ -274,12 +274,12 @@
 											</button>
 										</div>
 									{:else if getColumnType(column) === 'select'}
-										{const allOptions = getFacetedValues(column)}
-										{const search = localSelectSearch[column.id] ?? ''}
-										{const options = search
+										{@const allOptions = getFacetedValues(column)}
+										{@const search = localSelectSearch[column.id] ?? ''}
+										{@const options = search
 											? allOptions.filter((o) => o.toLowerCase().includes(search.toLowerCase()))
 											: allOptions}
-										{const selected = getSelectValues(column)}
+										{@const selected = getSelectValues(column)}
 										<div class="flex flex-col gap-1">
 											<Field.Root>
 												<Field.Input

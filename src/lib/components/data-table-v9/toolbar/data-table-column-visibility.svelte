@@ -3,7 +3,7 @@
 	import * as Popover from '../../popover';
 	import * as ScrollArea from '../../scroll-area';
 	import Checkbox from '../../checkbox/checkbox.svelte';
-	import { getReactiveTableState, type DataTableInstance } from '../data-table-utils';
+	import type { DataTableInstance } from '../data-table-utils';
 
 	type Props = {
 		table: DataTableInstance<T>;
@@ -12,9 +12,9 @@
 
 	let { table, triggerLabel = 'Columns' }: Props = $props();
 
-	const columnVisibility = $derived(getReactiveTableState(table).columnVisibility);
+	const columnVisibility = $derived.by(() => table.atoms.columnVisibility.get());
 	const allLeafColumns = $derived.by(() => {
-		getReactiveTableState(table);
+		void columnVisibility;
 		return table.getAllLeafColumns();
 	});
 	const allColumnsVisible = $derived(
