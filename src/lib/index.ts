@@ -84,6 +84,7 @@ export * as Tabs from './components/tabs';
 
 export * as Toast from './components/toast';
 export { toast } from './components/toast';
+export type { ToastOptions, ToastType } from './components/toast';
 export { createToaster } from '@ark-ui/svelte/toast';
 export type { CreateToasterReturn } from '@ark-ui/svelte/toast';
 
