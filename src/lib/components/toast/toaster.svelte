@@ -1,23 +1,22 @@
 <script lang="ts">
-	import { Toast, Toaster as ArkToaster } from '@ark-ui/svelte/toast';
+	import { Toast, Toaster } from '@ark-ui/svelte/toast';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from 'tailwind-variants';
 	import type { ClassValue } from 'tailwind-variants';
-	import type { CreateToasterReturn } from '@ark-ui/svelte/toast';
+	import { toast } from './toast.js';
 	import PhX from '$lib/icons/PhX.svelte';
 
 	interface Props {
-		toaster: CreateToasterReturn;
 		class?: ClassValue;
 	}
 
-	let { toaster, class: className }: Props = $props();
+	let { class: className }: Props = $props();
 </script>
 
 <Portal>
-	<ArkToaster {toaster}>
-		{#snippet children(toast)}
-			{@const t = toast()}
+	<Toaster toaster={toast}>
+		{#snippet children(toastItem)}
+			{@const t = toastItem()}
 			<Toast.Root
 				class={cn(
 					'relative min-w-80 rounded-lg border border-border bg-surface-1 p-4 pr-8 shadow-lg transition-all duration-200',
@@ -45,5 +44,5 @@
 				</Toast.CloseTrigger>
 			</Toast.Root>
 		{/snippet}
-	</ArkToaster>
+	</Toaster>
 </Portal>
