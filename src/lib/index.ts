@@ -44,8 +44,6 @@ export type { AlertDialogProps } from './components/dialog/dialog.types';
 
 export * as DataTable from './components/data-table-v9';
 export * as VirtualDataTable from './components/data-table-v9/virtual';
-export * as DataTableV8 from './components/data-table-v8';
-export * as VirtualDataTableV8 from './components/data-table-v8/virtual';
 
 export * as Drawer from './components/drawer';
 

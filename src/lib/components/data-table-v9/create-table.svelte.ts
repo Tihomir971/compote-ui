@@ -19,7 +19,7 @@ import {
 	type RowSelectionState
 } from '@tanstack/svelte-table';
 import { useLocaleContext } from '@ark-ui/svelte/locale';
-import { untrack, type Component } from 'svelte';
+import { onDestroy, untrack, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
 import { TYPE_NUMBER_FORMAT_DEFAULTS, type DataTableInstance } from './data-table-utils';
@@ -131,22 +131,22 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		});
 	});
 
-	// Notify consumers of visibility changes without taking control of the slice.
-	// v9 setters are atom-aware, so we observe the reactive state instead of
-	// overriding `onColumnVisibilityChange` (which would suppress internal updates).
-	// The callback runs untracked: it must only depend on the visibility atom,
-	// otherwise consumer-side reads (e.g. a persisted-state proxy the callback
-	// writes into) become dependencies of this effect and re-trigger it forever.
+	// Notify consumers of visibility changes without taking control of the slice
+	// (overriding the table's own `onColumnVisibilityChange` option would suppress
+	// internal updates). The atom's `subscribe` is an explicit observer that runs
+	// the callback outside Svelte's dependency tracking, so consumer-side reads
+	// (e.g. a persisted-state proxy the callback writes into) can never become
+	// dependencies that re-trigger the notification — the failure mode of
+	// observing via $effect. The initial-replay guard compares by reference:
+	// table state updates are immutable, so only the subscription's initial
+	// emission (if the atom flavor emits one) can match the snapshot.
 	if (options.onColumnVisibilityChange) {
-		let first = true;
-		$effect(() => {
-			const visibility = table.atoms.columnVisibility.get();
-			if (first) {
-				first = false;
-				return;
-			}
-			untrack(() => options.onColumnVisibilityChange?.(visibility));
+		const initialVisibility = table.atoms.columnVisibility.get();
+		const subscription = table.atoms.columnVisibility.subscribe((visibility) => {
+			if (visibility === initialVisibility) return;
+			options.onColumnVisibilityChange?.(visibility);
 		});
+		onDestroy(() => subscription.unsubscribe());
 	}
 
 	return table;

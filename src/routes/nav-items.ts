@@ -15,7 +15,6 @@ export const navItems: NavItem[] = [
 	{ label: 'Date Input', slug: 'date-input' },
 	{ label: 'Date Picker', slug: 'date-picker' },
 	{ label: 'Date Range Field', slug: 'date-range-field' },
-	{ label: 'Data Table v8', slug: 'data-table-v8' },
 	{ label: 'Data Table v9', slug: 'data-table-v9' },
 	{ label: 'Dialog', slug: 'dialog' },
 	{ label: 'Drawer', slug: 'drawer' },
