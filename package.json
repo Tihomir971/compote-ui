@@ -62,7 +62,7 @@
 		"@sveltejs/package": "^2.5.8",
 		"@sveltejs/vite-plugin-svelte": "7.1.2",
 		"@tailwindcss/vite": "^4.2.4",
-		"@tanstack/svelte-table": "9.0.0-beta.6",
+		"@tanstack/svelte-table": "^9.0.0-beta.9",
 		"@tanstack/svelte-virtual": "^3.13.28",
 		"@types/node": "^22.19.18",
 		"eslint": "^10.4.1",
@@ -88,7 +88,6 @@
 	"dependencies": {
 		"@ark-ui/svelte": "^5.22.1",
 		"@fontsource-variable/nunito-sans": "^5.2.7",
-		"@iconify/svelte": "^5.2.1",
 		"@internationalized/date": "^3.12.2",
 		"runed": "^0.37.1",
 		"tailwind-merge": "^3.6.0",

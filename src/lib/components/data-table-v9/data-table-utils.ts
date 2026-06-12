@@ -213,8 +213,12 @@ export function openUrlCell(value: string) {
 	window.open(value, '_blank', 'noopener,noreferrer');
 }
 
-export function getColumnMeta(columnDef: { meta?: unknown }): DataTableColumnMeta | undefined {
-	return columnDef.meta as DataTableColumnMeta | undefined;
+// `columnDef.meta` is natively typed as DataTableColumnMeta via the `columnMeta`
+// type-only slot in features.ts; this accessor just narrows the columnDef shape.
+export function getColumnMeta(columnDef: {
+	meta?: DataTableColumnMeta;
+}): DataTableColumnMeta | undefined {
+	return columnDef.meta;
 }
 
 export function joinStyles(...styles: Array<string | undefined>) {

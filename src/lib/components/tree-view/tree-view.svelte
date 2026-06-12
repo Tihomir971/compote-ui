@@ -15,8 +15,6 @@
 	import { Button, Field, ScrollArea } from '$lib';
 	import { SvelteSet } from 'svelte/reactivity';
 
-	import Icon from '@iconify/svelte';
-
 	let {
 		items = [],
 		label,
@@ -189,7 +187,6 @@
 					>
 						<PhCaretRight class="size-3.5" />
 					</TreeView.BranchIndicator>
-					{#if node.icon}<Icon icon={node.icon} class="size-4 shrink-0" />{/if}
 					<TreeView.BranchText class="flex-1 truncate">
 						{node.label}
 					</TreeView.BranchText>
@@ -209,7 +206,6 @@
 				{#if selectionMode === 'multiple'}
 					{@render nodeCheckbox()}
 				{/if}
-				{#if node.icon}<Icon icon={node.icon} class="size-4 shrink-0" />{/if}
 				<TreeView.ItemText class="flex-1 truncate">
 					{node.label}
 				</TreeView.ItemText>

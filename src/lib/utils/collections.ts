@@ -15,7 +15,6 @@ export interface TreeItem {
 	value: number | string;
 	label: string;
 	disabled?: boolean;
-	icon?: string;
 	children?: TreeItem[];
 }
 
