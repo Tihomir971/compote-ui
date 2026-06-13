@@ -1,12 +1,5 @@
 import {
 	createTable as createSvelteTable,
-	createSortedRowModel,
-	createFilteredRowModel,
-	createFacetedRowModel,
-	createFacetedUniqueValues,
-	createFacetedMinMaxValues,
-	sortFns,
-	filterFns,
 	type ColumnDef,
 	type ColumnPinningState,
 	type ColumnResizeMode,
@@ -78,13 +71,6 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 
 	const table = createSvelteTable<DataTableFeatures, T>({
 		features: dataTableFeatures,
-		rowModels: {
-			sortedRowModel: createSortedRowModel(sortFns),
-			filteredRowModel: createFilteredRowModel(filterFns),
-			facetedRowModel: createFacetedRowModel(),
-			facetedUniqueValues: createFacetedUniqueValues(),
-			facetedMinMaxValues: createFacetedMinMaxValues()
-		},
 		get data() {
 			return options.data;
 		},

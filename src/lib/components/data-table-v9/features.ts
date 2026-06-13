@@ -9,7 +9,14 @@ import {
 	columnVisibilityFeature,
 	columnPinningFeature,
 	columnSizingFeature,
-	columnResizingFeature
+	columnResizingFeature,
+	createSortedRowModel,
+	createFilteredRowModel,
+	createFacetedRowModel,
+	createFacetedUniqueValues,
+	createFacetedMinMaxValues,
+	sortFns,
+	filterFns
 } from '@tanstack/svelte-table';
 import type { DataTableColumnMeta } from './types';
 
@@ -25,6 +32,13 @@ export const dataTableFeatures = tableFeatures({
 	columnPinningFeature,
 	columnSizingFeature,
 	columnResizingFeature,
+	sortedRowModel: createSortedRowModel(),
+	filteredRowModel: createFilteredRowModel(),
+	facetedRowModel: createFacetedRowModel(),
+	facetedUniqueValues: createFacetedUniqueValues(),
+	facetedMinMaxValues: createFacetedMinMaxValues(),
+	sortFns,
+	filterFns,
 	// Type-only slot: types `columnDef.meta` as DataTableColumnMeta wherever
 	// DataTableFeatures flows. Stripped at runtime by constructTable.
 	columnMeta: metaHelper<DataTableColumnMeta>()
