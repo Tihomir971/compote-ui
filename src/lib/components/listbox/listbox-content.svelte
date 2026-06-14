@@ -19,7 +19,10 @@
 
 <Listbox.Content
 	{...restProps}
-	class={cn('flex min-h-0 w-full flex-1 flex-col overflow-y-auto outline-none', className)}
+	class={cn(
+		'flex min-h-0 w-full flex-1 flex-col overflow-y-auto outline-none bg-surface-document rounded p-1 border scrollbar-thin',
+		className
+	)}
 >
 	{@render items?.({ items: ctx.collection.items, group: ctx.collection.group() })}
 </Listbox.Content>

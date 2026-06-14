@@ -5,7 +5,7 @@ export interface SelectProps<T extends ListItem> extends Omit<
 	SelectRootBaseProps<T>,
 	'value' | 'collection'
 > {
-	value?: number | string | null;
+	value?: T['value'] | null;
 	items: T[];
 	label?: string;
 	placeholder?: string;
