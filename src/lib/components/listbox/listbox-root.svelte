@@ -9,12 +9,13 @@
 	import { setListboxContext } from './listbox-context';
 	import type { ClassValue } from 'svelte/elements';
 
-	type Props = Omit<ListboxRootBaseProps<ListItem<T>>, 'collection' | 'value'> & {
+	type Props = Omit<ListboxRootBaseProps<ListItem<T>>, 'collection' | 'value' | 'onValueChange'> & {
 		items: ListItem<T>[];
 		value?: T[];
 		name?: string;
 		class?: ClassValue;
 		children?: Snippet;
+		onValueChange?: (details: { value: T[]; items: ListItem<T>[] }) => void;
 	};
 
 	let {
@@ -64,8 +65,9 @@
 	{collection}
 	value={stringValue}
 	onValueChange={(details) => {
-		value = details.value as unknown as T[];
-		onValueChange?.(details);
+		const converted = details.value.map((v) => items.find((item) => item.value.toString() === v)?.value as T);
+		value = converted;
+		onValueChange?.({ value: converted, items: details.items as ListItem<T>[] });
 	}}
 	{...restProps}
 	class={cn('flex h-full w-full flex-col gap-1.5 overflow-hidden', className)}
