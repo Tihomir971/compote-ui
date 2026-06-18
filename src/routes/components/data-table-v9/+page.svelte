@@ -192,7 +192,7 @@
 			}),
 			personCol.accessor('lastName', {
 				header: 'Last Name',
-				type: 'text',
+				type: 'select',
 				size: 140,
 				enableColumnFilter: true
 			})

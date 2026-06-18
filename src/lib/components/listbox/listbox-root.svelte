@@ -65,7 +65,9 @@
 	{collection}
 	value={stringValue}
 	onValueChange={(details) => {
-		const converted = details.value.map((v) => items.find((item) => item.value.toString() === v)?.value as T);
+		const converted = details.value.map(
+			(v) => items.find((item) => item.value.toString() === v)?.value as T
+		);
 		value = converted;
 		onValueChange?.({ value: converted, items: details.items as ListItem<T>[] });
 	}}

@@ -178,8 +178,8 @@
 
 		{#if activeColumns.length > 0}
 			<div class="overflow-hidden border-t border-surface-2">
-				<ScrollArea.Root class="h-96">
-					<ScrollArea.Viewport>
+				<ScrollArea.Root>
+					<ScrollArea.Viewport class="max-h-96">
 						<ScrollArea.Content class="flex flex-col gap-3">
 							{#each activeColumns as column (column.id)}
 								<div class="border border-surface-3 p-3">
