@@ -28,7 +28,17 @@
 	const columnVisibility = $derived.by(() => table.atoms.columnVisibility.get());
 	const activeCount = $derived(columnFilters.length);
 
-	let activeFilterIds: string[] = $derived(columnFilters.map((f) => f.id));
+	// Filters the user has explicitly opened. Kept separate from the table's
+	// columnFilters so a filter card stays visible after its value is cleared
+	// (e.g. unchecking the last select option) until removed via the X button.
+	let manualFilterIds = $state<string[]>([]);
+	const activeFilterIds: string[] = $derived.by(() => {
+		const ids = columnFilters.map((f) => f.id);
+		for (const id of manualFilterIds) {
+			if (!ids.includes(id)) ids.push(id);
+		}
+		return ids;
+	});
 	let showColumnPicker = $state(false);
 	let columnSearchText = $state('');
 
@@ -65,13 +75,13 @@
 	}
 
 	function addFilter(column: Column<DataTableFeatures, T, unknown>) {
-		activeFilterIds = [...activeFilterIds, column.id];
+		manualFilterIds = [...manualFilterIds, column.id];
 		showColumnPicker = false;
 		columnSearchText = '';
 	}
 
 	function removeFilter(column: Column<DataTableFeatures, T, unknown>) {
-		activeFilterIds = activeFilterIds.filter((id) => id !== column.id);
+		manualFilterIds = manualFilterIds.filter((id) => id !== column.id);
 		column.setFilterValue(undefined);
 		delete localText[column.id];
 		delete localNumMin[column.id];
@@ -89,6 +99,7 @@
 		localNumMin = {};
 		localNumMax = {};
 		localSelectSearch = {};
+		manualFilterIds = [];
 		showColumnPicker = false;
 		columnSearchText = '';
 		table.resetColumnFilters();
