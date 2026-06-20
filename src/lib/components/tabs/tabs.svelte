@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Tabs } from '@ark-ui/svelte/tabs';
-	import { ClientOnly } from '@ark-ui/svelte/client-only';
+	/* 	import { ClientOnly } from '@ark-ui/svelte/client-only'; */
 	import type { TabsProps } from './types';
 
 	let {
@@ -12,14 +12,14 @@
 	}: TabsProps = $props();
 </script>
 
-<ClientOnly>
-	<Tabs.Root
-		{...rootProps}
-		bind:value
-		{defaultValue}
-		{orientation}
-		class="flex h-full data-[orientation='horizontal']:flex-col data-[orientation='vertical']:flex-row"
-	>
-		{@render children?.()}
-	</Tabs.Root>
-</ClientOnly>
+<!-- <ClientOnly> -->
+<Tabs.Root
+	{...rootProps}
+	bind:value
+	{defaultValue}
+	{orientation}
+	class="flex h-full data-[orientation='horizontal']:flex-col data-[orientation='vertical']:flex-row"
+>
+	{@render children?.()}
+</Tabs.Root>
+<!-- </ClientOnly> -->
