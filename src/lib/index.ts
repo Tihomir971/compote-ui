@@ -68,6 +68,9 @@ export * as Listbox from './components/listbox';
 export { default as NumberInput } from './components/number-input/number-input.svelte';
 export type { NumberInputProps } from './components/number-input/types';
 
+export { default as PhoneInput } from './components/phone-input/phone-input.svelte';
+export type { PhoneInputProps } from './components/phone-input/types';
+
 export * as Popover from './components/popover';
 
 export { default as QrCode } from './components/qr-code/qr-code.svelte';

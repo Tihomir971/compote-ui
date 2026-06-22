@@ -41,7 +41,8 @@ const TYPE_DEFAULTS: Partial<Record<string, TypeDefaults>> = {
 	time: { align: 'center', size: 80 },
 	'date-time': { align: 'center', size: 160 },
 	boolean: { align: 'center', size: 90 },
-	url: { align: 'center', size: 60, enableSorting: false }
+	url: { align: 'center', size: 60, enableSorting: false },
+	phone: { align: 'left', size: 160 }
 };
 
 function applyTypeDefaults<T extends { type?: string; align?: string; enableSorting?: boolean }>(

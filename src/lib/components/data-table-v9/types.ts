@@ -11,6 +11,7 @@ export type DataTableColumnType =
 	| 'boolean'
 	| 'select'
 	| 'url'
+	| 'phone'
 	| 'date'
 	| 'time'
 	| 'date-time';

@@ -213,6 +213,15 @@ export function openUrlCell(value: string) {
 	window.open(value, '_blank', 'noopener,noreferrer');
 }
 
+export function getPhoneCellValue(value: unknown) {
+	if (typeof value !== 'string' || value.trim() === '') return undefined;
+	return value;
+}
+
+export function openPhoneCell(value: string) {
+	window.location.href = `tel:${value}`;
+}
+
 // `columnDef.meta` is natively typed as DataTableColumnMeta via the `columnMeta`
 // type-only slot in features.ts; this accessor just narrows the columnDef shape.
 export function getColumnMeta(columnDef: {

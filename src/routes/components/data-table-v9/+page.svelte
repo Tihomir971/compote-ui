@@ -13,6 +13,7 @@
 		booleanVal: boolean;
 		selectVal: string;
 		urlVal: string;
+		phoneVal: string;
 		dateVal: Date;
 		timeVal: Date;
 		datetimeVal: Date;
@@ -28,6 +29,7 @@
 			booleanVal: true,
 			selectVal: 'Active',
 			urlVal: 'https://example.com',
+			phoneVal: '+12015550123',
 			dateVal: new Date('2024-03-15'),
 			timeVal: new Date('2024-03-15T09:30:00'),
 			datetimeVal: new Date('2024-03-15T09:30:00')
@@ -41,6 +43,7 @@
 			booleanVal: false,
 			selectVal: 'Inactive',
 			urlVal: 'https://svelte.dev',
+			phoneVal: '+381601234567',
 			dateVal: new Date('2025-11-01'),
 			timeVal: new Date('2025-11-01T14:45:00'),
 			datetimeVal: new Date('2025-11-01T14:45:00')
@@ -54,6 +57,7 @@
 			booleanVal: false,
 			selectVal: 'Pending',
 			urlVal: '',
+			phoneVal: '',
 			dateVal: new Date('NaN'),
 			timeVal: new Date('NaN'),
 			datetimeVal: new Date('NaN')
@@ -76,6 +80,7 @@
 		typesCol.accessor('booleanVal', { header: 'Boolean', type: 'boolean' }),
 		typesCol.accessor('selectVal', { header: 'Select', type: 'select' }),
 		typesCol.accessor('urlVal', { header: 'URL', type: 'url' }),
+		typesCol.accessor('phoneVal', { header: 'Phone', type: 'phone' }),
 		typesCol.accessor('dateVal', { header: 'Date', type: 'date' }),
 		typesCol.accessor('timeVal', { header: 'Time', type: 'time' }),
 		typesCol.accessor('datetimeVal', { header: 'Date-Time', type: 'date-time' })

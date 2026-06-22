@@ -2,15 +2,18 @@
 	import type { Cell, RowData } from '@tanstack/svelte-table';
 	import { FlexRender } from '@tanstack/svelte-table';
 	import { cn } from 'tailwind-variants';
-	import { PhArrowSquareOut, PhCheck, PhX } from '$lib/icons';
+	import { PhArrowSquareOut, PhCheck, PhPhone, PhX } from '$lib/icons';
 	import type { DataTableFeatures } from './features';
 	import {
 		getBooleanCellValue,
 		getColumnMeta,
+		getPhoneCellValue,
 		getUrlCellValue,
 		justifyClass,
+		openPhoneCell,
 		openUrlCell
 	} from './data-table-utils';
+	import { formatPhoneCellValue } from './phone-format';
 
 	type Props = {
 		cell: Cell<DataTableFeatures, T, unknown>;
@@ -58,6 +61,26 @@
 		>
 			<PhArrowSquareOut class="size-3.5 shrink-0" />
 		</button>
+	{:else}
+		-
+	{/if}
+{:else if meta?.type === 'phone'}
+	{@const value = getPhoneCellValue(cell.getValue())}
+	{#if value}
+		<span class={cn('inline-flex max-w-full items-center gap-1.5', justifyClass(meta.align))}>
+			<button
+				type="button"
+				class="inline-flex shrink-0 appearance-none rounded-sm border-0 bg-transparent p-0 text-ink-dim outline-none hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+				aria-label="Call {value}"
+				onclick={(event) => {
+					event.stopPropagation();
+					openPhoneCell(value);
+				}}
+			>
+				<PhPhone class="size-3.5" />
+			</button>
+			<span class="truncate leading-5">{formatPhoneCellValue(value)}</span>
+		</span>
 	{:else}
 		-
 	{/if}
