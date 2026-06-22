@@ -24,6 +24,15 @@
 			<PhoneInput label="Phone number" bind:value bind:country bind:valid />
 
 			<PhoneInput label="Horizontal" bind:value bind:country bind:valid layout="horizontal" />
+
+			<PhoneInput
+				label="National format"
+				bind:value
+				bind:country
+				bind:valid
+				initialFormat="national"
+				placeholderFormat="national"
+			/>
 		</div>
 	</section>
 
@@ -35,7 +44,6 @@
 				bind:value={invalidValue}
 				bind:country={invalidCountry}
 				bind:valid={invalidValid}
-				invalid={!invalidValid}
 			/>
 			<PhoneInput
 				label="Disabled"

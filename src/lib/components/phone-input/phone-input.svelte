@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Select } from '@ark-ui/svelte/select';
 	import { Portal } from '@ark-ui/svelte/portal';
+	import { useFilter } from '@ark-ui/svelte/locale';
 	import { TelInput, countries } from 'svelte-tel-input';
 	import type { CountryCode } from 'svelte-tel-input/types';
 	import type { PhoneInputProps } from './types';
@@ -22,28 +23,35 @@
 		flagClass: `flag-${c.iso2.toLowerCase()}`,
 		dialCode: c.dialCode
 	}));
-	const collection = createListCollection(countryItems);
+	const baseCollection = createListCollection(countryItems);
+
+	let filterText = $state('');
+	const filters = useFilter({ sensitivity: 'base' });
+	const collection = $derived(
+		filterText
+			? baseCollection.filter((label) => filters().contains(label, filterText))
+			: baseCollection
+	);
 
 	let {
 		value = $bindable(''),
 		country = $bindable(null),
 		valid = $bindable(false),
 		label,
-		placeholder,
-		name,
 		layout = 'vertical',
 		disabled,
 		readonly,
 		invalid,
 		required,
 		class: className,
-		options
+		...restProps
 	}: PhoneInputProps = $props();
 
 	const id = $props.id();
 	const numberId = `${id}-number`;
 
 	const selectedItem = $derived(countryItems.find((c) => c.value === country));
+	const showInvalid = $derived(invalid ?? (value.length > 0 && !valid));
 
 	const rootClass = $derived(
 		layout === 'horizontal'
@@ -63,7 +71,7 @@
 		class={cn(
 			'flex h-9 w-full items-center rounded-md border bg-surface-1 shadow-sm transition-shadow focus-within:ring-1 focus-within:ring-ring',
 			'data-disabled:cursor-not-allowed data-disabled:opacity-50',
-			invalid && 'border-danger focus-within:ring-danger',
+			showInvalid && 'border-danger focus-within:ring-danger',
 			className
 		)}
 		data-disabled={disabled ? '' : undefined}
@@ -73,6 +81,9 @@
 			value={country ? [country] : []}
 			onValueChange={(details) => {
 				country = (details.items[0]?.value as CountryCode | undefined) ?? null;
+			}}
+			onOpenChange={(details) => {
+				if (!details.open) filterText = '';
 			}}
 			{disabled}
 			readOnly={readonly}
@@ -87,7 +98,6 @@
 						<span
 							class="flag {selectedItem.flagClass} shrink-0 rounded-xs shadow-[inset_0_0_0_1px_var(--compote-border)]"
 						></span>
-						<span class="font-medium tabular-nums">+{selectedItem.dialCode}</span>
 					{:else}
 						<span class="text-ink-dim">Country</span>
 					{/if}
@@ -97,22 +107,33 @@
 			<Portal>
 				<Select.Positioner>
 					<Select.Content
-						class="z-200 max-h-60 min-w-52 overflow-auto rounded-md border bg-surface-document p-1 shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+						class="z-200 flex max-h-72 min-w-52 flex-col overflow-hidden rounded-md border bg-surface-document p-1 shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
 					>
-						{#each countryItems as item (item.value)}
-							<Select.Item
-								{item}
-								class="relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm text-ink transition-colors select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-1 data-[state=checked]:bg-surface-1"
-							>
-								<span
-									class="flag {item.flagClass} shrink-0 rounded-xs shadow-[inset_0_0_0_1px_var(--compote-border)]"
-								></span>
-								<Select.ItemText class="flex-1 truncate">{item.label}</Select.ItemText>
-								<Select.ItemIndicator class="absolute right-2 flex items-center justify-center">
-									<PhCheck class="size-3.5" />
-								</Select.ItemIndicator>
-							</Select.Item>
-						{/each}
+						<input
+							type="text"
+							bind:value={filterText}
+							placeholder="Search"
+							class="mb-1 shrink-0 rounded-sm border bg-surface-1 px-2 py-1 text-sm outline-none focus:ring-1 focus:ring-ring"
+							onkeydown={(e) => e.stopPropagation()}
+						/>
+						<div class="overflow-auto">
+							{#each collection.items as item (item.value)}
+								<Select.Item
+									{item}
+									class="relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm text-ink transition-colors select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-surface-1 data-[state=checked]:bg-surface-1"
+								>
+									<span
+										class="flag {item.flagClass} shrink-0 rounded-xs shadow-[inset_0_0_0_1px_var(--compote-border)]"
+									></span>
+									<Select.ItemText class="flex-1 truncate">{item.label}</Select.ItemText>
+									<Select.ItemIndicator class="absolute right-2 flex items-center justify-center">
+										<PhCheck class="size-3.5" />
+									</Select.ItemIndicator>
+								</Select.Item>
+							{:else}
+								<div class="py-2 text-center text-sm text-ink-dim">No results found</div>
+							{/each}
+						</div>
 					</Select.Content>
 				</Select.Positioner>
 			</Portal>
@@ -122,12 +143,10 @@
 			bind:value
 			bind:country
 			bind:valid
-			{name}
-			{placeholder}
 			{disabled}
 			{readonly}
 			{required}
-			{options}
+			{...restProps}
 			class="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-ink-dim disabled:cursor-not-allowed"
 		/>
 	</div>
