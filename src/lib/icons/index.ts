@@ -9,6 +9,8 @@ export { default as PhCaretDown } from './PhCaretDown.svelte';
 export { default as PhCaretRight } from './PhCaretRight.svelte';
 export { default as PhCaretUp } from './PhCaretUp.svelte';
 export { default as PhCheck } from './PhCheck.svelte';
+export { default as PhEye } from './PhEye.svelte';
+export { default as PhEyeSlash } from './PhEyeSlash.svelte';
 export { default as PhFile } from './PhFile.svelte';
 export { default as PhFileArchive } from './PhFileArchive.svelte';
 export { default as PhFileText } from './PhFileText.svelte';

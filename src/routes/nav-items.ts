@@ -28,6 +28,7 @@ export const navItems: NavItem[] = [
 	{ label: 'Menu', slug: 'menu' },
 	{ label: 'Number Input', slug: 'number-input' },
 	{ label: 'Palette', slug: 'palette' },
+	{ label: 'Password Input', slug: 'password-input' },
 	{ label: 'Phone Input', slug: 'phone-input' },
 	{ label: 'Popover', slug: 'popover' },
 	{ label: 'QR Code', slug: 'qr-code' },
