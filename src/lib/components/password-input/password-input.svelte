@@ -5,6 +5,7 @@
 	import { PhEye, PhEyeSlash } from '$lib/icons';
 
 	let {
+		value = $bindable(),
 		label,
 		layout = 'vertical',
 		placeholder,
@@ -29,6 +30,7 @@
 	<PasswordInput.Control class="relative isolate">
 		<PasswordInput.Input
 			{placeholder}
+			bind:value
 			class="h-9 w-full rounded-md border bg-surface-1 px-3 pr-9 text-sm shadow-sm placeholder:text-ink-dim focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-invalid:border-danger data-invalid:focus-visible:ring-danger"
 		/>
 		<PasswordInput.VisibilityTrigger
