@@ -26,6 +26,12 @@ yarn add compote-ui
 bun add compote-ui
 ```
 
+If you use an AI agent, run:
+
+```bash
+npx @tanstack/intent@latest install
+```
+
 ## Peer Dependencies
 
 Compote UI requires Svelte 5 or later:

@@ -1,0 +1,145 @@
+# skills/_artifacts/skill_tree.yaml
+library:
+  name: 'compote-ui'
+  version: '0.62.1'
+  repository: ''
+  description: 'Svelte 5 UI component library built on Ark UI, Tailwind CSS 4, and custom utility components.'
+generated_from:
+  domain_map: 'skills/_artifacts/domain_map.yaml'
+  skill_spec: 'skills/_artifacts/skill_spec.md'
+generated_at: '2026-06-23'
+
+skills:
+  - name: 'getting-started'
+    slug: 'getting-started'
+    type: 'lifecycle'
+    domain: 'starting-svelte-apps'
+    path: 'skills/getting-started/SKILL.md'
+    description: >
+      Load when setting up compote-ui in a SvelteKit or Svelte 5 app. Covers npm
+      install and bun add, importing tailwindcss before compote-ui/theme.css,
+      first component imports, Toast.Toaster placement, and peer dependency basics.
+    sources:
+      - 'package.json'
+      - 'README.md'
+      - 'CLAUDE.md'
+      - 'AGENTS.md'
+      - 'src/lib/index.ts'
+      - 'src/routes/layout.css'
+      - 'src/lib/theme.css'
+    references:
+      - 'references/install-and-peers.md'
+
+  - name: 'component-usage'
+    slug: 'component-usage'
+    type: 'core'
+    domain: 'using-component-groups'
+    path: 'skills/component-usage/SKILL.md'
+    description: >
+      Load when choosing or using compote-ui components and utilities from the
+      root package. Covers public exports, single components vs namespaced
+      compound components, forms, overlays, layout/display components,
+      files/images, buttons, collections, and common component usage mistakes.
+    sources:
+      - 'src/lib/index.ts'
+      - 'src/lib/utils/collections.ts'
+      - 'src/lib/components/button/button.svelte'
+      - 'src/lib/components/field/field.svelte'
+      - 'src/lib/components/select/select.svelte'
+      - 'src/lib/components/dialog/dialog-root.svelte'
+      - 'src/lib/components/file-upload/file-upload.svelte'
+      - 'src/lib/components/image-cropper/image-cropper.svelte'
+      - 'src/lib/utils/image-processing.ts'
+      - 'src/routes/nav-items.ts'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/skill.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/button.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/form.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/overlay.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/layout.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/display.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/images.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/interactive.md'
+    references:
+      - 'references/buttons.md'
+      - 'references/forms-and-inputs.md'
+      - 'references/overlays-and-floating-ui.md'
+      - 'references/layout-and-display.md'
+      - 'references/files-and-images.md'
+      - 'references/interactive-components.md'
+      - 'references/component-export-map.md'
+
+  - name: 'theming'
+    slug: 'theming'
+    type: 'core'
+    domain: 'customizing-theme-and-styling'
+    path: 'skills/theming/SKILL.md'
+    description: >
+      Load when configuring compote-ui/theme.css, Tailwind CSS 4 integration,
+      CSS variables, dark and light mode, class overrides, focus rings, or
+      consumer brand tokens. Recommends importing tailwindcss first, then
+      compote-ui/theme.css.
+    sources:
+      - 'src/lib/theme.css'
+      - 'src/routes/layout.css'
+      - '.prettierrc'
+      - 'CLAUDE.md'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/skill.md'
+    references:
+      - 'references/theme-tokens.md'
+
+  - name: 'data-table'
+    slug: 'data-table'
+    type: 'composition'
+    domain: 'building-data-tables'
+    path: 'skills/data-table/SKILL.md'
+    description: >
+      Load when using compote-ui/data-table or compote-ui/data-table/virtual.
+      Covers TanStack Table v9 wrapper usage, createTable,
+      createDataTableColumnHelper, table columns, row selection, filters,
+      formatting, toolbars, virtualized imports, and optional peer dependencies.
+    requires:
+      - 'component-usage'
+      - 'theming'
+    sources:
+      - 'package.json'
+      - 'src/lib/components/data-table-v9/index.ts'
+      - 'src/lib/components/data-table-v9/types.ts'
+      - 'src/lib/components/data-table-v9/features.ts'
+      - 'src/lib/components/data-table-v9/column-helper.ts'
+      - 'src/lib/components/data-table-v9/create-table.svelte.ts'
+      - 'src/lib/components/data-table-v9/data-table.svelte'
+      - 'src/lib/components/data-table-v9/virtual/data-table-virtualized.svelte'
+      - 'src/lib/components/data-table-v9/virtual/data-table-virtual-rows.svelte'
+      - 'src/routes/components/data-table-v9/+page.svelte'
+      - 'C:/Users/tihom/.claude/skills/compote-ui/references/data-table.md'
+    subsystems:
+      - 'TanStack Table v9'
+      - 'TanStack Virtual'
+    references:
+      - 'references/column-options.md'
+      - 'references/table-state-and-reactivity.md'
+      - 'references/virtual-table.md'
+
+  - name: 'production-checklist'
+    slug: 'production-checklist'
+    type: 'lifecycle'
+    domain: 'shipping-safely'
+    path: 'skills/production-checklist/SKILL.md'
+    description: >
+      Load before shipping or reviewing a compote-ui integration. Checks peer
+      dependencies, theme import, SSR/browser-only image utility boundaries,
+      accessible labels, optional data-table peers, excluded companion libraries,
+      and local verification with bun run check and bun run lint.
+    requires:
+      - 'getting-started'
+      - 'component-usage'
+      - 'theming'
+    sources:
+      - 'package.json'
+      - 'CLAUDE.md'
+      - '.claude/skills/verify/SKILL.md'
+      - 'src/lib/utils/image-processing.ts'
+      - 'src/lib/components/data-table-v9/virtual/data-table-virtual-rows.svelte'
+      - 'skills/_artifacts/domain_map.yaml'
+    references:
+      - 'references/production-audit.md'
