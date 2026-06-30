@@ -50,7 +50,7 @@
 	</Checkbox.Control>
 	{#if label}
 		<div class="flex flex-col gap-0.5">
-			<Checkbox.Label class="text-base select-none data-disabled:opacity-50">
+			<Checkbox.Label class="text-sm select-none data-disabled:opacity-50">
 				{label}
 			</Checkbox.Label>
 			{#if children}

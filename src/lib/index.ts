@@ -32,8 +32,10 @@ export type { DateRangeFieldProps } from './components/date-range-field/types';
 export { default as DateInput } from './components/date-input/date-input.svelte';
 export type {
 	DateInputProps,
+	DateInputValue,
 	DateValue as DateInputDateValue
 } from './components/date-input/types';
+export { toDateValue, dateValueToString, dateValueToDate } from './utils/date';
 
 export { default as DatePicker } from './components/date-picker/date-picker.svelte';
 export type { DatePickerProps } from './components/date-picker/types';
@@ -87,6 +89,9 @@ export type { SplitterPanelConfig, SplitterProps } from './components/splitter/t
 export { default as Switch } from './components/switch/switch.svelte';
 
 export * as Tabs from './components/tabs';
+
+export { default as TagsInput } from './components/tags-input/tags-input.svelte';
+export type { TagsInputProps } from './components/tags-input/types';
 
 export * as Toast from './components/toast';
 export { toast } from './components/toast';

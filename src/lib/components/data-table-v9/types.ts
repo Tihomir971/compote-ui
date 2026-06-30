@@ -77,8 +77,7 @@ export type DataTableAccessorFnColumn<T extends RowData> = DataTableLeafColumnBa
 };
 
 export type DataTableLeafColumn<T extends RowData> =
-	| DataTableAccessorKeyColumn<T>
-	| DataTableAccessorFnColumn<T>;
+	DataTableAccessorKeyColumn<T> | DataTableAccessorFnColumn<T>;
 
 export type DataTableGroupColumn<T extends RowData> = DataTableColumnBase & {
 	id?: string;

@@ -66,8 +66,7 @@
 
 	function getColumnType(column: Column<DataTableFeatures, T, unknown>): string | undefined {
 		return (column.columnDef.meta as Record<string, unknown> | undefined)?.type as
-			| string
-			| undefined;
+			string | undefined;
 	}
 
 	function getColumnLabel(column: Column<DataTableFeatures, T, unknown>): string {
@@ -162,8 +161,7 @@
 		column: Column<DataTableFeatures, T, unknown>
 	): Intl.NumberFormatOptions | undefined {
 		return (column.columnDef.meta as Record<string, unknown> | undefined)?.formatOptions as
-			| Intl.NumberFormatOptions
-			| undefined;
+			Intl.NumberFormatOptions | undefined;
 	}
 </script>
 

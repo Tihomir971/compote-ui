@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { DateInput } from '@ark-ui/svelte/date-input';
 	import { Field, useFieldContext } from '@ark-ui/svelte/field';
+	import { toDateValue, fromDateValue, dateValueShape } from '$lib/utils/date';
+	import type { DateValueShape } from '$lib/utils/date';
 	import type { DateInputProps } from './types';
 
 	let {
@@ -8,6 +10,9 @@
 		defaultValue,
 		label,
 		name,
+		granularity = 'day',
+		hourCycle,
+		timeZone,
 		onValueChange,
 		invalid,
 		readOnly,
@@ -21,12 +26,25 @@
 	const isReadOnly = $derived(readOnly ?? field?.()?.readOnly ?? false);
 	const isDisabled = $derived(disabled ?? field?.()?.disabled ?? false);
 
-	const arkValue = $derived(value ?? null);
-	const arkDefault = $derived(defaultValue ?? null);
+	// Remember the shape the consumer bound the value as, so changes are emitted
+	// back in the same shape (string in → string out, Date in → Date out).
+	// When the bound value starts null (e.g. a nullable DB column), default to
+	// string output since that's the common case binding to database values.
+	let shape: DateValueShape = 'string';
+
+	const arkValue = $derived.by(() => {
+		const s = dateValueShape(value) ?? dateValueShape(defaultValue);
+		if (s) shape = s;
+		return toDateValue(value, timeZone);
+	});
+	const arkDefault = $derived(toDateValue(defaultValue, timeZone));
 </script>
 
 <DateInput.Root
 	{...restProps}
+	{granularity}
+	{hourCycle}
+	{timeZone}
 	{hideTimeZone}
 	invalid={isInvalid}
 	readOnly={isReadOnly}
@@ -37,7 +55,7 @@
 		const dv = details.value[0] ?? null;
 		// Guard: skip if Ark UI echoes back the same date (prevents reactive loop)
 		if (dv?.toString() === arkValue?.toString()) return;
-		value = dv;
+		value = fromDateValue(dv, shape, timeZone);
 		onValueChange?.(details);
 	}}
 >
