@@ -2,6 +2,7 @@
 	import { DateInput } from '@ark-ui/svelte/date-input';
 	import { Field, useFieldContext } from '@ark-ui/svelte/field';
 	import { toDateValue, fromDateValue, dateValueShape } from '$lib/utils/date';
+	import { getLocalTimeZone } from '@internationalized/date';
 	import type { DateValueShape } from '$lib/utils/date';
 	import type { DateInputProps } from './types';
 
@@ -26,6 +27,11 @@
 	const isReadOnly = $derived(readOnly ?? field?.()?.readOnly ?? false);
 	const isDisabled = $derived(disabled ?? field?.()?.disabled ?? false);
 
+	// Default the display zone to the user's local zone. Without this Ark/zag
+	// formats segments in UTC, so a UTC value (e.g. 21:00Z) would show as 21:00
+	// instead of the local 23:00. A UTC string still round-trips back to UTC.
+	const tz = $derived(timeZone ?? getLocalTimeZone());
+
 	// Remember the shape the consumer bound the value as, so changes are emitted
 	// back in the same shape (string in → string out, Date in → Date out).
 	// When the bound value starts null (e.g. a nullable DB column), default to
@@ -35,16 +41,16 @@
 	const arkValue = $derived.by(() => {
 		const s = dateValueShape(value) ?? dateValueShape(defaultValue);
 		if (s) shape = s;
-		return toDateValue(value, timeZone);
+		return toDateValue(value, tz);
 	});
-	const arkDefault = $derived(toDateValue(defaultValue, timeZone));
+	const arkDefault = $derived(toDateValue(defaultValue, tz));
 </script>
 
 <DateInput.Root
 	{...restProps}
 	{granularity}
 	{hourCycle}
-	{timeZone}
+	timeZone={tz}
 	{hideTimeZone}
 	invalid={isInvalid}
 	readOnly={isReadOnly}
@@ -55,7 +61,7 @@
 		const dv = details.value[0] ?? null;
 		// Guard: skip if Ark UI echoes back the same date (prevents reactive loop)
 		if (dv?.toString() === arkValue?.toString()) return;
-		value = fromDateValue(dv, shape, timeZone);
+		value = fromDateValue(dv, shape, tz);
 		onValueChange?.(details);
 	}}
 >
