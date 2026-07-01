@@ -65,8 +65,8 @@
 		"@sveltejs/vite-plugin-svelte": "7.1.2",
 		"@tailwindcss/vite": "^4.3.2",
 		"@tanstack/intent": "^0.3.2",
-		"@tanstack/svelte-table": "^9.0.0-beta.17",
-		"@tanstack/svelte-virtual": "^3.13.30",
+		"@tanstack/svelte-table": "^9.0.0-beta.26",
+		"@tanstack/svelte-virtual": "^3.13.31",
 		"@types/node": "^22.20.0",
 		"eslint": "^10.5.0",
 		"eslint-config-prettier": "^10.1.8",
@@ -83,7 +83,7 @@
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.61.1",
 		"unplugin-icons": "^23.0.1",
-		"vite": "^8.0.16"
+		"vite": "^8.1.2"
 	},
 	"keywords": [
 		"svelte",
