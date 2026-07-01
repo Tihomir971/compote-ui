@@ -3,7 +3,9 @@
 	import { DateInput, useDateInput } from '@ark-ui/svelte/date-input';
 	import { Field } from '@ark-ui/svelte/field';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
-	import { CalendarDateTime } from '@internationalized/date';
+	import { CalendarDateTime, getLocalTimeZone } from '@internationalized/date';
+	import { toDateValue, fromDateValue, dateValueShape } from '$lib/utils/date';
+	import type { DateValueShape } from '$lib/utils/date';
 	import { PhCalendarBlank } from '$lib/icons';
 	import type { DateFieldProps } from './types';
 	import DatePickerCalendar from '../date-picker/date-picker-calendar.svelte';
@@ -20,54 +22,71 @@
 		required,
 		invalid,
 		timeZone,
+		locale: localeProp,
 		granularity,
 		hourCycle,
 		onValueChange
 	}: DateFieldProps = $props();
 
-	const locale = useLocaleContext();
+	const localeContext = useLocaleContext();
+	const resolvedLocale = $derived(localeProp ?? localeContext().locale);
 	const id = $props.id();
 	const showTimeInput = $derived(!!granularity && granularity !== 'day');
 	const resolvedHourCycle = $derived(
 		hourCycle ??
-			(new Intl.DateTimeFormat(locale().locale, { hour: 'numeric' })
+			(new Intl.DateTimeFormat(resolvedLocale, { hour: 'numeric' })
 				.formatToParts(new Date(2024, 0, 1, 14))
 				.some((p) => p.type === 'dayPeriod')
 				? 12
 				: 24)
 	);
 
+	// Default the display zone to the user's local zone. Without this Ark/zag
+	// formats segments in UTC, so a UTC value would show shifted hours.
+	const tz = $derived(timeZone ?? getLocalTimeZone());
+
+	// Remember the shape the consumer bound the value as, so changes are emitted
+	// back in the same shape (string in → string out, Date in → Date out).
+	// When the bound value starts null, default to string output.
+	let shape: DateValueShape = 'string';
+
+	const arkValue = $derived.by(() => {
+		const s = dateValueShape(value) ?? dateValueShape(defaultValue);
+		if (s) shape = s;
+		return toDateValue(value, tz);
+	});
+	const arkDefault = $derived(toDateValue(defaultValue, tz));
+
 	const datePicker = useDatePicker(() => ({
 		id,
-		locale: locale().locale,
+		locale: resolvedLocale,
 		closeOnSelect: !showTimeInput,
-		value: value ? [value] : [],
-		defaultValue: defaultValue ? [defaultValue] : undefined,
+		value: arkValue ? [arkValue] : [],
+		defaultValue: arkDefault ? [arkDefault] : undefined,
 		min,
 		max,
 		disabled,
 		readOnly,
 		required,
 		invalid,
-		timeZone,
+		timeZone: tz,
 		onValueChange(details) {
 			const picked = details.value[0] ?? null;
+			let next = picked;
 			if (picked && showTimeInput && !('hour' in picked)) {
-				const h = value && 'hour' in value ? (value as CalendarDateTime).hour : 0;
-				const m = value && 'hour' in value ? (value as CalendarDateTime).minute : 0;
-				const merged = new CalendarDateTime(picked.year, picked.month, picked.day, h, m);
-				value = merged;
-				datePicker().setValue([merged]);
-			} else {
-				value = picked;
+				const h = arkValue && 'hour' in arkValue ? (arkValue as CalendarDateTime).hour : 0;
+				const m = arkValue && 'hour' in arkValue ? (arkValue as CalendarDateTime).minute : 0;
+				next = new CalendarDateTime(picked.year, picked.month, picked.day, h, m);
+				datePicker().setValue(next ? [next] : []);
 			}
+			value = fromDateValue(next, shape, tz);
 			onValueChange?.(details);
 		}
 	}));
 
 	const dateInput = useDateInput(() => ({
 		id,
-		locale: locale().locale,
+		locale: resolvedLocale,
 		granularity: granularity ?? 'day',
 		hourCycle,
 		value: datePicker().value,
@@ -77,7 +96,7 @@
 		readOnly,
 		required,
 		invalid,
-		timeZone,
+		timeZone: tz,
 		onValueChange(details) {
 			datePicker().setValue(details.value);
 		}

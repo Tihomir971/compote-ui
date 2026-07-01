@@ -8,6 +8,10 @@
 	let minMaxValue = $state<DateValue | null>(null);
 	let invalidValue = $state<DateValue | null>(null);
 
+	// Supabase-style strings — bind directly, no conversion. String in → string out.
+	let dbDate = $state('2025-06-15');
+	let dbTimestamptz = $state('2025-07-11T10:12:01.982258+00:00');
+
 	const todayDate = today(getLocalTimeZone());
 	const minDate = todayDate;
 	const maxDate = todayDate.add({ months: 3 });
@@ -38,6 +42,29 @@
 			<DatePicker label="Scheduled at" granularity="minute" bind:value={datetimeValue} />
 			<p class="text-sm text-ink-dim">
 				Value: <strong>{datetimeValue?.toString() ?? 'none'}</strong>
+			</p>
+		</div>
+	</section>
+
+	<section>
+		<h2 class="mb-4 text-lg font-semibold">Database strings (Supabase)</h2>
+		<p class="mb-3 text-sm text-ink-dim">
+			Bind ISO strings straight from the DB. A <code>timestamptz</code> (UTC, with
+			<code>Z</code>/offset) displays in your local zone and is emitted back as UTC — leave
+			<code>timeZone</code> unset.
+		</p>
+		<div class="flex flex-col gap-4">
+			<DatePicker label="date column" bind:value={dbDate} />
+			<p class="text-sm text-ink-dim">
+				Value: <strong>{dbDate}</strong> (<em>{typeof dbDate}</em>)
+			</p>
+			<DatePicker
+				label="timestamptz column (UTC in → local display → UTC out)"
+				granularity="minute"
+				bind:value={dbTimestamptz}
+			/>
+			<p class="text-sm text-ink-dim">
+				Value: <strong>{dbTimestamptz}</strong> (<em>{typeof dbTimestamptz}</em>)
 			</p>
 		</div>
 	</section>
