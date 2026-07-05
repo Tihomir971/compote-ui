@@ -63,6 +63,9 @@ export type { ImageCropperProps, ImageCropperCropData } from './components/image
 export { default as ImageCropDialog } from './components/image-crop-dialog/image-crop-dialog.svelte';
 export type { ImageCropDialogProps } from './components/image-crop-dialog/types';
 
+export { default as ImageUpload } from './components/image-upload/image-upload.svelte';
+export type { ImageUploadProps, ImageUploadShape } from './components/image-upload/types';
+
 export { default as JsonTreeView } from './components/json-tree-view/json-tree-view.svelte';
 
 export * as Listbox from './components/listbox';
