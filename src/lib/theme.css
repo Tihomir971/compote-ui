@@ -124,3 +124,12 @@
 	outline: 2px solid var(--compote-ring);
 	outline-offset: 2px;
 }
+
+@keyframes compote-progress-indeterminate {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(250%);
+	}
+}

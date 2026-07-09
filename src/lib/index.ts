@@ -81,6 +81,15 @@ export type { PhoneInputProps } from './components/phone-input/types';
 
 export * as Popover from './components/popover';
 
+export { default as ProgressLinear } from './components/progress/progress-linear.svelte';
+export { default as ProgressCircular } from './components/progress/progress-circular.svelte';
+export type {
+	ProgressLinearProps,
+	ProgressCircularProps,
+	ProgressSize,
+	ProgressVariant
+} from './components/progress/types';
+
 export { default as QrCode } from './components/qr-code/qr-code.svelte';
 
 export { default as Select } from './components/select/select.svelte';
