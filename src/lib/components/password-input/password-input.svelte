@@ -16,7 +16,7 @@
 	const rootClass = $derived(
 		layout === 'horizontal'
 			? 'flex items-center justify-between gap-1.5 w-full data-disabled:opacity-50 data-disabled:grayscale'
-			: 'flex flex-col gap-1.5 w-full max-w-72 data-disabled:opacity-50 data-disabled:grayscale'
+			: 'flex flex-col gap-1.5 w-full data-disabled:opacity-50 data-disabled:grayscale'
 	);
 </script>
 
