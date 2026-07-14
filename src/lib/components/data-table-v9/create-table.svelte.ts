@@ -1,6 +1,7 @@
 import {
 	createTable as createSvelteTable,
 	type ColumnDef,
+	type Column,
 	type ColumnPinningState,
 	type ColumnResizeMode,
 	type ColumnSizingState,
@@ -82,6 +83,22 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		enableRowSelection: options.enableRowSelection ?? false,
 		enableMultiRowSelection: options.enableMultiRowSelection,
 		enableSorting: options.enableSorting,
+		// TanStack's default only inspects the FIRST row's value to decide whether a
+		// column participates in global search. If that value is null/undefined the
+		// column is excluded for the whole table, even when later rows have text.
+		// Treat null/undefined as unknown → allow; still exclude non-text values
+		// (booleans, objects, arrays) exactly as the default does.
+		// Explicit param/return types keep this callback's signature independent of
+		// `table` (which it closes over), avoiding a circular type inference. `as
+		// never` sidesteps the option's generic-function contextual type — matching
+		// the `filterFn as never` pattern above — so it doesn't perturb inference.
+		getColumnCanGlobalFilter: ((column: Column<DataTableFeatures, T>): boolean => {
+			const value = table
+				.getCoreRowModel()
+				.flatRows[0]?.getAllCellsByColumnId()
+				[column.id]?.getValue();
+			return value == null || typeof value === 'string' || typeof value === 'number';
+		}) as never,
 		debugTable: options.debugTable,
 		initialState: {
 			columnVisibility: initialColumnVisibility,
@@ -156,9 +173,11 @@ function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
 
 function createColumnPinning<T extends RowData>(columns: DataTableColumn<T>[]): ColumnPinningState {
 	const leafCols = getLeafColumns(columns);
+	// Compote exposes `pinned: 'left' | 'right'` publicly; v9 uses logical
+	// start/end pinning state, so translate at this boundary.
 	return {
-		left: leafCols.filter((c) => c.pinned === 'left').map(getColumnId),
-		right: leafCols.filter((c) => c.pinned === 'right').map(getColumnId)
+		start: leafCols.filter((c) => c.pinned === 'left').map(getColumnId),
+		end: leafCols.filter((c) => c.pinned === 'right').map(getColumnId)
 	};
 }
 

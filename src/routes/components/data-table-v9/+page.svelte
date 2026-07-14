@@ -184,6 +184,44 @@
 		reactiveColumns = [...reactiveColumns].reverse();
 	}
 
+	// Global search over a nullable text column. The FIRST row's `nickname` is
+	// null; a later row has a searchable value ("Sparrow"). TanStack's default
+	// getColumnCanGlobalFilter would exclude the whole column because the first
+	// value isn't a string/number — the override treats null/undefined as
+	// "unknown → allow" so the search still matches later rows. The boolean and
+	// object columns stay excluded from global search (searching "true" or
+	// "[object" matches nothing).
+	type NullableRow = {
+		name: string;
+		nickname: string | null;
+		active: boolean;
+		meta: { region: string };
+	};
+
+	const nullableRows: NullableRow[] = [
+		{ name: 'Alice', nickname: null, active: true, meta: { region: 'North' } },
+		{ name: 'Bob', nickname: 'Sparrow', active: false, meta: { region: 'South' } },
+		{ name: 'Carol', nickname: 'Falcon', active: true, meta: { region: 'East' } }
+	];
+
+	const nullableCol = DataTable.createDataTableColumnHelper<NullableRow>();
+	const nullableColumns = nullableCol.columns([
+		nullableCol.accessor('name', { header: 'Name', type: 'text', grow: true }),
+		nullableCol.accessor('nickname', { header: 'Nickname', type: 'text' }),
+		nullableCol.accessor('active', { header: 'Active', type: 'boolean', size: 100 }),
+		nullableCol.accessor('meta', {
+			header: 'Region',
+			cell: (value) => (value as { region: string }).region,
+			size: 120
+		})
+	]);
+
+	const nullableTable = DataTable.createTable({
+		data: nullableRows,
+		columns: nullableColumns,
+		getRowId: (row) => row.name
+	});
+
 	const personCol = DataTable.createDataTableColumnHelper<Person>();
 	const personColumns = personCol.columns([
 		personCol.group('Name', [
@@ -273,6 +311,22 @@
 	</DataTable.Toolbar>
 	<div class="h-56 min-h-0">
 		<DataTable.Root table={salesTable} caption="Sales summary" />
+	</div>
+</div>
+
+<div class="max-w-2xl space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">
+	<DataTable.Toolbar>
+		<DataTable.Title>Search — Nullable First Row</DataTable.Title>
+		{#snippet right()}
+			<DataTable.Search table={nullableTable} class="w-56" />
+		{/snippet}
+	</DataTable.Toolbar>
+	<p class="text-sm text-ink-dim">
+		Search “Sparrow” or “Falcon” — the Nickname column is searchable even though the first row’s
+		value is <code>null</code>. Boolean/object columns stay excluded.
+	</p>
+	<div class="h-48 min-h-0">
+		<DataTable.Root table={nullableTable} caption="Nullable-first-row search" />
 	</div>
 </div>
 

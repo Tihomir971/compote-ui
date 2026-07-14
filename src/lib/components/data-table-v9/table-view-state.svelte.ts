@@ -152,19 +152,19 @@ export function createTableViewState<T extends RowData>(getTable: () => DataTabl
 function buildHeaderGroups<T extends RowData>(table: DataTableInstance<T>) {
 	type HeaderEntry = Header<DataTableFeatures, T, unknown>;
 	const sections = new WeakMap<HeaderEntry, DataTableHeaderSection>();
-	const leftHeaderGroups = table.getLeftHeaderGroups();
+	const startHeaderGroups = table.getStartHeaderGroups();
 	const centerHeaderGroups = table.getCenterHeaderGroups();
-	const rightHeaderGroups = table.getRightHeaderGroups();
+	const endHeaderGroups = table.getEndHeaderGroups();
 
 	const groups: HeaderGroup<DataTableFeatures, T>[] = centerHeaderGroups.map(
 		(headerGroup, index) => {
 			const parts: Array<{ header: HeaderEntry; section: DataTableHeaderSection }> = [
-				...(leftHeaderGroups[index]?.headers ?? []).map((header) => ({
+				...(startHeaderGroups[index]?.headers ?? []).map((header) => ({
 					header,
 					section: 'left' as const
 				})),
 				...headerGroup.headers.map((header) => ({ header, section: 'center' as const })),
-				...(rightHeaderGroups[index]?.headers ?? []).map((header) => ({
+				...(endHeaderGroups[index]?.headers ?? []).map((header) => ({
 					header,
 					section: 'right' as const
 				}))
@@ -205,7 +205,7 @@ function buildHeaderGroups<T extends RowData>(table: DataTableInstance<T>) {
 
 			return {
 				...headerGroup,
-				id: `${leftHeaderGroups[index]?.id ?? ''}|${headerGroup.id}|${rightHeaderGroups[index]?.id ?? ''}`,
+				id: `${startHeaderGroups[index]?.id ?? ''}|${headerGroup.id}|${endHeaderGroups[index]?.id ?? ''}`,
 				headers
 			};
 		}

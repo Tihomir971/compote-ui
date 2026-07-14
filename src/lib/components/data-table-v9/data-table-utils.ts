@@ -115,9 +115,9 @@ export function getRowCells<T extends RowData>(
 	void state.columnPinning;
 	void state.columnSizing;
 	return [
-		...row.getLeftVisibleCells(),
+		...row.getStartVisibleCells(),
 		...row.getCenterVisibleCells(),
-		...row.getRightVisibleCells()
+		...row.getEndVisibleCells()
 	];
 }
 
@@ -142,9 +142,9 @@ export function getPinningStyle<T extends RowData>(
 	const zIndex = isHeader ? 15 : 1;
 	const selectionOffset = isRowSelectionEnabled ? 40 : 0;
 
-	if (isPinned === 'left') {
-		const left = column.getStart('left') + selectionOffset;
-		const leftCols = table.getLeftLeafColumns();
+	if (isPinned === 'start') {
+		const left = column.getStart('start') + selectionOffset;
+		const leftCols = table.getStartLeafColumns();
 		const isLastLeft = leftCols[leftCols.length - 1]?.id === column.id;
 		const shadow =
 			!isHeader && isLastLeft
@@ -154,8 +154,8 @@ export function getPinningStyle<T extends RowData>(
 			.filter(Boolean)
 			.join('; ');
 	} else {
-		const right = column.getAfter('right');
-		const rightCols = table.getRightLeafColumns();
+		const right = column.getAfter('end');
+		const rightCols = table.getEndLeafColumns();
 		const isFirstRight = rightCols[0]?.id === column.id;
 		const shadow =
 			!isHeader && isFirstRight
@@ -194,14 +194,14 @@ export function getGroupPinningStyle<T extends RowData>(
 
 	if (section === 'left') {
 		const first = leafHeaders[0];
-		if (first?.column.getIsPinned() !== 'left') return undefined;
-		const left = first.column.getStart('left') + (isRowSelectionEnabled ? 40 : 0);
+		if (first?.column.getIsPinned() !== 'start') return undefined;
+		const left = first.column.getStart('start') + (isRowSelectionEnabled ? 40 : 0);
 		return `position: sticky; z-index: 15; left: ${left}px`;
 	}
 
 	const last = leafHeaders[leafHeaders.length - 1];
-	if (last?.column.getIsPinned() !== 'right') return undefined;
-	return `position: sticky; z-index: 15; right: ${last.column.getAfter('right')}px`;
+	if (last?.column.getIsPinned() !== 'end') return undefined;
+	return `position: sticky; z-index: 15; right: ${last.column.getAfter('end')}px`;
 }
 
 export function getUrlCellValue(value: unknown) {
