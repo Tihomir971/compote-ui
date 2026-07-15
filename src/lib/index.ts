@@ -1,4 +1,6 @@
 // Reexport your entry components here
+export * as AppShell from './components/app-shell';
+
 export { default as Avatar } from './components/avatar/avatar.svelte';
 export type { AvatarProps, AvatarSize } from './components/avatar/avatar.types';
 
@@ -117,6 +119,8 @@ export type { ToggleProps, ToggleSize } from './components/toggle/types';
 export * as ToggleGroup from './components/toggle-group';
 
 export * as Menu from './components/menu';
+
+export * as NavRail from './components/nav-rail';
 
 export * as Tooltip from './components/tooltip';
 

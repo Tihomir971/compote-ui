@@ -4,6 +4,7 @@ export type NavItem = {
 };
 
 export const navItems: NavItem[] = [
+	{ label: 'App Shell', slug: 'app-shell' },
 	{ label: 'Avatar', slug: 'avatar' },
 	{ label: 'Button', slug: 'button' },
 	{ label: 'Card', slug: 'card' },
@@ -27,6 +28,7 @@ export const navItems: NavItem[] = [
 	{ label: 'Json Tree View', slug: 'json-tree-view' },
 	{ label: 'Listbox', slug: 'listbox' },
 	{ label: 'Menu', slug: 'menu' },
+	{ label: 'Nav Rail', slug: 'nav-rail' },
 	{ label: 'Number Input', slug: 'number-input' },
 	{ label: 'Palette', slug: 'palette' },
 	{ label: 'Password Input', slug: 'password-input' },
