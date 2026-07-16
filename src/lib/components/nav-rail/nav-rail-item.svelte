@@ -21,7 +21,7 @@
 		)
 	);
 
-	const iconBox = 'grid size-8 shrink-0 place-items-center [&>svg]:size-5';
+	const iconBox = 'grid size-6 shrink-0 place-items-center [&>svg]:size-5';
 	const labelClass = cn(
 		'min-w-0 truncate whitespace-nowrap opacity-0 transition-opacity',
 		'group-hover:opacity-100 group-focus-within:opacity-100 group-data-expanded:opacity-100'
