@@ -6,6 +6,7 @@ export type NavItem = {
 export const navItems: NavItem[] = [
 	{ label: 'App Shell', slug: 'app-shell' },
 	{ label: 'Avatar', slug: 'avatar' },
+	{ label: 'Badge', slug: 'badge' },
 	{ label: 'Button', slug: 'button' },
 	{ label: 'Card', slug: 'card' },
 	{ label: 'Carousel', slug: 'carousel' },
