@@ -50,6 +50,9 @@
 		"svelte": "^5.0.0"
 	},
 	"peerDependenciesMeta": {
+		"@tanstack/svelte-table": {
+			"optional": true
+		},
 		"@tanstack/svelte-virtual": {
 			"optional": true
 		}

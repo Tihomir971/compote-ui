@@ -49,8 +49,10 @@ export * as Dialog from './components/dialog';
 export { default as AlertDialog } from './components/dialog/alert-dialog.svelte';
 export type { AlertDialogProps } from './components/dialog/dialog.types';
 
-export * as DataTable from './components/data-table-v9';
-export * as VirtualDataTable from './components/data-table-v9/virtual';
+// DataTable / VirtualDataTable are intentionally NOT re-exported here — they pull in the
+// @tanstack/svelte-table peer dep for every consumer. Import them from the subpath exports:
+//   import * as DataTable from 'compote-ui/data-table';
+//   import * as VirtualDataTable from 'compote-ui/data-table/virtual';
 
 export * as Drawer from './components/drawer';
 
