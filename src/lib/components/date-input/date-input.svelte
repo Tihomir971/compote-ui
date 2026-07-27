@@ -66,7 +66,7 @@
 	}}
 >
 	{#if label}
-		<DateInput.Label class="text-sm font-medium leading-none">
+		<DateInput.Label class="text-sm leading-none font-medium">
 			{label}
 			<Field.RequiredIndicator />
 		</DateInput.Label>

@@ -61,24 +61,24 @@
 <Portal>
 	<DatePicker.Positioner>
 		<DatePicker.Content
-			class="z-50 min-w-70 rounded-lg border border-border bg-surface-document p-4 shadow-lg outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+			class="z-50 min-w-70 rounded-lg border border-border bg-surface-document p-4 shadow-lg outline-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
 		>
 			<DatePicker.View view="day">
 				<DatePicker.Context>
 					{#snippet render(datePicker)}
 						<DatePicker.ViewControl class="mb-3 flex items-center justify-between">
 							<DatePicker.PrevTrigger
-								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-40"
+								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-40"
 							>
 								<PhArrowLeft class="size-4" />
 							</DatePicker.PrevTrigger>
 							<DatePicker.ViewTrigger
-								class="flex-1 rounded-md py-1 text-center text-sm font-semibold text-ink hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+								class="flex-1 rounded-md py-1 text-center text-sm font-semibold text-ink hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
 							>
 								<DatePicker.RangeText />
 							</DatePicker.ViewTrigger>
 							<DatePicker.NextTrigger
-								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-40"
+								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-40"
 							>
 								<PhArrowRight class="size-4" />
 							</DatePicker.NextTrigger>
@@ -88,7 +88,7 @@
 								<DatePicker.TableRow>
 									{#each datePicker().weekDays as weekDay (weekDay.short)}
 										<DatePicker.TableHeader
-											class="pb-2 text-center text-xs font-medium uppercase text-ink-dim"
+											class="pb-2 text-center text-xs font-medium text-ink-dim uppercase"
 										>
 											{weekDay.short}
 										</DatePicker.TableHeader>
@@ -101,7 +101,7 @@
 										{#each week as day (day.toString())}
 											<DatePicker.TableCell value={day}>
 												<DatePicker.TableCellTrigger
-													class="inline-flex h-9 w-9 items-center justify-center rounded-md text-sm text-ink hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-40 data-in-range:rounded-none data-in-range:bg-primary/15 data-outside-range:opacity-40 data-outside-range:text-ink-dim data-range-end:rounded-r-md data-range-end:bg-primary data-range-end:text-ink-inverse data-range-start:rounded-l-md data-range-start:bg-primary data-range-start:text-ink-inverse data-selected:bg-primary data-selected:text-ink-inverse data-today:font-semibold data-today:text-primary data-unavailable:line-through data-unavailable:opacity-40 data-selected:data-today:text-ink-inverse"
+													class="inline-flex h-9 w-9 items-center justify-center rounded-md text-sm text-ink hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-40 data-in-range:rounded-none data-in-range:bg-primary/15 data-outside-range:text-ink-dim data-outside-range:opacity-40 data-range-end:rounded-r-md data-range-end:bg-primary data-range-end:text-ink-inverse data-range-start:rounded-l-md data-range-start:bg-primary data-range-start:text-ink-inverse data-selected:bg-primary data-selected:text-ink-inverse data-today:font-semibold data-today:text-primary data-selected:data-today:text-ink-inverse data-unavailable:line-through data-unavailable:opacity-40"
 												>
 													{day.day}
 												</DatePicker.TableCellTrigger>
@@ -143,7 +143,7 @@
 									<button
 										type="button"
 										onclick={() => datePicker().setValue([togglePeriod(cur)])}
-										class="h-8 rounded-md border border-border bg-surface-1 px-2 text-sm shadow-sm hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+										class="h-8 rounded-md border border-border bg-surface-1 px-2 text-sm shadow-sm hover:bg-surface-2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
 									>
 										{isPM(cur) ? 'PM' : 'AM'}
 									</button>
@@ -159,17 +159,17 @@
 					{#snippet render(datePicker)}
 						<DatePicker.ViewControl class="mb-3 flex items-center justify-between">
 							<DatePicker.PrevTrigger
-								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-40"
+								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-40"
 							>
 								<PhArrowLeft class="size-4" />
 							</DatePicker.PrevTrigger>
 							<DatePicker.ViewTrigger
-								class="flex-1 rounded-md py-1 text-center text-sm font-semibold text-ink hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+								class="flex-1 rounded-md py-1 text-center text-sm font-semibold text-ink hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
 							>
 								<DatePicker.RangeText />
 							</DatePicker.ViewTrigger>
 							<DatePicker.NextTrigger
-								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-40"
+								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-40"
 							>
 								<PhArrowRight class="size-4" />
 							</DatePicker.NextTrigger>
@@ -181,7 +181,7 @@
 										{#each monthRow as month (month.value)}
 											<DatePicker.TableCell value={month.value}>
 												<DatePicker.TableCellTrigger
-													class="inline-flex h-10 w-full items-center justify-center rounded-md px-2 text-sm text-ink hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-outside-range:invisible data-selected:bg-primary data-selected:text-ink-inverse"
+													class="inline-flex h-10 w-full items-center justify-center rounded-md px-2 text-sm text-ink hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-outside-range:invisible data-selected:bg-primary data-selected:text-ink-inverse"
 												>
 													{month.label}
 												</DatePicker.TableCellTrigger>
@@ -200,17 +200,17 @@
 					{#snippet render(datePicker)}
 						<DatePicker.ViewControl class="mb-3 flex items-center justify-between">
 							<DatePicker.PrevTrigger
-								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-40"
+								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-40"
 							>
 								<PhArrowLeft class="size-4" />
 							</DatePicker.PrevTrigger>
 							<DatePicker.ViewTrigger
-								class="flex-1 rounded-md py-1 text-center text-sm font-semibold text-ink hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+								class="flex-1 rounded-md py-1 text-center text-sm font-semibold text-ink hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
 							>
 								<DatePicker.RangeText />
 							</DatePicker.ViewTrigger>
 							<DatePicker.NextTrigger
-								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-40"
+								class="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-dim hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-40"
 							>
 								<PhArrowRight class="size-4" />
 							</DatePicker.NextTrigger>
@@ -222,7 +222,7 @@
 										{#each yearRow as year (year.value)}
 											<DatePicker.TableCell value={year.value}>
 												<DatePicker.TableCellTrigger
-													class="inline-flex h-10 w-full items-center justify-center rounded-md px-2 text-sm text-ink hover:bg-surface-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-outside-range:invisible data-selected:bg-primary data-selected:text-ink-inverse"
+													class="inline-flex h-10 w-full items-center justify-center rounded-md px-2 text-sm text-ink hover:bg-surface-1 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-outside-range:invisible data-selected:bg-primary data-selected:text-ink-inverse"
 												>
 													{year.label}
 												</DatePicker.TableCellTrigger>

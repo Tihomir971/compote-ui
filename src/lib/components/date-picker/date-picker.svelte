@@ -72,7 +72,7 @@
 	}}
 >
 	{#if label}
-		<DatePicker.Label class="text-sm font-medium leading-none">
+		<DatePicker.Label class="text-sm leading-none font-medium">
 			{label}
 			<Field.RequiredIndicator />
 		</DatePicker.Label>
@@ -80,15 +80,15 @@
 	<DatePicker.Control class="flex flex-row gap-1.5">
 		<DatePicker.Input
 			{placeholder}
-			class="h-9 min-w-0 flex-1 rounded-md border border-border bg-surface-1 px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-50 data-invalid:border-danger"
+			class="h-9 min-w-0 flex-1 rounded-md border border-border bg-surface-1 px-3 text-sm shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-invalid:border-danger"
 		/>
 		<DatePicker.Trigger
-			class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1 shadow-sm hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-50"
+			class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1 shadow-sm hover:bg-surface-2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50"
 		>
 			<PhCalendarBlank class="size-4" />
 		</DatePicker.Trigger>
 		<DatePicker.ClearTrigger
-			class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1 text-ink-dim shadow-sm hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+			class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1 text-ink-dim shadow-sm hover:bg-surface-2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
 		>
 			<PhX class="size-3.5" />
 		</DatePicker.ClearTrigger>

@@ -35,7 +35,7 @@
 				<Progress.Label class="text-sm font-medium text-ink">{label}</Progress.Label>
 			{/if}
 			{#if showValueText}
-				<Progress.ValueText class="text-sm tabular-nums text-ink-dim" />
+				<Progress.ValueText class="text-sm text-ink-dim tabular-nums" />
 			{/if}
 		</div>
 	{/if}

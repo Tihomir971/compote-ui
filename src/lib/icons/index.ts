@@ -21,6 +21,7 @@ export { default as PhMagnifyingGlass } from './PhMagnifyingGlass.svelte';
 export { default as PhMicrosoftExcelLogo } from './PhMicrosoftExcelLogo.svelte';
 export { default as PhMinus } from './PhMinus.svelte';
 export { default as PhPhone } from './PhPhone.svelte';
+export { default as PhPlus } from './PhPlus.svelte';
 export { default as PhStar } from './PhStar.svelte';
 export { default as PhUploadSimple } from './PhUploadSimple.svelte';
 export { default as PhUser } from './PhUser.svelte';

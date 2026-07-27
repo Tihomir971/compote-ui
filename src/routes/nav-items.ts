@@ -41,6 +41,7 @@ export const navItems: NavItem[] = [
 	{ label: 'Select', slug: 'select' },
 	{ label: 'Splitter', slug: 'splitter' },
 	{ label: 'Switch', slug: 'switch' },
+	{ label: 'Table', slug: 'table' },
 	{ label: 'Tags Input', slug: 'tags-input' },
 	{ label: 'Toast', slug: 'toast' },
 	{ label: 'Toggle', slug: 'toggle' },

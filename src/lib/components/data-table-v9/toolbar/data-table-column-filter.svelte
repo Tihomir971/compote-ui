@@ -175,8 +175,8 @@
 		{/if}
 	</Popover.Trigger>
 
-	<Popover.Content class="w-70 p-3 flex flex-col gap-3" showArrow={false}>
-		<div class="flex items-center justify-between py-2.5 mr-1">
+	<Popover.Content class="flex w-70 flex-col gap-3 p-3" showArrow={false}>
+		<div class="mr-1 flex items-center justify-between py-2.5">
 			<span class="text-sm font-medium text-ink">Filters</span>
 			{#if activeCount > 0}
 				<button type="button" onclick={clearFilters} class="text-xs text-primary hover:underline">

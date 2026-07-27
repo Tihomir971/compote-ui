@@ -107,6 +107,8 @@ export type { SplitterPanelConfig, SplitterProps } from './components/splitter/t
 
 export { default as Switch } from './components/switch/switch.svelte';
 
+export * as Table from './components/table';
+
 export * as Tabs from './components/tabs';
 
 export { default as TagsInput } from './components/tags-input/tags-input.svelte';

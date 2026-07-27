@@ -130,7 +130,7 @@
 	)}
 >
 	{#if label}
-		<Combobox.Label class="text-sm font-medium leading-none">
+		<Combobox.Label class="text-sm leading-none font-medium">
 			{label}
 			<Field.RequiredIndicator class="text-danger" />
 		</Combobox.Label>

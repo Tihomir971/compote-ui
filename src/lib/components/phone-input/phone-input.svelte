@@ -92,7 +92,7 @@
 			<Select.Control class="h-full">
 				<Select.Trigger
 					aria-label="Country"
-					class="flex h-9 cursor-pointer items-center gap-1.5 rounded-l-md border-r px-2.5 text-sm outline-none transition-colors hover:bg-surface-2 active:bg-surface-2 data-disabled:cursor-not-allowed data-disabled:hover:bg-transparent"
+					class="flex h-9 cursor-pointer items-center gap-1.5 rounded-l-md border-r px-2.5 text-sm transition-colors outline-none hover:bg-surface-2 active:bg-surface-2 data-disabled:cursor-not-allowed data-disabled:hover:bg-transparent"
 				>
 					{#if selectedItem}
 						<span

@@ -48,7 +48,7 @@
 				/>
 			</Progress.Circle>
 			{#if showValueText}
-				<Progress.ValueText class="absolute text-sm font-medium tabular-nums text-ink" />
+				<Progress.ValueText class="absolute text-sm font-medium text-ink tabular-nums" />
 			{/if}
 		</div>
 		{#if label}

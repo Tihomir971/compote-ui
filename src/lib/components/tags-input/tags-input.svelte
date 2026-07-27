@@ -33,7 +33,7 @@
 	<TagsInput.Context>
 		{#snippet render(tagsInput)}
 			{#if label}
-				<TagsInput.Label class="text-sm font-medium leading-none data-disabled:opacity-50">
+				<TagsInput.Label class="text-sm leading-none font-medium data-disabled:opacity-50">
 					{label}
 				</TagsInput.Label>
 			{/if}
@@ -55,7 +55,7 @@
 						<TagsInput.ItemPreview
 							class={cn(
 								'inline-flex items-center gap-1 rounded bg-surface-2 py-0.5 pr-1 pl-2 text-sm',
-								'data-highlighted:bg-primary/10 data-disabled:opacity-50'
+								'data-disabled:opacity-50 data-highlighted:bg-primary/10'
 							)}
 						>
 							<TagsInput.ItemText>{value}</TagsInput.ItemText>

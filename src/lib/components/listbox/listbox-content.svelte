@@ -20,7 +20,7 @@
 <Listbox.Content
 	{...restProps}
 	class={cn(
-		'flex min-h-0 w-full flex-1 flex-col overflow-y-auto outline-none bg-surface-document rounded p-1 border scrollbar-thin',
+		'flex min-h-0 w-full flex-1 scrollbar-thin flex-col overflow-y-auto rounded border bg-surface-document p-1 outline-none',
 		className
 	)}
 >

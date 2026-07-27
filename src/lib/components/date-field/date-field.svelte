@@ -105,7 +105,7 @@
 
 <DateInput.RootProvider value={dateInput}>
 	{#if label}
-		<DateInput.Label class="text-sm font-medium leading-none">
+		<DateInput.Label class="text-sm leading-none font-medium">
 			{label}
 			<Field.RequiredIndicator />
 		</DateInput.Label>
@@ -126,7 +126,7 @@
 					</DateInput.SegmentContext>
 				</DateInput.SegmentGroup>
 				<DatePicker.Trigger
-					class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1 shadow-sm hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-50"
+					class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1 shadow-sm hover:bg-surface-2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50"
 				>
 					<PhCalendarBlank class="size-4" />
 				</DatePicker.Trigger>

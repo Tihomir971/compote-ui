@@ -14,7 +14,7 @@
 	class={cn(
 		'group absolute inset-y-0 left-0 z-20 flex w-16 flex-col overflow-hidden',
 		'border-r border-border bg-surface-1 transition-[width] duration-200',
-		'hover:w-60 focus-within:w-60 data-expanded:w-60',
+		'focus-within:w-60 hover:w-60 data-expanded:w-60',
 		className
 	)}
 	{...rest}
