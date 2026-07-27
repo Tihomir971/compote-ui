@@ -14,7 +14,11 @@ export type DataTableColumnType =
 	| 'phone'
 	| 'date'
 	| 'time'
-	| 'date-time';
+	| 'date-time'
+	// Layout-only: carries no value to format or filter. Exists so an actions
+	// column picks up sensible defaults (see TYPE_DEFAULTS) instead of opting
+	// out of sorting/hiding/filtering by hand at every call site.
+	| 'action';
 export type DataTableCellRenderer<T extends RowData> = (
 	value: unknown,
 	row: T

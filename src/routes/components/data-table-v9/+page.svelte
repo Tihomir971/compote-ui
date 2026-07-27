@@ -3,6 +3,7 @@
 	import * as DataTable from '$lib/components/data-table-v9';
 	import * as VirtualDataTable from '$lib/components/data-table-v9/virtual';
 	import { makeData, type Person } from './makeData.ts';
+	import RowActionsCell from './RowActionsCell.svelte';
 
 	type TypesRow = {
 		label: string;
@@ -83,7 +84,16 @@
 		typesCol.accessor('phoneVal', { header: 'Phone', type: 'phone' }),
 		typesCol.accessor('dateVal', { header: 'Date', type: 'date' }),
 		typesCol.accessor('timeVal', { header: 'Time', type: 'time' }),
-		typesCol.accessor('datetimeVal', { header: 'Date-Time', type: 'date-time' })
+		typesCol.accessor('datetimeVal', { header: 'Date-Time', type: 'date-time' }),
+		// Action column: an icon-sm button must not make the row taller than the
+		// text rows beside it.
+		typesCol.accessorFn(() => null, {
+			id: 'actions',
+			header: '',
+			type: 'action',
+			cellComponent: RowActionsCell,
+			cellProps: (_value, row) => ({ label: row.label })
+		})
 	]);
 
 	const typesTable = DataTable.createTable({

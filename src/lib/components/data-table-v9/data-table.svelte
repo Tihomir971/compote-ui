@@ -113,7 +113,7 @@
 							{@const meta = getColumnMeta(cell.column.columnDef)}
 							<td
 								class={cn(
-									'truncate border-b border-b-surface-2 px-3 py-2 group-last/row:border-b-0',
+									'h-9 truncate border-b border-b-surface-2 px-3 py-0 align-middle group-last/row:border-b-0',
 									alignClass(meta?.align),
 									cell.column.getIsPinned() && 'bg-(--row-bg)'
 								)}

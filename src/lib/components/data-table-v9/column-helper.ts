@@ -31,7 +31,13 @@ type GroupColumnOptions<T extends RowData> = Omit<
 	| 'formatLocale'
 >;
 
-type TypeDefaults = { align?: DataTableAlign; size?: number; enableSorting?: boolean };
+type TypeDefaults = {
+	align?: DataTableAlign;
+	size?: number;
+	enableSorting?: boolean;
+	enableHiding?: boolean;
+	enableColumnFilter?: boolean;
+};
 
 const TYPE_DEFAULTS: Partial<Record<string, TypeDefaults>> = {
 	number: { align: 'right', size: 120 },
@@ -42,7 +48,14 @@ const TYPE_DEFAULTS: Partial<Record<string, TypeDefaults>> = {
 	'date-time': { align: 'center', size: 160 },
 	boolean: { align: 'center', size: 90 },
 	url: { align: 'center', size: 60, enableSorting: false },
-	phone: { align: 'left', size: 160 }
+	phone: { align: 'left', size: 160 },
+	action: {
+		align: 'center',
+		size: 60,
+		enableSorting: false,
+		enableHiding: false,
+		enableColumnFilter: false
+	}
 };
 
 function applyTypeDefaults<T extends { type?: string; align?: string; enableSorting?: boolean }>(
