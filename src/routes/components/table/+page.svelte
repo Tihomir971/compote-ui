@@ -100,31 +100,23 @@
 									<Button
 										variant="ghost"
 										size="icon-sm"
-										aria-label="Decrease quantity"
 										onclick={() => decrementQuantity(cartItem)}
 									>
-										<PhMinus class="size-4" />
+										<PhMinus />
 									</Button>
 									<span class="w-8 text-center font-medium">{cartItem.quantity}</span>
 									<Button
 										variant="ghost"
 										size="icon-sm"
-										aria-label="Increase quantity"
 										onclick={() => incrementQuantity(cartItem)}
 									>
-										<PhPlus class="size-4" />
+										<PhPlus />
 									</Button>
 								</div>
 							</Table.Cell>
 							<Table.Cell class="text-center">
-								<Button
-									variant="ghost"
-									size="icon-sm"
-									aria-label="Remove item"
-									class="text-danger hover:bg-danger/10"
-									onclick={() => removeItem(cartItem)}
-								>
-									<PhX class="size-4" />
+								<Button variant="destructive" size="icon-sm" onclick={() => removeItem(cartItem)}>
+									<PhX />
 								</Button>
 							</Table.Cell>
 						</Table.Row>
