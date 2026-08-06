@@ -12,8 +12,8 @@ export type DataTableHeaderSection = 'left' | 'center' | 'right';
  *
  * Writable slice atoms are rune-backed, so reading them inside a $derived
  * registers the dependency. Derived table APIs (getRowModel, header groups,
- * getVisibleLeafColumns, …) are not reliably tracked by the beta adapter, so
- * each derived below first reads the slices its result depends on.
+ * getVisibleLeafColumns, …) aren't themselves reactive, so each derived below
+ * first reads the slices its result depends on.
  */
 export function createTableViewState<T extends RowData>(getTable: () => DataTableInstance<T>) {
 	const table = $derived.by(getTable);

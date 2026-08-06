@@ -13,7 +13,7 @@ import {
 	type RowSelectionState
 } from '@tanstack/svelte-table';
 import { useLocaleContext } from '@ark-ui/svelte/locale';
-import { onDestroy, untrack, type Component } from 'svelte';
+import { onDestroy, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
 import { TYPE_NUMBER_FORMAT_DEFAULTS, type DataTableInstance } from './data-table-utils';
@@ -111,27 +111,6 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			sorting: options.initialState?.sorting ?? [],
 			columnFilters: options.initialState?.columnFilters ?? []
 		}
-	});
-
-	// The svelte adapter's internal $effect.pre only tracks `data` and `state` — not
-	// `columns` — so reactive add/remove/reorder of columns never reaches the table.
-	// Track the derived column defs here and push them through setOptions ourselves.
-	// Re-supply the `data` getter so spreading `prev` doesn't freeze data reactivity.
-	// CAUTION: upstream guidance says a second setOptions sync can race the adapter's
-	// own $effect.pre (which getter-merges the original options on data/state change).
-	// Both syncs write consistent values here, but revisit if the beta adapter ever
-	// starts tracking `columns` itself.
-	$effect.pre(() => {
-		const columns = columnDefs;
-		untrack(() => {
-			table.setOptions((prev) => ({
-				...prev,
-				get data() {
-					return options.data;
-				},
-				columns
-			}));
-		});
 	});
 
 	// Notify consumers of visibility changes without taking control of the slice

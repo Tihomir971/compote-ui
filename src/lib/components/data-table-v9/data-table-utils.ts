@@ -16,10 +16,10 @@ import type { DataTableFeatures } from './features';
 export type DataTableInstance<T extends RowData> = SvelteTable<DataTableFeatures, T>;
 
 // Structural subset of the view state (see table-view-state.svelte.ts) that the
-// style helpers below read to register reactive dependencies. The beta adapter
-// does not reliably track derived table APIs (getStart, getSize, …) inside
-// $derived/template expressions, so each helper explicitly reads the slices its
-// output depends on.
+// style helpers below read to register reactive dependencies. Derived table APIs
+// (getStart, getSize, …) aren't themselves reactive inside $derived/template
+// expressions, so each helper explicitly reads the state slices its output
+// depends on.
 export type DataTableTrackedState = {
 	columnPinning: ColumnPinningState;
 	columnResizing: TableState<DataTableFeatures>['columnResizing'];
