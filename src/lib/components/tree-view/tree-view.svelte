@@ -111,11 +111,11 @@
 			{#snippet render(tree)}
 				<Button
 					variant="outline"
-					size="icon-lg"
+					size="icon"
 					title="Collapse all"
 					onclick={() => tree().collapse()}
 				>
-					<PhArrowsInSimple class="size-4" />
+					<PhArrowsInSimple />
 				</Button>
 			{/snippet}
 		</TreeView.Context>
@@ -123,10 +123,10 @@
 			<Field.Root>
 				<Field.Input bind:value={searchTerm} placeholder="Search...">
 					{#snippet startIcon()}
-						<PhMagnifyingGlass class="size-4" />
+						<PhMagnifyingGlass />
 					{/snippet}
 					{#snippet endIcon()}
-						<Button variant="ghost" size="icon" onclick={() => (searchTerm = '')}>
+						<Button variant="ghost" size="icon-sm" onclick={() => (searchTerm = '')}>
 							<PhX />
 						</Button>
 					{/snippet}

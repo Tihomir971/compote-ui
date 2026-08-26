@@ -31,7 +31,7 @@
 		)}
 	/>
 	{#if endIcon}
-		<div class="absolute inset-y-0 right-0 flex items-center justify-end p-0.5">
+		<div class="absolute inset-y-0 right-0 flex items-center justify-end">
 			<div class="flex h-full min-w-8 items-center justify-center">
 				{@render endIcon()}
 			</div>
