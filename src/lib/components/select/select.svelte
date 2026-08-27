@@ -14,7 +14,6 @@
 		placeholder,
 		layout = 'vertical',
 		size = 'default',
-		name,
 		invalid,
 		readOnly,
 		disabled,
@@ -94,5 +93,5 @@
 			</Select.Content>
 		</Select.Positioner>
 	</Portal>
-	<input type="hidden" {name} value={value ?? ''} />
+	<Select.HiddenSelect />
 </Select.Root>
