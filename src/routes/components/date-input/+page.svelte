@@ -18,6 +18,15 @@
 	const todayDate = today(localTimeZone);
 	const minDate = todayDate;
 	const maxDate = todayDate.add({ months: 6 });
+
+	let formDate = $state('2025-06-15');
+	let formDateTime = $state('2025-07-11T10:12:01.982258+00:00');
+	let submitted = $state('');
+
+	function dumpForm(event: SubmitEvent & { currentTarget: HTMLFormElement }) {
+		event.preventDefault();
+		submitted = JSON.stringify([...new FormData(event.currentTarget)]);
+	}
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -112,5 +121,31 @@
 		<div class="flex flex-col gap-4">
 			<DateInput label="Date" disabled />
 		</div>
+	</section>
+	<section>
+		<h2 class="mb-4 text-lg font-semibold">In a form</h2>
+		<p class="mb-3 text-sm text-ink-dim">
+			The hidden input submits a canonical ISO string, never the locale-formatted display value. The
+			German field below still <em>displays</em> <code>15.6.2025</code> while submitting ISO.
+		</p>
+		<form class="flex flex-col gap-4" onsubmit={dumpForm}>
+			<DateInput label="Start date" name="startDate" bind:value={formDate} />
+			<DateInput
+				label="Starts at (minute granularity)"
+				name="startsAt"
+				granularity="minute"
+				bind:value={formDateTime}
+			/>
+			<DateInput label="German locale" name="germanDate" locale="de-DE" bind:value={formDate} />
+			<button
+				type="submit"
+				class="h-9 w-fit rounded-md bg-primary px-4 text-sm text-ink-inverse focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+			>
+				Submit
+			</button>
+			<p class="text-sm break-all text-ink-dim">
+				Submitted: <strong>{submitted || 'none'}</strong>
+			</p>
+		</form>
 	</section>
 </div>

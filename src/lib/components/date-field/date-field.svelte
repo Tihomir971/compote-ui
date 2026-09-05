@@ -4,7 +4,7 @@
 	import { Field } from '@ark-ui/svelte/field';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
 	import { CalendarDateTime, getLocalTimeZone } from '@internationalized/date';
-	import { toDateValue, fromDateValue, dateValueShape } from '$lib/utils/date';
+	import { toDateValue, fromDateValue, dateValueShape, dateValueToString } from '$lib/utils/date';
 	import type { DateValueShape } from '$lib/utils/date';
 	import { PhCalendarBlank } from '$lib/icons';
 	import type { DateFieldProps } from './types';
@@ -97,6 +97,9 @@
 		required,
 		invalid,
 		timeZone: tz,
+		// Submit a canonical ISO string rather than zag's locale-formatted display
+		// string. Only feeds the hidden input's value; segments are formatted separately.
+		format: (date) => dateValueToString(date),
 		onValueChange(details) {
 			datePicker().setValue(details.value);
 		}

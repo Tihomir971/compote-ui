@@ -18,6 +18,14 @@
 		const d = new Date(date.year, date.month - 1, date.day);
 		return d.getDay() === 0 || d.getDay() === 6;
 	}
+
+	let formValue = $state<DateValue[]>([]);
+	let submitted = $state('');
+
+	function dumpForm(event: SubmitEvent & { currentTarget: HTMLFormElement }) {
+		event.preventDefault();
+		submitted = JSON.stringify([...new FormData(event.currentTarget)]);
+	}
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -74,5 +82,25 @@
 		<div class="flex flex-col gap-4">
 			<DateRangeField label="Date range" disabled />
 		</div>
+	</section>
+	<section>
+		<h2 class="mb-4 text-lg font-semibold">In a form</h2>
+		<p class="mb-3 text-sm text-ink-dim">
+			A <code>name</code> of <code>stay</code> submits two ISO fields, <code>stayStart</code> and
+			<code>stayEnd</code>. The names stay the same however many dates are picked; an unpicked end
+			date submits as an empty string.
+		</p>
+		<form class="flex flex-col gap-4" onsubmit={dumpForm}>
+			<DateRangeField label="Stay" name="stay" bind:value={formValue} />
+			<button
+				type="submit"
+				class="h-9 w-fit rounded-md bg-primary px-4 text-sm text-ink-inverse focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+			>
+				Submit
+			</button>
+			<p class="text-sm break-all text-ink-dim">
+				Submitted: <strong>{submitted || 'none'}</strong>
+			</p>
+		</form>
 	</section>
 </div>

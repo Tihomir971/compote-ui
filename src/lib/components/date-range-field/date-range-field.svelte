@@ -3,6 +3,7 @@
 	import { DateInput, useDateInput } from '@ark-ui/svelte/date-input';
 	import { Field } from '@ark-ui/svelte/field';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
+	import { dateValueToString } from '$lib/utils/date';
 	import { PhCalendarBlank } from '$lib/icons';
 	import type { DateRangeFieldProps } from './types';
 	import DatePickerCalendar from '../date-picker/date-picker-calendar.svelte';
@@ -104,5 +105,21 @@
 			<DatePickerCalendar />
 		</DatePicker.RootProvider>
 	</DateInput.Control>
-	<DateInput.HiddenInput {name} />
+	<!-- Ark's HiddenInput would submit locale-formatted strings under names that
+	     flip between `name` and `name[0]`/`name[1]` depending on how many dates are
+	     selected. Plain inputs give stable names and canonical ISO values. -->
+	{#if name}
+		<input
+			type="hidden"
+			name="{name}Start"
+			{disabled}
+			value={value[0] ? dateValueToString(value[0]) : ''}
+		/>
+		<input
+			type="hidden"
+			name="{name}End"
+			{disabled}
+			value={value[1] ? dateValueToString(value[1]) : ''}
+		/>
+	{/if}
 </DateInput.RootProvider>

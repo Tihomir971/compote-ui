@@ -20,6 +20,8 @@ bun run <script>
 | Purpose         | Command                                    |
 | --------------- | ------------------------------------------ |
 | Dev server      | `bun run dev`                              |
+| Test            | `bun run test`                             |
+| Test (watch)    | `bun run test:watch`                       |
 | Type-check      | `bun run check`                            |
 | Lint            | `bun run lint`                             |
 | Format          | `bun run format`                           |
@@ -38,6 +40,29 @@ bun run <script>
 - Components go in `src/lib/` and must be exported from `src/lib/index.ts`.
 - The built package outputs to `dist/` (gitignored). Run `bun run build` to generate it.
 - `src/routes/` is the dev playground only — not part of the published package.
+
+## Testing
+
+**Vitest 5**, configured under `test.projects` in `vite.config.ts`. There is one project, `server`
+(`environment: 'node'`) — no browser and no jsdom.
+
+- `src/**/*.test.ts` — runs in the `server` project.
+- `src/**/*.svelte.test.ts` — deliberately **excluded**. That glob is reserved for browser-mode
+  component tests (`vitest-browser-svelte` + `@vitest/browser-playwright`, the setup `npx sv add
+vitest` generates). Add that second project only if a component grows interaction logic worth
+  testing; don't add it to test Ark UI's own machines.
+
+Two things are worth testing here:
+
+1. **Pure logic** — `src/lib/utils/`. Cheap, fast, no DOM. See `src/lib/utils/date.test.ts`.
+2. **Render contracts** — what a component actually emits, asserted against the SSR output via
+   `render()` from `svelte/server`. No browser needed. This is how the "does this component submit
+   the right thing" class of bug gets caught; see `src/lib/components/date-hidden-input.test.ts`.
+
+`expect.requireAssertions` is on, so every test must assert something.
+
+Do not write tests that re-verify Ark UI behavior (popup opening, segment keyboard nav) — that is
+covered upstream and is expensive and brittle here.
 
 ## Code Style
 
@@ -87,7 +112,11 @@ When you add a new component or make significant changes to an existing one:
    - Add an entry to the `navItems` array in `src/routes/components/nav-items.ts`, keeping entries in alphabetical order.
      The playground uses a vertical sidebar navigation on the left and routed pages on the right.
 
-2. **Update the compote-ui skill** — the skill lives at `~/.claude/skills/compote-ui/references/`. Add or update the relevant reference file (e.g. `display.md`, `form.md`, `layout.md`). Document the component anatomy, props, and a minimal usage example.
+2. **Cover any submit/render contract with a test** — if the component takes a `name`, emits hidden
+   inputs, or transforms a bound value, add an SSR assertion under `src/lib/components/`. Extract
+   non-trivial logic into `src/lib/utils/` and unit-test it there.
+
+3. **Update the compote-ui skill** — the skill lives at `~/.claude/skills/compote-ui/references/`. Add or update the relevant reference file (e.g. `display.md`, `form.md`, `layout.md`). Document the component anatomy, props, and a minimal usage example.
 
 ## Svelte Component Authoring
 
