@@ -81,42 +81,103 @@ describe('DateRangeField submits a stable pair of names', () => {
 	const start = new CalendarDate(2025, 6, 1);
 	const end = new CalendarDate(2025, 6, 15);
 
-	it('submits both ends of a complete range', () => {
-		expect(
-			submitted(DateRangeField as Component<never>, { name: 'stay', value: [start, end] })
-		).toEqual([
+	it('expands the `name` shorthand into a Start/End pair', () => {
+		expect(submitted(DateRangeField as Component<never>, { name: 'stay', start, end })).toEqual([
 			{ name: 'stayStart', value: '2025-06-01', disabled: false },
 			{ name: 'stayEnd', value: '2025-06-15', disabled: false }
 		]);
 	});
 
+	it('uses startName/endName verbatim when given', () => {
+		expect(
+			submitted(DateRangeField as Component<never>, {
+				startName: 'stay_start',
+				endName: 'stay_end',
+				start,
+				end
+			})
+		).toEqual([
+			{ name: 'stay_start', value: '2025-06-01', disabled: false },
+			{ name: 'stay_end', value: '2025-06-15', disabled: false }
+		]);
+	});
+
+	it('lets startName/endName override the shorthand', () => {
+		const names = submitted(DateRangeField as Component<never>, {
+			name: 'stay',
+			startName: 'from',
+			endName: 'until',
+			start,
+			end
+		}).map((i) => i.name);
+		expect(names).toEqual(['from', 'until']);
+	});
+
 	it('submits an empty end while only the start is picked', () => {
-		expect(submitted(DateRangeField as Component<never>, { name: 'stay', value: [start] })).toEqual(
-			[
-				{ name: 'stayStart', value: '2025-06-01', disabled: false },
-				{ name: 'stayEnd', value: '', disabled: false }
-			]
-		);
+		expect(submitted(DateRangeField as Component<never>, { name: 'stay', start })).toEqual([
+			{ name: 'stayStart', value: '2025-06-01', disabled: false },
+			{ name: 'stayEnd', value: '', disabled: false }
+		]);
 	});
 
 	it('keeps the names identical however many dates are picked', () => {
-		const names = (value: CalendarDate[]) =>
-			submitted(DateRangeField as Component<never>, { name: 'stay', value }).map((i) => i.name);
-		expect(names([])).toEqual(['stayStart', 'stayEnd']);
-		expect(names([start])).toEqual(['stayStart', 'stayEnd']);
-		expect(names([start, end])).toEqual(['stayStart', 'stayEnd']);
+		const names = (props: Record<string, unknown>) =>
+			submitted(DateRangeField as Component<never>, { name: 'stay', ...props }).map((i) => i.name);
+		expect(names({})).toEqual(['stayStart', 'stayEnd']);
+		expect(names({ start })).toEqual(['stayStart', 'stayEnd']);
+		expect(names({ start, end })).toEqual(['stayStart', 'stayEnd']);
+	});
+
+	// Each end accepts a DateValue, an ISO/DB string or a native Date. Whichever
+	// notation goes in, ISO comes out — the server contract never varies.
+	it.each([
+		['a DateValue', start, '2025-06-01'],
+		['an ISO string', '2025-06-01', '2025-06-01'],
+		['a Supabase timestamptz string', '2025-06-01 00:00:00+00', '2025-06-01T00:00:00.000Z'],
+		['a native Date', new Date('2025-06-01T00:00:00Z'), '2025-06-01T00:00:00.000Z']
+	])('submits ISO when the start is bound as %s', (_label, bound, expected) => {
+		expect(
+			submitted(DateRangeField as Component<never>, { name: 'stay', start: bound })[0]
+		).toEqual({ name: 'stayStart', value: expected, disabled: false });
+	});
+
+	it.each([
+		['null', null],
+		['undefined', undefined]
+	])('submits an empty string when the start is %s', (_label, bound) => {
+		expect(
+			submitted(DateRangeField as Component<never>, { name: 'stay', start: bound })[0]
+		).toEqual({ name: 'stayStart', value: '', disabled: false });
+	});
+
+	it('mixes notations across the two ends without changing the output', () => {
+		const values = submitted(DateRangeField as Component<never>, {
+			name: 'stay',
+			start: '2025-06-01',
+			end: new Date('2025-06-15T00:00:00Z')
+		}).map((i) => i.value);
+		expect(values).toEqual(['2025-06-01', '2025-06-15T00:00:00.000Z']);
 	});
 
 	it('marks both inputs disabled so neither is submitted', () => {
 		const inputs = submitted(DateRangeField as Component<never>, {
 			name: 'stay',
-			value: [start, end],
+			start,
+			end,
 			disabled: true
 		});
 		expect(inputs.map((i) => i.disabled)).toEqual([true, true]);
 	});
 
-	it('renders no hidden inputs without a name', () => {
-		expect(submitted(DateRangeField as Component<never>, { value: [start, end] })).toEqual([]);
+	it('renders no hidden inputs without any name', () => {
+		expect(submitted(DateRangeField as Component<never>, { start, end })).toEqual([]);
+	});
+
+	// zag reads the range positionally, so a lone end would silently become the start.
+	it('drops an end bound without a start', () => {
+		expect(submitted(DateRangeField as Component<never>, { name: 'stay', end })).toEqual([
+			{ name: 'stayStart', value: '', disabled: false },
+			{ name: 'stayEnd', value: '', disabled: false }
+		]);
 	});
 });
