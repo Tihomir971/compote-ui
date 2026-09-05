@@ -23,6 +23,12 @@ function submitted(component: Component<never>, props: Record<string, unknown>):
 	}));
 }
 
+/** The segment kinds rendered, in order (`day`, `hour`, `timeZoneName`, ...). */
+function segmentTypes(component: Component<never>, props: Record<string, unknown>): string[] {
+	const { body } = render(component as Component, { props });
+	return [...body.matchAll(/data-type="([a-zA-Z]+)"/g)].map(([, type]) => type);
+}
+
 /** The text a user actually sees — segments, not the hidden input. */
 function visibleText(component: Component<never>, props: Record<string, unknown>): string {
 	const { body } = render(component as Component, { props });
@@ -71,6 +77,36 @@ describe('locale affects the display, never the submitted value', () => {
 
 	it('still displays the German format', () => {
 		expect(visibleText(DateInput as Component<never>, props)).toContain('15.6.2025');
+	});
+});
+
+// `hideTimeZone` is a zag date-input prop, so it is not inherited from the
+// date-picker props DateField/DateRangeField extend — each has to forward it.
+describe('the time-zone segment is hidden by default', () => {
+	const props = { value: '2025-07-11T10:12:01.982258+00:00', granularity: 'minute' };
+
+	it.each([
+		['DateInput', DateInput],
+		['DateField', DateField]
+	])('%s renders no timeZoneName segment', (_label, component) => {
+		expect(segmentTypes(component as Component<never>, props)).not.toContain('timeZoneName');
+	});
+
+	it.each([
+		['DateInput', DateInput],
+		['DateField', DateField]
+	])('%s renders one when hideTimeZone is false', (_label, component) => {
+		expect(
+			segmentTypes(component as Component<never>, { ...props, hideTimeZone: false })
+		).toContain('timeZoneName');
+	});
+
+	it('DateRangeField hides it too', () => {
+		const types = segmentTypes(DateRangeField as Component<never>, {
+			start: '2025-07-11T10:12:01.982258+00:00',
+			granularity: 'minute'
+		});
+		expect(types).not.toContain('timeZoneName');
 	});
 });
 

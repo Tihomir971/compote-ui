@@ -25,6 +25,7 @@
 		locale: localeProp,
 		granularity,
 		hourCycle,
+		hideTimeZone = true,
 		onValueChange
 	}: DateFieldProps = $props();
 
@@ -89,6 +90,7 @@
 		locale: resolvedLocale,
 		granularity: granularity ?? 'day',
 		hourCycle,
+		hideTimeZone,
 		value: datePicker().value,
 		min,
 		max,

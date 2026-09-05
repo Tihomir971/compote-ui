@@ -31,4 +31,10 @@ export interface DateRangeFieldProps extends Omit<
 	endName?: string;
 	granularity?: 'day' | 'hour' | 'minute' | 'second';
 	hourCycle?: 12 | 24;
+	/**
+	 * Hide the trailing time-zone segment (e.g. `GMT+2`) that a zoned value shows
+	 * at time granularity. Defaults to `true`, matching `DateInput`. Not inherited
+	 * from Ark: `hideTimeZone` is a date-input prop, not a date-picker one.
+	 */
+	hideTimeZone?: boolean;
 }

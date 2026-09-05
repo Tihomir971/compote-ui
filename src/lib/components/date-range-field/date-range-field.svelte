@@ -28,6 +28,7 @@
 		timeZone,
 		granularity,
 		hourCycle,
+		hideTimeZone = true,
 		onValueChange
 	}: DateRangeFieldProps = $props();
 
@@ -102,6 +103,7 @@
 		selectionMode: 'range',
 		granularity: granularity ?? 'day',
 		hourCycle,
+		hideTimeZone,
 		value: datePicker().value,
 		min,
 		max,
