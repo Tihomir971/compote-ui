@@ -20,6 +20,14 @@ export interface FieldRootProps extends FieldRootBaseProps {
 	form?: FormAdapter;
 	field?: string;
 	helperText?: string;
+	/**
+	 * Error to render below the control, for validation that does not go through
+	 * a {@link FormAdapter} (e.g. a SvelteKit remote form's `field.issues()`).
+	 * Passing it also marks the field invalid unless `invalid` is set explicitly.
+	 * Ignored when `form` and `field` are given — the adapter wins, as it does
+	 * for `invalid` and `required`.
+	 */
+	errorText?: string | null;
 }
 
 export interface FieldLabelProps extends FieldLabelBaseProps {

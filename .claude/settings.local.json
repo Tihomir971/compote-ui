@@ -16,7 +16,8 @@
 			"Skill(svelte:svelte-code-writer)",
 			"Skill(svelte:svelte-code-writer:*)",
 			"PowerShell(bunx @tanstack/intent@latest load \"@tanstack/svelte-table#svelte/table-state\")",
-			"PowerShell(bunx @tanstack/intent@latest load \"@tanstack/svelte-table#svelte/production-readiness\")"
+			"PowerShell(bunx @tanstack/intent@latest load \"@tanstack/svelte-table#svelte/production-readiness\")",
+			"Bash(grep -n \"form\\\\b\\\\|field\\\\b\\\\|FormAdapter\" \"C:/Users/tihom/.claude/skills/compote-ui/references/form.md\" | head -40)"
 		]
 	},
 	"plansDirectory": "./docs/plans"

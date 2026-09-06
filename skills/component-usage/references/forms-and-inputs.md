@@ -19,6 +19,25 @@ With a form adapter, `Field.Root` derives invalid/required state and renders the
 </Field.Root>
 ```
 
+`errorText` is the per-field route to that same line, for validation that doesn't fit the adapter's
+`Record<string, string[]>` shape — a SvelteKit remote form's `field.issues()`, say. **Passing it
+marks the field invalid**; an explicit `invalid` still wins, and the adapter wins over both.
+
+```svelte
+<Field.Root required errorText={fields.password.issues()?.[0]?.message}>
+	<PasswordInput label="Password" name={fields.password.as('password').name} />
+</Field.Root>
+```
+
+One message, not a list: several errors on one value are usually stages of the same judgement, and a
+stack that grows and shrinks per keystroke is what makes a form jump. Independent requirements (a
+password policy) belong in a persistent checklist shown from the start, not in error text. Where you
+genuinely need several, `<Field.ErrorText>` children still work.
+
+The message line is **always held open**, so a field never changes height when an error appears and
+nothing below it moves. Errors and `helperText` share that line — an error replaces the helper
+rather than stacking under it.
+
 List controls use `{ value, label }` items:
 
 ```svelte

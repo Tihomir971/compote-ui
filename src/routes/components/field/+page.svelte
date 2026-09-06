@@ -8,6 +8,11 @@
 	let fieldInvalidEmail = $state('invalid-email');
 	let fieldSearch = $state('');
 	let fieldUsername = $state('');
+	let fieldPassword = $state('');
+
+	const passwordError = $derived(
+		fieldPassword.length > 0 && fieldPassword.length < 8 ? 'At least 8 characters.' : null
+	);
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -112,6 +117,33 @@
 				<Field.Label>Password</Field.Label>
 				<Field.Input type="password" placeholder="••••••••" />
 				<Field.ErrorText>Password is required.</Field.ErrorText>
+			</Field.Root>
+		</div>
+	</section>
+
+	<section>
+		<h2 class="mb-2 text-lg font-semibold">errorText</h2>
+		<p class="mb-4 text-sm text-ink-dim">
+			For validation that doesn't go through a <code>FormAdapter</code> — a SvelteKit remote form's
+			<code>field.issues()</code>, say. Type one or two characters: the error takes over the
+			helper's line rather than stacking under it, and passing it is enough to mark the field
+			invalid. Nothing below moves, because the message line is held open even when there is no
+			message — which is what the third field shows.
+		</p>
+		<div class="flex flex-col gap-4">
+			<Field.Root required helperText="At least 8 characters." errorText={passwordError}>
+				<Field.Label>Password</Field.Label>
+				<Field.Input bind:value={fieldPassword} type="password" placeholder="••••••••" />
+			</Field.Root>
+
+			<Field.Root errorText="This one is always in error.">
+				<Field.Label>No invalid prop passed</Field.Label>
+				<Field.Input value="wrong" />
+			</Field.Root>
+
+			<Field.Root>
+				<Field.Label>No message of any kind</Field.Label>
+				<Field.Input placeholder="Still the same height" />
 			</Field.Root>
 		</div>
 	</section>
