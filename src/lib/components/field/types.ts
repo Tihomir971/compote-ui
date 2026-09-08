@@ -28,6 +28,13 @@ export interface FieldRootProps extends FieldRootBaseProps {
 	 * for `invalid` and `required`.
 	 */
 	errorText?: string | null;
+	/**
+	 * Whether to drop the spacer that otherwise holds the message line open
+	 * when there is no error or helper text to show. Defaults to `false`. Set
+	 * to `true` for a field that never surfaces validation (a toolbar search
+	 * box, say), so it doesn't reserve height it will never use.
+	 */
+	hideMessageLine?: boolean;
 }
 
 export interface FieldLabelProps extends FieldLabelBaseProps {

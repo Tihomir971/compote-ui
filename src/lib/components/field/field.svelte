@@ -8,6 +8,7 @@
 		field,
 		helperText,
 		errorText,
+		hideMessageLine = false,
 		class: className,
 		invalid,
 		required,
@@ -37,7 +38,7 @@
 		<Field.ErrorText>{resolvedError}</Field.ErrorText>
 	{:else if helperText}
 		<Field.HelperText>{helperText}</Field.HelperText>
-	{:else}
+	{:else if !hideMessageLine}
 		<!--
 			Holds the message line open so a field does not change height when an
 			error appears. `1lh` resolves against this element's own line-height, so

@@ -36,7 +36,14 @@ genuinely need several, `<Field.ErrorText>` children still work.
 
 The message line is **always held open**, so a field never changes height when an error appears and
 nothing below it moves. Errors and `helperText` share that line — an error replaces the helper
-rather than stacking under it.
+rather than stacking under it. For a field that never surfaces validation (a toolbar search box,
+say), pass `hideMessageLine` to drop the spacer entirely:
+
+```svelte
+<Field.Root hideMessageLine>
+	<Field.Input bind:value={search} placeholder="Search..." />
+</Field.Root>
+```
 
 List controls use `{ value, label }` items:
 

@@ -104,3 +104,21 @@ describe('the message line is always held open', () => {
 		expect(message({})).toBe('');
 	});
 });
+
+// The escape hatch for fields that never surface validation (a toolbar search
+// box, say) and so should not reserve height for a message they'll never show.
+describe('hideMessageLine', () => {
+	it('drops the spacer when set to true', () => {
+		expect(hasSpacer({ hideMessageLine: true })).toBe(false);
+	});
+
+	it('still renders an error over the opt-out', () => {
+		expect(message({ hideMessageLine: true, errorText: 'Too short.' })).toBe('Too short.');
+	});
+
+	it('still renders helperText over the opt-out', () => {
+		expect(message({ hideMessageLine: true, helperText: 'At least 8 characters.' })).toBe(
+			'At least 8 characters.'
+		);
+	});
+});
