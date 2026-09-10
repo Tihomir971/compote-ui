@@ -120,7 +120,7 @@
 			{/snippet}
 		</TreeView.Context>
 		<div class="flex-1">
-			<Field.Root>
+			<Field.Root hideMessageLine>
 				<Field.Input bind:value={searchTerm} placeholder="Search...">
 					{#snippet startIcon()}
 						<PhMagnifyingGlass />

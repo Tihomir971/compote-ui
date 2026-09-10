@@ -37,7 +37,7 @@
 	}
 </script>
 
-<Field.Root class={cn(className)}>
+<Field.Root class={cn(className)} hideMessageLine>
 	<Field.Input {placeholder} value={globalFilter} oninput={handleInput}>
 		{#snippet startIcon()}
 			<PhMagnifyingGlass class="size-4" />

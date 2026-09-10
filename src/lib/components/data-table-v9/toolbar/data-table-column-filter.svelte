@@ -290,7 +290,7 @@
 											: allOptions}
 										{@const selected = getSelectValues(column)}
 										<div class="flex flex-col gap-1">
-											<Field.Root>
+											<Field.Root hideMessageLine>
 												<Field.Input
 													placeholder="Search..."
 													value={search}
@@ -325,7 +325,7 @@
 											</ScrollArea.Root>
 										</div>
 									{:else}
-										<Field.Root>
+										<Field.Root hideMessageLine>
 											<Field.Input
 												placeholder="Search..."
 												value={localText[column.id] ?? ''}
