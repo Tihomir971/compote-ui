@@ -23,6 +23,7 @@ export const navItems: NavItem[] = [
 	{ label: 'Field', slug: 'field' },
 	{ label: 'Fieldset', slug: 'fieldset' },
 	{ label: 'File Upload', slug: 'file-upload' },
+	{ label: 'Format', slug: 'format' },
 	{ label: 'Hover Card', slug: 'hover-card' },
 	{ label: 'Image Cropper', slug: 'image-cropper' },
 	{ label: 'Image Upload', slug: 'image-upload' },

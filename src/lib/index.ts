@@ -144,6 +144,14 @@ export type { DateValue } from '@internationalized/date';
 export { Portal } from '@ark-ui/svelte/portal';
 export type { PortalProps } from '@ark-ui/svelte/portal';
 
+export { FormatByte, FormatNumber, FormatRelativeTime, FormatTime } from '@ark-ui/svelte/format';
+export type {
+	FormatByteProps,
+	FormatNumberProps,
+	FormatRelativeTimeProps,
+	FormatTimeProps
+} from '@ark-ui/svelte/format';
+
 export { createListCollection, createTreeCollection } from './utils/collections';
 export type { ListItem, TreeItem } from './utils/collections';
 export type { ListCollection, TreeCollection } from '@ark-ui/svelte/collection';
