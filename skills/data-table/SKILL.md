@@ -8,7 +8,7 @@ description: >
 metadata:
   type: composition
   library: compote-ui
-  library_version: '0.62.1'
+  library_version: '0.74.2'
 requires:
   - component-usage
   - theming

@@ -8,7 +8,7 @@ description: >
 metadata:
   type: core
   library: compote-ui
-  library_version: '0.62.1'
+  library_version: '0.74.2'
 sources:
   - src/lib/index.ts
   - src/lib/utils/collections.ts
@@ -19,6 +19,17 @@ sources:
   - src/lib/components/file-upload/file-upload.svelte
   - src/lib/components/image-cropper/image-cropper.svelte
   - src/lib/utils/image-processing.ts
+  - src/lib/components/app-shell
+  - src/lib/components/nav-rail
+  - src/lib/components/badge/badge.svelte
+  - src/lib/components/table
+  - src/lib/components/qr-code/qr-code.svelte
+  - src/lib/components/progress
+  - src/lib/components/tags-input/tags-input.svelte
+  - src/lib/components/menu
+  - src/lib/components/popover
+  - src/lib/components/hover-card
+  - src/lib/components/tooltip
 ---
 
 # Compote UI — Component Usage
@@ -189,7 +200,7 @@ Correct:
 
 Icon-only controls need an accessible name.
 
-Source: `C:/Users/tihom/.claude/skills/compote-ui/references/button.md`
+Source: `references/buttons.md`
 
 ## References
 

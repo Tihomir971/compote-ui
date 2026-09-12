@@ -1,5 +1,54 @@
 # Files And Images
 
+## ImageUpload
+
+Single-image upload/replace/delete widget — a preview box with a corner `Menu` badge
+(click-triggered, works on touch) opening "Upload/Replace" and "Delete" actions. Selecting a file
+routes through `ImageCropDialog` automatically, so this is the easiest way to wire up an avatar or
+banner uploader — no manual dropzone/crop-dialog wiring needed.
+
+```svelte
+<script lang="ts">
+	let avatarUrl = $state<string | undefined>();
+
+	function handleChange(blob: Blob) {
+		const form = new FormData();
+		form.append('image', blob, 'avatar.webp');
+		fetch('/upload', { method: 'POST', body: form });
+	}
+</script>
+
+<ImageUpload
+	bind:value={avatarUrl}
+	aspectRatio={1}
+	onChange={handleChange}
+	onDelete={() => {
+		/* clear on server */
+	}}
+/>
+
+<!-- Square/banner variant: size + shape via class -->
+<ImageUpload
+	bind:value={bannerUrl}
+	shape="square"
+	class="aspect-video w-64"
+	aspectRatio={16 / 9}
+	uploadLabel="Upload banner"
+/>
+```
+
+Props: `value?: string` (bindable), `shape?: 'circle' | 'square'` (default `'circle'`),
+`class?: ClassValue` (default `'size-24'` — controls preview box sizing), `aspectRatio?: number`
+(passed to the crop dialog), `processOptions?: ProcessImageOptions`,
+`uploadLabel?`/`replaceLabel?`/`deleteLabel?: string`, `onChange: (blob: Blob) => void`,
+`onDelete: () => void`.
+
+`value` is updated internally to an object URL after a successful crop; the previous object URL is
+revoked automatically. Delete has **no built-in confirmation** — wrap `onDelete` in your own
+`AlertDialog` if you need one.
+
+## ImageCropDialog
+
 Use `ImageCropDialog` for the complete upload/crop flow.
 
 ```svelte

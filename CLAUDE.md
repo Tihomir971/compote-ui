@@ -116,7 +116,7 @@ When you add a new component or make significant changes to an existing one:
    inputs, or transforms a bound value, add an SSR assertion under `src/lib/components/`. Extract
    non-trivial logic into `src/lib/utils/` and unit-test it there.
 
-3. **Update the compote-ui skill** — the skill lives at `~/.claude/skills/compote-ui/references/`. Add or update the relevant reference file (e.g. `display.md`, `form.md`, `layout.md`). Document the component anatomy, props, and a minimal usage example.
+3. **Update the `skills/` tree** — the package-shipped skill lives at `skills/` in this repo (published to npm alongside `dist/`, discoverable via `@tanstack/intent`). Add or update the relevant reference file under `skills/component-usage/references/` (e.g. `layout-and-display.md`, `forms-and-inputs.md`, `overlays-and-floating-ui.md`) — document the component anatomy, props, and a minimal usage example. If the export map in `skills/component-usage/references/component-export-map.md` doesn't list the new component, add it there too. For data-table changes, update `skills/data-table/` instead. Bump `metadata.library_version` in the touched `SKILL.md` file(s) to match the version being published.
 
 ## Svelte Component Authoring
 
