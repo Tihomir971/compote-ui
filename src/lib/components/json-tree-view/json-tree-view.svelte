@@ -47,7 +47,7 @@
 	{...rootProps}
 >
 	<JsonTreeView.Tree
-		class={cn('flex flex-col leading-[1.8] [&_svg]:size-3', treeClass)}
+		class={cn('flex flex-col leading-[1.8] **:data-[slot=icon]:size-3 [&_svg]:size-3', treeClass)}
 		{indentGuide}
 		{renderValue}
 	>

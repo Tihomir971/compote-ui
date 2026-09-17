@@ -1,7 +1,7 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 
 export const badge = tv({
-	base: 'inline-flex w-fit items-center gap-1 rounded px-2 py-0.5 text-xs font-medium [&_svg]:size-3 [&_svg]:shrink-0',
+	base: 'inline-flex w-fit items-center gap-1 rounded px-2 py-0.5 text-xs font-medium **:data-[slot=icon]:size-3 [&_svg]:size-3 [&_svg]:shrink-0',
 	variants: {
 		variant: {
 			solid: '',
