@@ -71,7 +71,7 @@
 		"@tailwindcss/vite": "^4.3.3",
 		"@tanstack/intent": "^0.4.0",
 		"@tanstack/svelte-table": "9.2.4",
-		"@types/node": "^22.20.3",
+		"@types/node": "^24",
 		"eslint": "^10.10.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.23.0",
