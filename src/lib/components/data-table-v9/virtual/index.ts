@@ -3,6 +3,7 @@ export {
 	ColumnFilter,
 	ColumnVisibility,
 	FlexRender,
+	Refresh,
 	Search,
 	Title,
 	Toolbar,

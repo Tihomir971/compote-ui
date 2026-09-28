@@ -154,13 +154,38 @@ bun add @tanstack/svelte-virtual
 ### Label toolbar triggers
 
 `ColumnFilter` and `ColumnVisibility` render icon-only outline buttons by default (funnel and
-columns icons, with `aria-label` set). Pass `triggerLabel` to show text instead. `ColumnFilter`
+columns icons, with `aria-label` and a hover tooltip). Pass `triggerLabel` to show text instead. `ColumnFilter`
 shows the active filter count as a badge in the corner either way.
 
 ```svelte
 <DataTable.ColumnFilter {table} triggerLabel="Filters" />
 <DataTable.ColumnVisibility {table} triggerLabel="Columns" />
 ```
+
+### Add a refresh button
+
+`DataTable.Refresh` is data-source agnostic: it calls `onRefresh` and, if that returns a promise,
+spins its icon and sets `aria-busy` until the promise settles. Clicks while busy are ignored. Pass
+`loading` to force the busy state when a refresh starts elsewhere (polling, another control).
+
+```svelte
+<script lang="ts">
+	import { getInvoices } from './invoices.remote';
+
+	const invoices = getInvoices();
+</script>
+
+<DataTable.Toolbar>
+	{#snippet right()}
+		<DataTable.Refresh onRefresh={() => invoices.refresh()} />
+		<DataTable.ColumnFilter {table} />
+		<DataTable.ColumnVisibility {table} />
+	{/snippet}
+</DataTable.Toolbar>
+```
+
+Props: `onRefresh: () => void | Promise<unknown>`, `loading?: boolean`, `triggerLabel?: string`
+(icon-only with `aria-label="Refresh"` and a tooltip when omitted). Errors thrown by `onRefresh` are not caught.
 
 ## Common Mistakes
 

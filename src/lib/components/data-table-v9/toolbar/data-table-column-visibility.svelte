@@ -1,6 +1,7 @@
 <script lang="ts" generics="T extends RowData">
 	import type { RowData } from '@tanstack/svelte-table';
 	import * as Popover from '../../popover';
+	import * as Tooltip from '../../tooltip';
 	import * as ScrollArea from '../../scroll-area';
 	import Checkbox from '../../checkbox/checkbox.svelte';
 	import type { DataTableInstance } from '../data-table-utils';
@@ -14,6 +15,9 @@
 	};
 
 	let { table, triggerLabel }: Props = $props();
+
+	// Popover and tooltip share one trigger element, so both must agree on its id.
+	const triggerId = $props.id();
 
 	const columnVisibility = $derived.by(() => table.atoms.columnVisibility.get());
 	const allLeafColumns = $derived.by(() => {
@@ -35,17 +39,25 @@
 	}
 </script>
 
-<Popover.Root positioning={{ placement: 'bottom-end' }}>
-	<Popover.Trigger
-		aria-label={triggerLabel ? undefined : 'Columns'}
-		class={button({ variant: 'outline', size: triggerLabel ? 'default' : 'icon' })}
-	>
-		{#if triggerLabel}
-			{triggerLabel}
-		{:else}
-			<PhColumns />
-		{/if}
-	</Popover.Trigger>
+<Popover.Root ids={{ trigger: triggerId }} positioning={{ placement: 'bottom-end' }}>
+	<Tooltip.Root ids={{ trigger: triggerId }} disabled={!!triggerLabel}>
+		<Tooltip.Trigger>
+			{#snippet asChild(tooltipProps)}
+				<Popover.Trigger
+					{...tooltipProps()}
+					aria-label={triggerLabel ? undefined : 'Columns'}
+					class={button({ variant: 'outline', size: triggerLabel ? 'default' : 'icon' })}
+				>
+					{#if triggerLabel}
+						{triggerLabel}
+					{:else}
+						<PhColumns />
+					{/if}
+				</Popover.Trigger>
+			{/snippet}
+		</Tooltip.Trigger>
+		<Tooltip.Content>Columns</Tooltip.Content>
+	</Tooltip.Root>
 
 	<Popover.Content class="w-56 p-2" showArrow={false}>
 		<div class="border-b border-surface-3 px-2 pb-2">

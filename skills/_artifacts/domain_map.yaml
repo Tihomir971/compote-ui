@@ -440,7 +440,7 @@ skills:
       - 'compote-ui/data-table subpath'
       - 'createDataTableColumnHelper'
       - 'createTable'
-      - 'DataTable.Root, Toolbar, Title, Search, ColumnFilter, ColumnVisibility'
+      - 'DataTable.Root, Toolbar, Title, Search, Refresh, ColumnFilter, ColumnVisibility'
       - 'column types and type defaults'
       - 'TanStack Table v9 feature registry'
       - 'compote-ui/data-table/virtual and @tanstack/svelte-virtual'

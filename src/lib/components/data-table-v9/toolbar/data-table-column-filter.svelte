@@ -2,6 +2,7 @@
 	import { onDestroy } from 'svelte';
 	import type { Column, RowData } from '@tanstack/svelte-table';
 	import * as Popover from '../../popover';
+	import * as Tooltip from '../../tooltip';
 	import * as ScrollArea from '../../scroll-area';
 	import Checkbox from '../../checkbox/checkbox.svelte';
 	import { cn } from 'tailwind-variants';
@@ -20,6 +21,9 @@
 	};
 
 	let { table, triggerLabel }: Props = $props();
+
+	// Popover and tooltip share one trigger element, so both must agree on its id.
+	const triggerId = $props.id();
 
 	let localText: Record<string, string> = $state({});
 	let localNumMin: Record<string, number> = $state({});
@@ -168,30 +172,38 @@
 	}
 </script>
 
-<Popover.Root positioning={{ placement: 'bottom-end' }}>
-	<Popover.Trigger
-		aria-label={triggerLabel ? undefined : 'Filters'}
-		class={button({
-			variant: 'outline',
-			size: triggerLabel ? 'default' : 'icon',
-			class: 'relative'
-		})}
-	>
-		{#if triggerLabel}
-			{triggerLabel}
-		{:else}
-			<PhFunnel />
-		{/if}
-		{#if activeCount > 0}
-			<Badge
-				variant="solid"
-				color="primary"
-				class="absolute top-0 right-0 size-4 translate-x-1/3 -translate-y-1/3 justify-center px-1 text-xs"
-			>
-				{activeCount > 99 ? '99+' : activeCount}
-			</Badge>
-		{/if}
-	</Popover.Trigger>
+<Popover.Root ids={{ trigger: triggerId }} positioning={{ placement: 'bottom-end' }}>
+	<Tooltip.Root ids={{ trigger: triggerId }} disabled={!!triggerLabel}>
+		<Tooltip.Trigger>
+			{#snippet asChild(tooltipProps)}
+				<Popover.Trigger
+					{...tooltipProps()}
+					aria-label={triggerLabel ? undefined : 'Filters'}
+					class={button({
+						variant: 'outline',
+						size: triggerLabel ? 'default' : 'icon',
+						class: 'relative'
+					})}
+				>
+					{#if triggerLabel}
+						{triggerLabel}
+					{:else}
+						<PhFunnel />
+					{/if}
+					{#if activeCount > 0}
+						<Badge
+							variant="solid"
+							color="primary"
+							class="absolute top-0 right-0 size-4 translate-x-1/3 -translate-y-1/3 justify-center px-1 text-xs"
+						>
+							{activeCount > 99 ? '99+' : activeCount}
+						</Badge>
+					{/if}
+				</Popover.Trigger>
+			{/snippet}
+		</Tooltip.Trigger>
+		<Tooltip.Content>Filters</Tooltip.Content>
+	</Tooltip.Root>
 
 	<Popover.Content class="flex w-70 flex-col gap-3 p-3" showArrow={false}>
 		<div class="mr-1 flex items-center justify-between py-2.5">

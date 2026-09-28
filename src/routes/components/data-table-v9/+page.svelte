@@ -290,8 +290,9 @@
 		enableRowSelection: true
 	});
 
-	function refreshData() {
-		console.log('New data');
+	// Simulated fetch so the Refresh button's busy state is visible.
+	async function refreshData() {
+		await new Promise((resolve) => setTimeout(resolve, 800));
 		data = makeData(100);
 	}
 
@@ -362,7 +363,7 @@
 				<DataTable.Search table={personTable} class="w-56" />
 			{/snippet}
 			{#snippet right()}
-				<Button variant="outline" onclick={refreshData}>Regenerate Data</Button>
+				<DataTable.Refresh onRefresh={refreshData} />
 				<DataTable.ColumnFilter table={personTable} />
 				<DataTable.ColumnVisibility table={personTable} />
 			{/snippet}
@@ -401,7 +402,7 @@
 				<VirtualDataTable.Search table={virtualTable} class="w-56" />
 			{/snippet}
 			{#snippet right()}
-				<Button variant="outline" onclick={refreshVirtualData}>Regenerate Data</Button>
+				<VirtualDataTable.Refresh onRefresh={refreshVirtualData} triggerLabel="Regenerate" />
 				<VirtualDataTable.ColumnFilter table={virtualTable} />
 				<VirtualDataTable.ColumnVisibility table={virtualTable} />
 			{/snippet}

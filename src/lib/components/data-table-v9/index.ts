@@ -7,6 +7,7 @@ export { default as Toolbar } from './toolbar/data-table-toolbar.svelte';
 export { default as ColumnFilter } from './toolbar/data-table-column-filter.svelte';
 export { default as ColumnVisibility } from './toolbar/data-table-column-visibility.svelte';
 export { default as Search } from './toolbar/data-table-search.svelte';
+export { default as Refresh } from './toolbar/data-table-refresh.svelte';
 
 export type { CreateDataTableOptions, DataTableInstance } from './create-table.svelte';
 export type {
