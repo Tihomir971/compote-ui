@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Popover } from '@ark-ui/svelte/popover';
-	import type { PopoverTriggerBaseProps } from '@ark-ui/svelte/popover';
+	import type { PopoverTriggerProps } from '@ark-ui/svelte/popover';
 	import type { ClassValue } from 'svelte/elements';
 	import type { Snippet } from 'svelte';
 
-	interface Props extends PopoverTriggerBaseProps {
+	interface Props extends Omit<PopoverTriggerProps, 'class' | 'children'> {
 		class?: ClassValue;
 		children: Snippet;
 	}

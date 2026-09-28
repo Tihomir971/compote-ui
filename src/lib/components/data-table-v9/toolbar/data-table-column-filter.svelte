@@ -9,14 +9,17 @@
 	import type { DataTableFeatures } from '../features';
 	import NumberInput from '../../number-input/number-input.svelte';
 	import * as Field from '../../field';
-	import { PhX, PhMagnifyingGlass } from '$lib/icons';
+	import Badge from '../../badge/badge.svelte';
+	import { button } from '../../button/button.variants';
+	import { PhX, PhMagnifyingGlass, PhFunnel } from '$lib/icons';
 
 	type Props = {
 		table: DataTableInstance<T>;
+		/** Text label for the trigger. When omitted, a funnel icon is shown instead. */
 		triggerLabel?: string;
 	};
 
-	let { table, triggerLabel = 'Filters' }: Props = $props();
+	let { table, triggerLabel }: Props = $props();
 
 	let localText: Record<string, string> = $state({});
 	let localNumMin: Record<string, number> = $state({});
@@ -167,11 +170,26 @@
 
 <Popover.Root positioning={{ placement: 'bottom-end' }}>
 	<Popover.Trigger
-		class="flex h-9 cursor-pointer items-center rounded-md border border-surface-3 bg-surface-1 px-3 text-sm font-medium text-ink shadow-sm outline-none hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+		aria-label={triggerLabel ? undefined : 'Filters'}
+		class={button({
+			variant: 'outline',
+			size: triggerLabel ? 'default' : 'icon',
+			class: 'relative'
+		})}
 	>
-		{triggerLabel}
+		{#if triggerLabel}
+			{triggerLabel}
+		{:else}
+			<PhFunnel />
+		{/if}
 		{#if activeCount > 0}
-			({activeCount})
+			<Badge
+				variant="solid"
+				color="primary"
+				class="absolute top-0 right-0 size-4 translate-x-1/3 -translate-y-1/3 justify-center px-1 text-xs"
+			>
+				{activeCount > 99 ? '99+' : activeCount}
+			</Badge>
 		{/if}
 	</Popover.Trigger>
 

@@ -8,7 +8,7 @@ description: >
 metadata:
   type: composition
   library: compote-ui
-  library_version: '0.74.2'
+  library_version: '0.75.5'
 requires:
   - component-usage
   - theming
@@ -149,6 +149,17 @@ bun add @tanstack/svelte-virtual
 <div class="h-96 min-h-0">
 	<VirtualDataTable.Root {table} caption="Large dataset" />
 </div>
+```
+
+### Label toolbar triggers
+
+`ColumnFilter` and `ColumnVisibility` render icon-only outline buttons by default (funnel and
+columns icons, with `aria-label` set). Pass `triggerLabel` to show text instead. `ColumnFilter`
+shows the active filter count as a badge in the corner either way.
+
+```svelte
+<DataTable.ColumnFilter {table} triggerLabel="Filters" />
+<DataTable.ColumnVisibility {table} triggerLabel="Columns" />
 ```
 
 ## Common Mistakes

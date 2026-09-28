@@ -4,13 +4,16 @@
 	import * as ScrollArea from '../../scroll-area';
 	import Checkbox from '../../checkbox/checkbox.svelte';
 	import type { DataTableInstance } from '../data-table-utils';
+	import { button } from '../../button/button.variants';
+	import { PhColumns } from '$lib/icons';
 
 	type Props = {
 		table: DataTableInstance<T>;
+		/** Text label for the trigger. When omitted, a columns icon is shown instead. */
 		triggerLabel?: string;
 	};
 
-	let { table, triggerLabel = 'Columns' }: Props = $props();
+	let { table, triggerLabel }: Props = $props();
 
 	const columnVisibility = $derived.by(() => table.atoms.columnVisibility.get());
 	const allLeafColumns = $derived.by(() => {
@@ -34,9 +37,14 @@
 
 <Popover.Root positioning={{ placement: 'bottom-end' }}>
 	<Popover.Trigger
-		class="flex h-9 cursor-pointer items-center rounded-md border border-surface-3 bg-surface-1 px-3 text-sm font-medium text-ink shadow-sm outline-none hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+		aria-label={triggerLabel ? undefined : 'Columns'}
+		class={button({ variant: 'outline', size: triggerLabel ? 'default' : 'icon' })}
 	>
-		{triggerLabel}
+		{#if triggerLabel}
+			{triggerLabel}
+		{:else}
+			<PhColumns />
+		{/if}
 	</Popover.Trigger>
 
 	<Popover.Content class="w-56 p-2" showArrow={false}>
