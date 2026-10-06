@@ -34,7 +34,8 @@
 		"!skills/_artifacts"
 	],
 	"sideEffects": [
-		"**/*.css"
+		"**/*.css",
+		".svelte-kit/**"
 	],
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
