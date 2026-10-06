@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Combobox, Field } from '$lib';
+	import { Combobox, Field } from '#lib';
 
 	const languageItems = [
 		{ value: 'english', label: 'English' },

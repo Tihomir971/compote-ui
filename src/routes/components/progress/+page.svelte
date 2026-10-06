@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ProgressLinear, ProgressCircular } from '$lib';
+	import { ProgressLinear, ProgressCircular } from '#lib';
 
 	let value = $state(60);
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ImageUpload } from '$lib';
+	import { ImageUpload } from '#lib';
 
 	let avatarValue = $state<string | undefined>(undefined);
 	let bannerValue = $state<string | undefined>(undefined);

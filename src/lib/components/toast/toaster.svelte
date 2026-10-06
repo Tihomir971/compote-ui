@@ -5,12 +5,12 @@
 	import { cn } from 'tailwind-variants';
 	import type { ClassValue } from 'tailwind-variants';
 	import { toast } from './toast.js';
-	import PhX from '$lib/icons/PhX.svelte';
-	import PhCheckCircle from '$lib/icons/PhCheckCircle.svelte';
-	import PhXCircle from '$lib/icons/PhXCircle.svelte';
-	import PhWarning from '$lib/icons/PhWarning.svelte';
-	import PhInfo from '$lib/icons/PhInfo.svelte';
-	import PhCircleNotch from '$lib/icons/PhCircleNotch.svelte';
+	import PhX from '#lib/icons/PhX.svelte';
+	import PhCheckCircle from '#lib/icons/PhCheckCircle.svelte';
+	import PhXCircle from '#lib/icons/PhXCircle.svelte';
+	import PhWarning from '#lib/icons/PhWarning.svelte';
+	import PhInfo from '#lib/icons/PhInfo.svelte';
+	import PhCircleNotch from '#lib/icons/PhCircleNotch.svelte';
 
 	interface Props {
 		class?: ClassValue;

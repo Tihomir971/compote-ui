@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { ImageCropper, useImageCropper } from '@ark-ui/svelte/image-cropper';
 	import type { ImageCropperProps } from './types';
-	import { Button } from '$lib';
-	import { cropImage } from '$lib/utils/image-processing';
-	import type { ProcessImageOptions } from '$lib/utils/image-processing';
-	import { PhArrowClockwise, PhArrowCounterClockwise } from '$lib/icons';
+	import { Button } from '#lib';
+	import { cropImage } from '#lib/utils/image-processing';
+	import type { ProcessImageOptions } from '#lib/utils/image-processing';
+	import { PhArrowClockwise, PhArrowCounterClockwise } from '#lib/icons';
 
 	let {
 		src = $bindable(),

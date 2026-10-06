@@ -2,7 +2,7 @@
 	import { Checkbox } from '@ark-ui/svelte/checkbox';
 	import { cn } from 'tailwind-variants';
 	import type { CheckboxProps as Props } from './checkbox.types.ts';
-	import { PhCheck, PhMinus } from '$lib/icons';
+	import { PhCheck, PhMinus } from '#lib/icons';
 
 	let {
 		checked = $bindable(),

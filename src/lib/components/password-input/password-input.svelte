@@ -2,7 +2,7 @@
 	import { Field } from '@ark-ui/svelte/field';
 	import { PasswordInput } from '@ark-ui/svelte/password-input';
 	import type { PasswordInputProps } from './types';
-	import { PhEye, PhEyeSlash } from '$lib/icons';
+	import { PhEye, PhEyeSlash } from '#lib/icons';
 
 	let {
 		value = $bindable(),

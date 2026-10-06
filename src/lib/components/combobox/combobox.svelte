@@ -8,7 +8,7 @@
 	import type { ComboboxProps } from './types';
 	import { createListCollection, type ListItem } from '../../utils/collections';
 	import { cn } from 'tailwind-variants';
-	import { PhCaretDown, PhCheck, PhX } from '$lib/icons';
+	import { PhCaretDown, PhCheck, PhX } from '#lib/icons';
 
 	let {
 		value = $bindable(),

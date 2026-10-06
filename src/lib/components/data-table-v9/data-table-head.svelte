@@ -2,7 +2,7 @@
 	import type { HeaderGroup, RowData } from '@tanstack/svelte-table';
 	import { FlexRender } from '@tanstack/svelte-table';
 	import { cn } from 'tailwind-variants';
-	import { PhCaretDown, PhCaretUp } from '$lib/icons';
+	import { PhCaretDown, PhCaretUp } from '#lib/icons';
 	import type { DataTableInstance } from './data-table-utils';
 	import type { DataTableViewState } from './table-view-state.svelte';
 	import type { DataTableFeatures } from './features';

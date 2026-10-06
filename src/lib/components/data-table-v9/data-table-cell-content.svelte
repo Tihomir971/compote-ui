@@ -2,7 +2,7 @@
 	import type { Cell, RowData } from '@tanstack/svelte-table';
 	import { FlexRender } from '@tanstack/svelte-table';
 	import { cn } from 'tailwind-variants';
-	import { PhArrowSquareOut, PhCheck, PhPhone, PhX } from '$lib/icons';
+	import { PhArrowSquareOut, PhCheck, PhPhone, PhX } from '#lib/icons';
 	import type { DataTableFeatures } from './features';
 	import {
 		getBooleanCellValue,

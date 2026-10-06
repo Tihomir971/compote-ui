@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Dialog, Drawer, Select } from '$lib';
+	import { Button, Dialog, Drawer, Select } from '#lib';
 
 	let bottomOpen = $state(false);
 	let rightOpen = $state(false);

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TreeView, Menu } from '$lib';
+	import { TreeView, Menu } from '#lib';
 
 	const treeItems = [
 		{

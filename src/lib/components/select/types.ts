@@ -1,5 +1,5 @@
 import type { SelectRootBaseProps } from '@ark-ui/svelte/select';
-import type { ListItem } from '$lib/utils/collections';
+import type { ListItem } from '#lib/utils/collections';
 
 export interface SelectProps<T extends ListItem> extends Omit<
 	SelectRootBaseProps<T>,

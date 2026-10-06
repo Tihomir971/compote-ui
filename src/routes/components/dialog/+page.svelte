@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Dialog, AlertDialog } from '$lib';
+	import { Button, Dialog, AlertDialog } from '#lib';
 
 	let dialogOpen = $state(false);
 	let alertDialogOpen = $state(false);

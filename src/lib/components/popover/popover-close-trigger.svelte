@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Popover } from '@ark-ui/svelte/popover';
 	import type { PopoverCloseTriggerBaseProps } from '@ark-ui/svelte/popover';
-	import { PhX } from '$lib/icons';
+	import { PhX } from '#lib/icons';
 	import type { ClassValue } from 'svelte/elements';
 
 	interface Props extends PopoverCloseTriggerBaseProps {

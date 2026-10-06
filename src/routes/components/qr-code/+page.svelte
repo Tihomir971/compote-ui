@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { QrCode } from '$lib';
+	import { QrCode } from '#lib';
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">

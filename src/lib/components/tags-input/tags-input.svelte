@@ -3,7 +3,7 @@
 	import { useFieldContext } from '@ark-ui/svelte/field';
 	import { cn } from 'tailwind-variants';
 	import type { TagsInputProps } from './types';
-	import { PhX } from '$lib/icons';
+	import { PhX } from '#lib/icons';
 
 	let {
 		value = $bindable(),

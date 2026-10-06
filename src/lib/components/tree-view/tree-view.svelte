@@ -11,8 +11,8 @@
 		PhMagnifyingGlass,
 		PhMinus,
 		PhX
-	} from '$lib/icons';
-	import { Button, Field, ScrollArea } from '$lib';
+	} from '#lib/icons';
+	import { Button, Field, ScrollArea } from '#lib';
 	import { SvelteSet } from 'svelte/reactivity';
 
 	let {

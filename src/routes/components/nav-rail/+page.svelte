@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { AppShell, NavRail, Button } from '$lib';
-	import PhStar from '$lib/icons/PhStar.svelte';
-	import PhFileText from '$lib/icons/PhFileText.svelte';
-	import PhImage from '$lib/icons/PhImage.svelte';
-	import PhCalendarBlank from '$lib/icons/PhCalendarBlank.svelte';
-	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
-	import PhUser from '$lib/icons/PhUser.svelte';
+	import { AppShell, NavRail, Button } from '#lib';
+	import PhStar from '#lib/icons/PhStar.svelte';
+	import PhFileText from '#lib/icons/PhFileText.svelte';
+	import PhImage from '#lib/icons/PhImage.svelte';
+	import PhCalendarBlank from '#lib/icons/PhCalendarBlank.svelte';
+	import PhMagnifyingGlass from '#lib/icons/PhMagnifyingGlass.svelte';
+	import PhUser from '#lib/icons/PhUser.svelte';
 
 	const items = [
 		{ label: 'Dashboard', icon: PhStar },

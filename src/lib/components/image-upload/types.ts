@@ -1,5 +1,5 @@
 import type { ClassValue } from 'tailwind-variants';
-import type { ProcessImageOptions } from '$lib/utils/image-processing';
+import type { ProcessImageOptions } from '#lib/utils/image-processing';
 
 export type ImageUploadShape = 'circle' | 'square';
 

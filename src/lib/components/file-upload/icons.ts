@@ -6,7 +6,7 @@ import {
 	PhImage,
 	PhMicrosoftExcelLogo,
 	PhVideoCamera
-} from '$lib/icons';
+} from '#lib/icons';
 
 export const getFileIcon = (file: File) => {
 	const fileType = file.type;

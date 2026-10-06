@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PasswordInput } from '$lib';
+	import { PasswordInput } from '#lib';
 
 	let value = $state('');
 	let invalidValue = $state('bad-password');

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Button, LinkButton } from '$lib';
-	import PhCheck from '$lib/icons/PhCheck.svelte';
-	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
+	import { Button, LinkButton } from '#lib';
+	import PhCheck from '#lib/icons/PhCheck.svelte';
+	import PhMagnifyingGlass from '#lib/icons/PhMagnifyingGlass.svelte';
 
 	const variants = ['default', 'outline', 'ghost', 'destructive'] as const;
 	const sizes = ['sm', 'default', 'lg'] as const;

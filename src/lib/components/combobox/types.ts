@@ -1,5 +1,5 @@
 import type { ComboboxRootBaseProps } from '@ark-ui/svelte/combobox';
-import type { ListItem } from '$lib/utils/collections';
+import type { ListItem } from '#lib/utils/collections';
 
 export interface ComboboxProps<T extends ListItem> extends Omit<
 	ComboboxRootBaseProps<T>,

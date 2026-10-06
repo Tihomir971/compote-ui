@@ -4,9 +4,9 @@
 	import { Field } from '@ark-ui/svelte/field';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
 	import { getLocalTimeZone } from '@internationalized/date';
-	import { toDateValue, fromDateValue, dateValueShape, dateValueToString } from '$lib/utils/date';
-	import type { DateValueShape } from '$lib/utils/date';
-	import { PhCalendarBlank } from '$lib/icons';
+	import { toDateValue, fromDateValue, dateValueShape, dateValueToString } from '#lib/utils/date';
+	import type { DateValueShape } from '#lib/utils/date';
+	import { PhCalendarBlank } from '#lib/icons';
 	import type { DateRangeFieldProps } from './types';
 	import DatePickerCalendar from '../date-picker/date-picker-calendar.svelte';
 

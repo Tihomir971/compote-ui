@@ -12,7 +12,7 @@
 	import * as Field from '../../field';
 	import Badge from '../../badge/badge.svelte';
 	import { button } from '../../button/button.variants';
-	import { PhX, PhMagnifyingGlass, PhFunnel } from '$lib/icons';
+	import { PhX, PhMagnifyingGlass, PhFunnel } from '#lib/icons';
 
 	type Props = {
 		table: DataTableInstance<T>;

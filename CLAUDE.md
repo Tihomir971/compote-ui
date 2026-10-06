@@ -31,7 +31,7 @@ bun run <script>
 ## Framework & Versions
 
 - **Svelte 5** — runes mode is enabled project-wide (`$state`, `$derived`, `$effect`, `$props`). Do not use the legacy Options API (no `export let`, no `onMount` from svelte, no reactive statements `$:`).
-- **SvelteKit 2** — used as the dev harness; the actual output is a library package.
+- **SvelteKit 3** — used as the dev harness; the actual output is a library package. There is no `svelte.config.js` any more: options live in `svelte.options.js` and are passed to `sveltekit(...)` in `vite.config.ts`. `$lib` is now `#lib` (package.json `imports`).
 - **Ark UI** (`@ark-ui/svelte`) — headless component primitives, listed as a peer dependency. Build on top of these where possible; add custom components when Ark UI doesn't cover the use case.
 - **Tailwind CSS 4** — imported via `src/routes/layout.css`; use utility classes directly in components.
 
@@ -122,7 +122,7 @@ When you add a new component or make significant changes to an existing one:
 
 - Always use the Svelte MCP server when creating or editing `.svelte` files.
 - Components must be compatible with Svelte 5 runes; the `runes: true` compiler option is set globally.
-- The rune-mode workaround in `svelte.config.js` (excluding `node_modules`) will be removable in Svelte 6 — do not remove it now.
+- The rune-mode workaround in `svelte.options.js` (excluding `node_modules`) will be removable in Svelte 6 — do not remove it now.
 - The Prettier config's `tailwindStylesheet` points to `./src/routes/layout.css` — do not move that file without updating `.prettierrc`.
 
 <!-- intent-skills:start -->

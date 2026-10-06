@@ -2,8 +2,8 @@
 	import { cn } from 'tailwind-variants';
 	import * as Menu from '../menu';
 	import ImageCropDialog from '../image-crop-dialog/image-crop-dialog.svelte';
-	import { fileToDataUrl } from '$lib/utils/image-processing';
-	import { PhUploadSimple, PhImage, PhX } from '$lib/icons';
+	import { fileToDataUrl } from '#lib/utils/image-processing';
+	import { PhUploadSimple, PhImage, PhX } from '#lib/icons';
 	import type { ImageUploadProps } from './types';
 
 	let {

@@ -7,7 +7,7 @@
 	import type { PhoneInputProps } from './types';
 	import { createListCollection } from '../../utils/collections';
 	import { cn } from 'tailwind-variants';
-	import { PhCaretDown, PhCheck } from '$lib/icons';
+	import { PhCaretDown, PhCheck } from '#lib/icons';
 	import 'svelte-tel-input/styles/flags.css';
 
 	interface CountryItem {

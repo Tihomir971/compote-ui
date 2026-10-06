@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import type { DialogCloseTriggerBaseProps } from '@ark-ui/svelte/dialog';
-	import { PhX } from '$lib/icons';
+	import { PhX } from '#lib/icons';
 	import {
 		button,
 		type ButtonVariant,
 		type ButtonSize
-	} from '$lib/components/button/button.variants';
+	} from '#lib/components/button/button.variants';
 	import type { ClassValue } from 'tailwind-variants';
 
 	interface Props extends DialogCloseTriggerBaseProps {

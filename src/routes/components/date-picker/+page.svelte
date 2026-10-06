@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DatePicker } from '$lib';
+	import { DatePicker } from '#lib';
 	import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
 	import type { DateValue } from '@ark-ui/svelte/date-picker';
 

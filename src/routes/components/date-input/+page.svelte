@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { DateInput, getLocalTimeZone, parseAbsolute } from '$lib';
+	import { DateInput, getLocalTimeZone, parseAbsolute } from '#lib';
 	import { CalendarDate, today } from '@internationalized/date';
-	import type { DateInputDateValue } from '$lib';
+	import type { DateInputDateValue } from '#lib';
 
 	const localTimeZone = getLocalTimeZone();
 

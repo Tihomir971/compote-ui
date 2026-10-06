@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { FormatByte, FormatNumber, FormatRelativeTime, FormatTime } from '$lib';
+	import { FormatByte, FormatNumber, FormatRelativeTime, FormatTime } from '#lib';
 
 	const daysAgo = new Date(Date.now() - 1000 * 60 * 60 * 24 * 3);
 	const inTwoHours = new Date(Date.now() + 1000 * 60 * 60 * 2);

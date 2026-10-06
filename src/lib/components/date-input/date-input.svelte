@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { DateInput } from '@ark-ui/svelte/date-input';
 	import { Field, useFieldContext } from '@ark-ui/svelte/field';
-	import { toDateValue, fromDateValue, dateValueShape, dateValueToString } from '$lib/utils/date';
+	import { toDateValue, fromDateValue, dateValueShape, dateValueToString } from '#lib/utils/date';
 	import { getLocalTimeZone } from '@internationalized/date';
-	import type { DateValue, DateValueShape } from '$lib/utils/date';
+	import type { DateValue, DateValueShape } from '#lib/utils/date';
 	import type { DateInputProps } from './types';
 
 	let {

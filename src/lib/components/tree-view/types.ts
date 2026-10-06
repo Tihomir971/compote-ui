@@ -1,5 +1,5 @@
 import type { UseTreeViewProps } from '@ark-ui/svelte/tree-view';
-import type { TreeItem } from '$lib/utils/collections';
+import type { TreeItem } from '#lib/utils/collections';
 
 // UseTreeViewProps<T> already includes: selectionMode, selectedValue, expandedValue,
 // checkedValue, onSelectionChange, onExpandedChange, onCheckedChange, and more.

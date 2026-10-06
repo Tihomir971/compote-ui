@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Listbox } from '$lib';
+	import { Listbox } from '#lib';
 
 	const flatItems = [
 		{ value: 'apple', label: 'Apple' },

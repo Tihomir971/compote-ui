@@ -6,7 +6,7 @@
 	import Checkbox from '../../checkbox/checkbox.svelte';
 	import type { DataTableInstance } from '../data-table-utils';
 	import { button } from '../../button/button.variants';
-	import { PhColumns } from '$lib/icons';
+	import { PhColumns } from '#lib/icons';
 
 	type Props = {
 		table: DataTableInstance<T>;

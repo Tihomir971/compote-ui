@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AppShell, Button } from '$lib';
+	import { AppShell, Button } from '#lib';
 
 	const links = Array.from({ length: 20 }, (_, i) => `Navigation item ${i + 1}`);
 </script>

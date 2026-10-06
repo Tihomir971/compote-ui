@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { HoverCard } from '$lib';
-	import Button from '$lib/components/button/button.svelte';
+	import { HoverCard } from '#lib';
+	import Button from '#lib/components/button/button.svelte';
 	import type { Placement } from '@zag-js/popper';
 </script>
 

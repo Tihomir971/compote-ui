@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { navItems } from './nav-items';
-	import { ScrollArea } from '$lib';
+	import { ScrollArea } from '#lib';
 	import './layout.css';
 	// Supports weights 200-900
 	import '@fontsource-variable/nunito-sans/wght.css';

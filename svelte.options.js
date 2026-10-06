@@ -1,0 +1,20 @@
+import adapter from '@sveltejs/adapter-cloudflare';
+import { relative, sep } from 'node:path';
+
+/** Shared by `vite.config.ts` (via `sveltekit(...)`) and `eslint.config.js`. */
+export const svelteOptions = {
+	compilerOptions: {
+		// defaults to rune mode for the project, execept for `node_modules`. Can be removed in svelte 6.
+		runes: (/** @type {{ filename: string }} */ { filename }) => {
+			const relativePath = relative(import.meta.dirname, filename);
+			const pathSegments = relativePath.toLowerCase().split(sep);
+			const isExternalLibrary = pathSegments.includes('node_modules');
+
+			return isExternalLibrary ? undefined : true;
+		}
+	},
+	// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
+	// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
+	// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+	adapter: adapter()
+};

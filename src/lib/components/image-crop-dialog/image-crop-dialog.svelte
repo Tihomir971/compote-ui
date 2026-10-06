@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Dialog from '../dialog';
 	import ImageCropper from '../image-cropper/image-cropper.svelte';
-	import { Button } from '$lib';
-	import { cropImage, processImage } from '$lib/utils/image-processing';
+	import { Button } from '#lib';
+	import { cropImage, processImage } from '#lib/utils/image-processing';
 	import type { ImageCropperCropData } from '../image-cropper/types';
 	import type { ImageCropDialogProps } from './types';
 

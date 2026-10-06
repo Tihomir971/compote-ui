@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Field, Fieldset } from '$lib';
+	import { Field, Fieldset } from '#lib';
 
 	let name = $state('');
 	let email = $state('');

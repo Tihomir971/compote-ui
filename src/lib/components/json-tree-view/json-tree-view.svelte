@@ -6,7 +6,7 @@
 	} from '@ark-ui/svelte/json-tree-view';
 	import type { ClassValue } from 'svelte/elements';
 	import { cn } from 'tailwind-variants';
-	import { PhCaretRight } from '$lib/icons';
+	import { PhCaretRight } from '#lib/icons';
 
 	interface Props extends JsonTreeViewRootBaseProps {
 		class?: ClassValue;

@@ -3,7 +3,7 @@
 	import type { ListboxItemIndicatorBaseProps } from '@ark-ui/svelte/listbox';
 	import type { Snippet } from 'svelte';
 	import { cn } from 'tailwind-variants';
-	import { PhCheck } from '$lib/icons';
+	import { PhCheck } from '#lib/icons';
 	import type { ClassValue } from 'svelte/elements';
 
 	type Props = ListboxItemIndicatorBaseProps & {

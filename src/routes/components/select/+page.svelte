@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Select } from '$lib';
+	import { Select } from '#lib';
 
 	const selectItems = [
 		{ value: 'apple', label: 'Apple' },

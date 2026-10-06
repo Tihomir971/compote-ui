@@ -2,7 +2,7 @@
 	import { Drawer } from '@ark-ui/svelte/drawer';
 	import type { DrawerCloseTriggerBaseProps } from '@ark-ui/svelte/drawer';
 	import type { ClassValue } from 'svelte/elements';
-	import PhX from '$lib/icons/PhX.svelte';
+	import PhX from '#lib/icons/PhX.svelte';
 
 	interface Props extends DrawerCloseTriggerBaseProps {
 		class?: ClassValue;

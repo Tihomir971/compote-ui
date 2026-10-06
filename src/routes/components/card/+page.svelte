@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, Button, Splitter } from '$lib';
+	import { Card, Button, Splitter } from '#lib';
 </script>
 
 {#snippet leftPanel()}

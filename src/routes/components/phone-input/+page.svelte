@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PhoneInput } from '$lib';
+	import { PhoneInput } from '#lib';
 	import type { CountryCode } from 'svelte-tel-input/types';
 
 	let value = $state('');

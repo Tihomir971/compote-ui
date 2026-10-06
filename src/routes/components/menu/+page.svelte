@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Menu } from '$lib';
+	import { Menu } from '#lib';
 
 	let checked = $state(false);
 	let radioValue = $state('light');

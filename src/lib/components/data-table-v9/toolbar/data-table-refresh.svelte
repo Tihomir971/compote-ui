@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Tooltip from '../../tooltip';
-	import { PhArrowClockwise } from '$lib/icons';
+	import { PhArrowClockwise } from '#lib/icons';
 
 	type Props = {
 		/** Called on click. If it returns a promise, the button shows a busy state until it settles. */

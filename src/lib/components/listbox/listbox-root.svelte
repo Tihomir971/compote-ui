@@ -4,7 +4,7 @@
 	import { useFilter } from '@ark-ui/svelte/locale';
 	import type { Snippet } from 'svelte';
 	import type { ListCollection } from '@ark-ui/svelte/collection';
-	import type { ListItem } from '$lib/utils/collections';
+	import type { ListItem } from '#lib/utils/collections';
 	import { cn } from 'tailwind-variants';
 	import { setListboxContext } from './listbox-context';
 	import type { ClassValue } from 'svelte/elements';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Toast, toast } from '$lib';
+	import { Toast, toast } from '#lib';
 
 	function fakeRequest(shouldFail = false) {
 		return new Promise<string>((resolve, reject) => {

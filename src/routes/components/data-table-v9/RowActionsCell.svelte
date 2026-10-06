@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Button from '$lib/components/button/button.svelte';
-	import { PhEye } from '$lib/icons';
+	import Button from '#lib/components/button/button.svelte';
+	import { PhEye } from '#lib/icons';
 
 	let { label }: { label: string } = $props();
 </script>

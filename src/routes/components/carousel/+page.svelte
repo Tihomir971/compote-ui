@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, Carousel } from '$lib';
+	import { Card, Carousel } from '#lib';
 
 	const images = [
 		{

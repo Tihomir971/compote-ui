@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Switch } from '$lib';
+	import { Switch } from '#lib';
 
 	let switchChecked = $state(false);
 </script>

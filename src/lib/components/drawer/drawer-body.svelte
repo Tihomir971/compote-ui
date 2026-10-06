@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 	import { cn } from 'tailwind-variants';
-	import { ScrollArea } from '$lib';
+	import { ScrollArea } from '#lib';
 
 	interface Props {
 		class?: ClassValue;

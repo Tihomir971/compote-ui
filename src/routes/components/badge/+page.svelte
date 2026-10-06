@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Badge } from '$lib';
-	import { PhCheck, PhX } from '$lib/icons';
+	import { Badge } from '#lib';
+	import { PhCheck, PhX } from '#lib/icons';
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">

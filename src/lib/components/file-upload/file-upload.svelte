@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { FileUpload, type FileUploadFileError } from '@ark-ui/svelte/file-upload';
-	import { PhX } from '$lib/icons';
+	import { PhX } from '#lib/icons';
 	import type { FileUploadProps } from './types';
 	import { getAcceptAttribute } from './utils';
 	import { getFileIcon } from './icons';

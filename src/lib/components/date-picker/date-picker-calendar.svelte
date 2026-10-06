@@ -2,7 +2,7 @@
 	import { DatePicker } from '@ark-ui/svelte/date-picker';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { CalendarDateTime } from '@internationalized/date';
-	import { PhArrowLeft, PhArrowRight } from '$lib/icons';
+	import { PhArrowLeft, PhArrowRight } from '#lib/icons';
 	import type { DateValue } from '@ark-ui/svelte/date-picker';
 	import Select from '../select/select.svelte';
 

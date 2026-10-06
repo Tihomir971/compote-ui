@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { NumberInput } from '$lib';
+	import { NumberInput } from '#lib';
 
 	let numberInputValue = $state(1);
 	let numberCurrency = $state(1);

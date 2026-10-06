@@ -2,7 +2,7 @@
 	import { onDestroy } from 'svelte';
 	import type { RowData } from '@tanstack/svelte-table';
 	import { cn, type ClassValue } from 'tailwind-variants';
-	import { PhMagnifyingGlass, PhX } from '$lib/icons';
+	import { PhMagnifyingGlass, PhX } from '#lib/icons';
 	import * as Field from '../../field';
 	import type { DataTableInstance } from '../data-table-utils';
 

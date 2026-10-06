@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TagsInput } from '$lib';
+	import { TagsInput } from '#lib';
 
 	let frameworks = $state(['Svelte', 'React']);
 	let empty = $state<string[]>([]);

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Checkbox, CheckboxGroup } from '$lib';
+	import { Checkbox, CheckboxGroup } from '#lib';
 
 	let checked = $state(false);
 

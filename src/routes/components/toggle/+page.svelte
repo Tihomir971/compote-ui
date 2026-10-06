@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Toggle, ToggleGroup, Tooltip } from '$lib';
+	import { Toggle, ToggleGroup, Tooltip } from '#lib';
 
 	import PhBell from '~icons/ph/bell';
 	import PhHeart from '~icons/ph/heart';

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Button from '$lib/components/button/button.svelte';
-	import * as DataTable from '$lib/components/data-table-v9';
-	import * as VirtualDataTable from '$lib/components/data-table-v9/virtual';
+	import Button from '#lib/components/button/button.svelte';
+	import * as DataTable from '#lib/components/data-table-v9';
+	import * as VirtualDataTable from '#lib/components/data-table-v9/virtual';
 	import { makeData, type Person } from './makeData.ts';
 	import RowActionsCell from './RowActionsCell.svelte';
 

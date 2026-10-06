@@ -3,9 +3,9 @@
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { Select } from '@ark-ui/svelte/select';
 	import type { SelectProps } from './types';
-	import { createListCollection, type ListItem } from '$lib/utils/collections';
+	import { createListCollection, type ListItem } from '#lib/utils/collections';
 	import { cn } from 'tailwind-variants';
-	import { PhCaretDown, PhCheck } from '$lib/icons';
+	import { PhCaretDown, PhCheck } from '#lib/icons';
 
 	let {
 		value = $bindable(),

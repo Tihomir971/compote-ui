@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { JsonTreeView, ScrollArea } from '$lib';
+	import { JsonTreeView, ScrollArea } from '#lib';
 
 	const profile = {
 		name: 'Ada Lovelace',

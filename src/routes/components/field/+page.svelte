@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Field, ToggleGroup } from '$lib';
-	import PhMagnifyingGlass from '$lib/icons/PhMagnifyingGlass.svelte';
-	import PhX from '$lib/icons/PhX.svelte';
+	import { Field, ToggleGroup } from '#lib';
+	import PhMagnifyingGlass from '#lib/icons/PhMagnifyingGlass.svelte';
+	import PhX from '#lib/icons/PhX.svelte';
 	let fieldName = $state('');
 	let fieldEmail = $state('');
 	let fieldBio = $state('');

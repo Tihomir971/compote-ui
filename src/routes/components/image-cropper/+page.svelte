@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ImageCropper } from '$lib';
+	import { ImageCropper } from '#lib';
 	let imageCropperSrc = $state(
 		'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=800&h=600&fit=crop'
 	);

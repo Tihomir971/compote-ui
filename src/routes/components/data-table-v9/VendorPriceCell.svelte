@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
-	import * as Popover from '$lib/components/popover';
+	import * as Popover from '#lib/components/popover';
 
 	type VendorPrice = {
 		vendor: string;

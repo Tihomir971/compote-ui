@@ -2,7 +2,7 @@
 	import { Listbox } from '@ark-ui/svelte/listbox';
 	import type { ListboxContentBaseProps } from '@ark-ui/svelte/listbox';
 	import type { Snippet } from 'svelte';
-	import type { ListItem } from '$lib/utils/collections';
+	import type { ListItem } from '#lib/utils/collections';
 	import { cn } from 'tailwind-variants';
 	import { getListboxContext } from './listbox-context';
 	import type { ClassValue } from 'svelte/elements';

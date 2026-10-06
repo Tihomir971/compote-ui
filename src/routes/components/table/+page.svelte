@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Table, Button, Checkbox } from '$lib';
-	import { PhMinus, PhPlus, PhX } from '$lib/icons';
+	import { Table, Button, Checkbox } from '#lib';
+	import { PhMinus, PhPlus, PhX } from '#lib/icons';
 
 	type CartItem = { id: string; sku: string; name: string; price: number; quantity: number };
 
