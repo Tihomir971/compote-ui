@@ -13,6 +13,7 @@
 		percentVal: number;
 		booleanVal: boolean;
 		selectVal: string;
+		tagsVal: string[];
 		urlVal: string;
 		phoneVal: string;
 		dateVal: Date;
@@ -29,6 +30,7 @@
 			percentVal: 0.742,
 			booleanVal: true,
 			selectVal: 'Active',
+			tagsVal: ['Battery', 'Mains'],
 			urlVal: 'https://example.com',
 			phoneVal: '+12015550123',
 			dateVal: new Date('2024-03-15'),
@@ -43,6 +45,7 @@
 			percentVal: 0.123,
 			booleanVal: false,
 			selectVal: 'Inactive',
+			tagsVal: ['Battery', 'Battery'],
 			urlVal: 'https://svelte.dev',
 			phoneVal: '+381601234567',
 			dateVal: new Date('2025-11-01'),
@@ -57,6 +60,7 @@
 			percentVal: 0,
 			booleanVal: false,
 			selectVal: 'Pending',
+			tagsVal: [],
 			urlVal: '',
 			phoneVal: '',
 			dateVal: new Date('NaN'),
@@ -80,6 +84,8 @@
 		typesCol.accessor('percentVal', { header: 'Percent', type: 'percent' }),
 		typesCol.accessor('booleanVal', { header: 'Boolean', type: 'boolean' }),
 		typesCol.accessor('selectVal', { header: 'Select', type: 'select' }),
+		// An array value facets and filters per item; an empty array is the "(empty)" option.
+		typesCol.accessor('tagsVal', { header: 'Select (multi)', type: 'select' }),
 		typesCol.accessor('urlVal', { header: 'URL', type: 'url' }),
 		typesCol.accessor('phoneVal', { header: 'Phone', type: 'phone' }),
 		typesCol.accessor('dateVal', { header: 'Date', type: 'date' }),

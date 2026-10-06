@@ -58,6 +58,29 @@ Type defaults:
 
 Use one `grow: true` column to absorb extra horizontal space.
 
+## Select columns with multiple values
+
+A `type: 'select'` column may return an array (tags, multi-select attributes). The Funnel then
+lists each item as its own option with a row count, a row matches when any of its items is
+selected, and the cell renders the items joined with `, `. A row counts once per option even
+when its array repeats an item. Missing values — `null`, `undefined`, `''` or an empty array —
+share one `(empty)` option.
+
+The filter value is an array of selected options: each is the `String()` of the cell value, and
+the empty option is `null` — so a real `'null'` string stays its own option:
+
+```ts
+table.getColumn('tags')?.setFilterValue(['Battery', null]); // Battery or no tags
+```
+
+```ts
+col.accessorFn((row) => row.tags.map((tag) => tag.name), {
+	id: 'tags',
+	header: 'Tags',
+	type: 'select'
+});
+```
+
 ## Locale for number/currency/percent
 
 Priority: `formatLocale` prop → `useLocaleContext().locale` → browser default. Wrap the app in

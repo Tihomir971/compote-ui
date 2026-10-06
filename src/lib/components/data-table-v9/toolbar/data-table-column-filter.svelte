@@ -13,6 +13,11 @@
 	import Badge from '../../badge/badge.svelte';
 	import { button } from '../../button/button.variants';
 	import { PhX, PhMagnifyingGlass, PhFunnel } from '#lib/icons';
+	import {
+		selectFilterOptions,
+		type SelectFilterOption,
+		type SelectFilterValue
+	} from '#lib/utils/select-filter';
 
 	type Props = {
 		table: DataTableInstance<T>;
@@ -139,13 +144,13 @@
 		}, 300);
 	}
 
-	function getSelectValues(column: Column<DataTableFeatures, T, unknown>): string[] {
-		return (column.getFilterValue() as string[] | undefined) ?? [];
+	function getSelectValues(column: Column<DataTableFeatures, T, unknown>): SelectFilterValue[] {
+		return (column.getFilterValue() as SelectFilterValue[] | undefined) ?? [];
 	}
 
 	function handleSelectChange(
 		column: Column<DataTableFeatures, T, unknown>,
-		value: string,
+		value: SelectFilterValue,
 		checked: boolean
 	) {
 		const current = getSelectValues(column);
@@ -153,8 +158,8 @@
 		column.setFilterValue(next.length ? next : undefined);
 	}
 
-	function getFacetedValues(column: Column<DataTableFeatures, T, unknown>): string[] {
-		return Array.from(column.getFacetedUniqueValues().keys()).map(String).sort();
+	function getSelectOptions(column: Column<DataTableFeatures, T, unknown>): SelectFilterOption[] {
+		return selectFilterOptions(column.getFacetedUniqueValues());
 	}
 
 	function getFacetedMinMax(
@@ -313,10 +318,12 @@
 											</button>
 										</div>
 									{:else if getColumnType(column) === 'select'}
-										{@const allOptions = getFacetedValues(column)}
+										{@const allOptions = getSelectOptions(column)}
 										{@const search = localSelectSearch[column.id] ?? ''}
 										{@const options = search
-											? allOptions.filter((o) => o.toLowerCase().includes(search.toLowerCase()))
+											? allOptions.filter((o) =>
+													o.label.toLowerCase().includes(search.toLowerCase())
+												)
 											: allOptions}
 										{@const selected = getSelectValues(column)}
 										<div class="flex flex-col gap-1">
@@ -335,15 +342,22 @@
 												<ScrollArea.Viewport class="max-h-40">
 													<ScrollArea.Content>
 														<div class="flex flex-col gap-0.5">
-															{#each options as option (option)}
-																<Checkbox
-																	size="sm"
-																	label={option}
-																	class="min-h-7 rounded-sm px-2 hover:bg-surface-2"
-																	checked={selected.includes(option)}
-																	onCheckedChange={({ checked }) =>
-																		handleSelectChange(column, option, checked === true)}
-																/>
+															{#each options as option (option.value)}
+																<div
+																	class="flex min-h-7 items-center gap-2 rounded-sm pr-2 hover:bg-surface-2"
+																>
+																	<Checkbox
+																		size="sm"
+																		label={option.label}
+																		class="min-h-7 flex-1 px-2"
+																		checked={selected.includes(option.value)}
+																		onCheckedChange={({ checked }) =>
+																			handleSelectChange(column, option.value, checked === true)}
+																	/>
+																	<span class="text-xs text-ink-dim tabular-nums"
+																		>{option.count}</span
+																	>
+																</div>
 															{/each}
 														</div>
 													</ScrollArea.Content>

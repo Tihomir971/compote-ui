@@ -17,6 +17,12 @@ import { onDestroy, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
 import { TYPE_NUMBER_FORMAT_DEFAULTS, type DataTableInstance } from './data-table-utils';
+import {
+	formatSelectValue,
+	matchesSelectFilter,
+	selectCellValues,
+	type SelectFilterValue
+} from '../../utils/select-filter';
 import type {
 	DataTableColumn,
 	DataTableColumnType,
@@ -28,9 +34,9 @@ import type {
 const oneOfFilterFn: FilterFn<DataTableFeatures, RowData> = (
 	row,
 	columnId,
-	filterValue: string[]
+	filterValue: SelectFilterValue[]
 ) => {
-	return filterValue.includes(String(row.getValue(columnId)));
+	return matchesSelectFilter(row.getValue(columnId), filterValue);
 };
 oneOfFilterFn.autoRemove = (val: unknown): boolean => !Array.isArray(val) || val.length === 0;
 
@@ -198,7 +204,12 @@ function createColumns<T extends RowData>(
 				grow: column.grow,
 				sum: column.sum,
 				footer: column.footer
-			} satisfies DataTableColumnMeta
+			} satisfies DataTableColumnMeta,
+			// Select cells may hold an array (multi-value / tag columns): facet each item
+			// separately so the Funnel lists options, not value combinations.
+			...(column.type === 'select'
+				? { getUniqueValues: (row: T) => selectCellValues(readColumnValue(column, row)) }
+				: {})
 		} satisfies Partial<ColumnDef<DataTableFeatures, T>>;
 
 		if (typeof column.accessorFn === 'function') {
@@ -217,6 +228,12 @@ function createColumns<T extends RowData>(
 				formatCellValue(column, context.getValue(), context.row.original, localeCtx)
 		};
 	}) as ColumnDef<DataTableFeatures, T>[];
+}
+
+function readColumnValue<T extends RowData>(column: DataTableLeafColumn<T>, row: T): unknown {
+	return typeof column.accessorFn === 'function'
+		? column.accessorFn(row)
+		: row[column.accessorKey as keyof T];
 }
 
 function isGroupColumn<T extends RowData>(
@@ -302,6 +319,8 @@ function applyTypeFormat<T extends RowData>(
 	}
 
 	if (column.type === 'boolean') return value ? 'Yes' : 'No';
+
+	if (column.type === 'select') return formatSelectValue(value);
 
 	return value as string | number | boolean;
 }
