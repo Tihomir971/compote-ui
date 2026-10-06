@@ -4,6 +4,7 @@
 	import type { NumberInputProps } from './types';
 	import { PhCaretDown, PhCaretUp } from '#lib/icons';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
+	import { toNumberInputValue } from '#lib/utils/number-input-value';
 
 	let {
 		value = $bindable(),
@@ -28,12 +29,7 @@
 	{...restProps}
 	allowMouseWheel
 	locale={locale().locale}
-	value={value != null
-		? new Intl.NumberFormat(locale().locale, {
-				useGrouping: false,
-				maximumFractionDigits: 20
-			}).format(value)
-		: undefined}
+	value={toNumberInputValue(value, locale().locale, restProps.defaultValue !== undefined)}
 	readOnly={readonly}
 	onValueChange={(valueChangeDetails) => {
 		onValueChange?.(valueChangeDetails);

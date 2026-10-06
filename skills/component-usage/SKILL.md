@@ -8,7 +8,7 @@ description: >
 metadata:
   type: core
   library: compote-ui
-  library_version: '0.74.2'
+  library_version: '0.79.2'
 sources:
   - src/lib/index.ts
   - src/lib/utils/collections.ts

@@ -172,6 +172,9 @@ If selection must be restricted to a fixed set (pick-only, no free text), use `C
 Props: `value?: number | null` (bindable), `label?`, `readonly?`, `layout?: 'vertical' | 'horizontal'`,
 plus Ark UI NumberInput props (`min`, `max`, `step`, `formatOptions`, `locale`).
 
+`value` is controlled: setting it to `null` from outside clears the input. Use `defaultValue`
+(a string) only for uncontrolled use, without passing `value`.
+
 ## PasswordInput
 
 Password field with a built-in show/hide toggle. The underlying `<input>` is a real DOM input —

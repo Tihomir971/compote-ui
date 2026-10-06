@@ -1,7 +1,9 @@
 import {
 	createTable as createSvelteTable,
+	functionalUpdate,
 	type ColumnDef,
 	type Column,
+	type ColumnFiltersState,
 	type ColumnPinningState,
 	type ColumnResizeMode,
 	type ColumnSizingState,
@@ -17,6 +19,11 @@ import { onDestroy, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
 import { TYPE_NUMBER_FORMAT_DEFAULTS, type DataTableInstance } from './data-table-utils';
+import {
+	changedFilterIds,
+	FilterRevisions,
+	registerFilterRevisions
+} from './filter-revisions.svelte';
 import {
 	formatSelectValue,
 	matchesSelectFilter,
@@ -76,6 +83,8 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 	// getter (like `data`) to make adding/removing/reordering columns reactive.
 	const columnDefs = $derived(createColumns(options.columns, localeCtx));
 
+	const filterRevisions = new FilterRevisions();
+
 	const table = createSvelteTable<DataTableFeatures, T>({
 		features: dataTableFeatures,
 		get data() {
@@ -104,6 +113,16 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 				.flatRows[0]?.getAllCellsByColumnId()
 				[column.id]?.getValue();
 			return value == null || typeof value === 'string' || typeof value === 'number';
+		}) as never,
+		// Same write as TanStack's default handler, plus a per-column revision bump so
+		// ColumnFilter can tell a filter changed even when it ends on its old value.
+		onColumnFiltersChange: ((
+			updater: ColumnFiltersState | ((old: ColumnFiltersState) => ColumnFiltersState)
+		) => {
+			const atom = table.baseAtoms.columnFilters;
+			const prev = atom.get();
+			atom.set((old: ColumnFiltersState) => functionalUpdate(updater, old));
+			filterRevisions.bump(changedFilterIds(prev, atom.get()));
 		}) as never,
 		debugTable: options.debugTable,
 		initialState: {
@@ -136,6 +155,8 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		});
 		onDestroy(() => subscription.unsubscribe());
 	}
+
+	registerFilterRevisions(table, filterRevisions);
 
 	return table;
 }

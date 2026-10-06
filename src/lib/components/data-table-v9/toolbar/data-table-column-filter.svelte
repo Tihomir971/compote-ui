@@ -18,6 +18,9 @@
 		type SelectFilterOption,
 		type SelectFilterValue
 	} from '#lib/utils/select-filter';
+	import { mergeRangeFilter, rangeBounds, type PendingRange } from '#lib/utils/range-filter';
+	import { DebouncedFilterEdits } from '#lib/utils/debounced-filter-edit.svelte';
+	import { getFilterRevisions } from '../filter-revisions.svelte';
 
 	type Props = {
 		table: DataTableInstance<T>;
@@ -30,11 +33,23 @@
 	// Popover and tooltip share one trigger element, so both must agree on its id.
 	const triggerId = $props.id();
 
-	let localText: Record<string, string> = $state({});
-	let localNumMin: Record<string, number> = $state({});
-	let localNumMax: Record<string, number> = $state({});
+	// Debounced edits not committed yet. A control shows its pending edit if there is one,
+	// otherwise the column's live filter value — so a filter changed from outside (the app
+	// calling setFilterValue / setColumnFilters / resetColumnFilters) never leaves a stale
+	// value in the inputs, an edit pending during that change is dropped rather than
+	// re-applied, and committing one range bound never restores the other's old value.
+	const textEdits = new DebouncedFilterEdits<string>();
+	const rangeEdits = new DebouncedFilterEdits<PendingRange>();
+
+	// What an edit is based on: the column's filter revision, which only ever goes up, so a
+	// filter cleared and set back to its old value still makes the edit stale. Tables not
+	// made by compote's createTable have no revisions; fall back to the filter value.
+	const filterRevisions = $derived(getFilterRevisions(table));
+	function editBase(column: Column<DataTableFeatures, T, unknown>): unknown {
+		return filterRevisions ? filterRevisions.get(column.id) : column.getFilterValue();
+	}
+
 	let localSelectSearch: Record<string, string> = $state({});
-	const timers: Record<string, ReturnType<typeof setTimeout>> = {};
 
 	const columnFilters = $derived.by(() => table.atoms.columnFilters.get());
 	const columnVisibility = $derived.by(() => table.atoms.columnVisibility.get());
@@ -73,7 +88,8 @@
 	});
 
 	onDestroy(() => {
-		Object.values(timers).forEach(clearTimeout);
+		textEdits.cancelAll();
+		rangeEdits.cancelAll();
 	});
 
 	function getColumnType(column: Column<DataTableFeatures, T, unknown>): string | undefined {
@@ -93,22 +109,15 @@
 
 	function removeFilter(column: Column<DataTableFeatures, T, unknown>) {
 		manualFilterIds = manualFilterIds.filter((id) => id !== column.id);
+		textEdits.cancel(column.id);
+		rangeEdits.cancel(column.id);
 		column.setFilterValue(undefined);
-		delete localText[column.id];
-		delete localNumMin[column.id];
-		delete localNumMax[column.id];
 		delete localSelectSearch[column.id];
-		clearTimeout(timers[column.id]);
-		clearTimeout(timers[`${column.id}_min`]);
-		clearTimeout(timers[`${column.id}_max`]);
 	}
 
 	function clearFilters() {
-		Object.values(timers).forEach(clearTimeout);
-		for (const key of Object.keys(timers)) delete timers[key];
-		localText = {};
-		localNumMin = {};
-		localNumMax = {};
+		textEdits.cancelAll();
+		rangeEdits.cancelAll();
 		localSelectSearch = {};
 		manualFilterIds = [];
 		showColumnPicker = false;
@@ -116,12 +125,39 @@
 		table.resetColumnFilters();
 	}
 
+	function getTextValue(column: Column<DataTableFeatures, T, unknown>): string {
+		const value = column.getFilterValue();
+		return textEdits.get(column.id, editBase(column)) ?? (typeof value === 'string' ? value : '');
+	}
+
+	/**
+	 * Whether `column` still has a filter card. A card torn down by an outside change can
+	 * still emit — Ark's NumberInput commits the typed number on the blur its unmount
+	 * triggers — and that must not write back a filter the app just cleared.
+	 */
+	function isCardActive(column: Column<DataTableFeatures, T, unknown>): boolean {
+		return activeFilterIds.includes(column.id);
+	}
+
 	function handleTextInput(column: Column<DataTableFeatures, T, unknown>, value: string) {
-		localText[column.id] = value;
-		clearTimeout(timers[column.id]);
-		timers[column.id] = setTimeout(() => {
-			column.setFilterValue(value || undefined);
-		}, 300);
+		if (!isCardActive(column)) return;
+		textEdits.edit(
+			column.id,
+			editBase(column),
+			() => value,
+			() => editBase(column),
+			(text) => column.setFilterValue(text || undefined)
+		);
+	}
+
+	function getRangeBound(
+		column: Column<DataTableFeatures, T, unknown>,
+		which: 'min' | 'max'
+	): number | null {
+		const value = column.getFilterValue();
+		const pending = rangeEdits.get(column.id, editBase(column));
+		if (pending && which in pending) return pending[which] ?? null;
+		return rangeBounds(value)[which === 'min' ? 0 : 1] ?? null;
 	}
 
 	function handleNumericInput(
@@ -129,19 +165,14 @@
 		which: 'min' | 'max',
 		value: number | null
 	) {
-		if (value === null) {
-			if (which === 'min') delete localNumMin[column.id];
-			else delete localNumMax[column.id];
-		} else {
-			if (which === 'min') localNumMin[column.id] = value;
-			else localNumMax[column.id] = value;
-		}
-		clearTimeout(timers[`${column.id}_${which}`]);
-		timers[`${column.id}_${which}`] = setTimeout(() => {
-			const min = localNumMin[column.id];
-			const max = localNumMax[column.id];
-			column.setFilterValue(min === undefined && max === undefined ? undefined : [min, max]);
-		}, 300);
+		if (!isCardActive(column)) return;
+		rangeEdits.edit(
+			column.id,
+			editBase(column),
+			(pending) => ({ ...pending, [which]: value }),
+			() => editBase(column),
+			(pending) => column.setFilterValue(mergeRangeFilter(column.getFilterValue(), pending))
+		);
 	}
 
 	function getSelectValues(column: Column<DataTableFeatures, T, unknown>): SelectFilterValue[] {
@@ -246,32 +277,26 @@
 												<NumberInput
 													layout="horizontal"
 													label="From"
-													value={localNumMin[column.id] ?? null}
+													bind:value={
+														() => getRangeBound(column, 'min'),
+														(bound) => handleNumericInput(column, 'min', bound ?? null)
+													}
 													min={facetMin}
 													max={facetMax}
 													formatOptions={colFormatOptions}
-													onValueChange={({ valueAsNumber }) =>
-														handleNumericInput(
-															column,
-															'min',
-															isNaN(valueAsNumber) ? null : valueAsNumber
-														)}
 												/>
 											</div>
 											<div class="min-w-0 flex-1">
 												<NumberInput
 													layout="horizontal"
 													label="To"
-													value={localNumMax[column.id] ?? null}
+													bind:value={
+														() => getRangeBound(column, 'max'),
+														(bound) => handleNumericInput(column, 'max', bound ?? null)
+													}
 													min={facetMin}
 													max={facetMax}
 													formatOptions={colFormatOptions}
-													onValueChange={({ valueAsNumber }) =>
-														handleNumericInput(
-															column,
-															'max',
-															isNaN(valueAsNumber) ? null : valueAsNumber
-														)}
 												/>
 											</div>
 										</div>
@@ -372,9 +397,10 @@
 										<Field.Root hideMessageLine>
 											<Field.Input
 												placeholder="Search..."
-												value={localText[column.id] ?? ''}
-												oninput={(e: Event) =>
-													handleTextInput(column, (e.currentTarget as HTMLInputElement).value)}
+												bind:value={
+													() => getTextValue(column),
+													(text) => handleTextInput(column, String(text ?? ''))
+												}
 											/>
 										</Field.Root>
 									{/if}
