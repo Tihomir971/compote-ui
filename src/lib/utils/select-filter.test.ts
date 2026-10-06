@@ -124,8 +124,14 @@ describe('formatSelectValue', () => {
 		expect(formatSelectValue('Active')).toBe('Active');
 	});
 
+	it('shows a repeated item once, skipping empty items', () => {
+		expect(formatSelectValue(['Battery', 'Battery', 'Mains'])).toBe('Battery, Mains');
+		expect(formatSelectValue(['Battery', null, '', 'Battery'])).toBe('Battery');
+	});
+
 	it('returns undefined for empty values', () => {
 		expect(formatSelectValue([])).toBeUndefined();
+		expect(formatSelectValue([null, ''])).toBeUndefined();
 		expect(formatSelectValue('')).toBeUndefined();
 		expect(formatSelectValue(null)).toBeUndefined();
 	});

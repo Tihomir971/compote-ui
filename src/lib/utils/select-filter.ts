@@ -81,11 +81,14 @@ export function selectFilterOptions(
 	return options;
 }
 
-/** Cell text for a select value: array items joined with `, `; undefined when empty. */
+/**
+ * Cell text for a select value: the same distinct items the Funnel lists, joined with `, `;
+ * undefined when empty.
+ */
 export function formatSelectValue(value: unknown): string | number | boolean | undefined {
 	if (Array.isArray(value)) {
-		const items = value.filter((item) => !isEmpty(item));
-		return items.length ? items.join(', ') : undefined;
+		const items = selectCellValues(value);
+		return items[0] === EMPTY_SELECT_VALUE ? undefined : items.join(', ');
 	}
 	return isEmpty(value) ? undefined : (value as string | number | boolean);
 }
