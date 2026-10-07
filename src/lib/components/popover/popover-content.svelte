@@ -1,22 +1,46 @@
 <script lang="ts">
-	import { Popover } from '@ark-ui/svelte/popover';
+	import { Popover, usePopoverContext } from '@ark-ui/svelte/popover';
+	import type { PopoverContentProps } from '@ark-ui/svelte/popover';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from 'tailwind-variants';
 	import type { ClassValue } from 'svelte/elements';
 	import type { Snippet } from 'svelte';
+	import { getPopoverLabels } from './popover-labels.svelte';
 
-	interface Props {
+	interface Props extends Omit<PopoverContentProps, 'class' | 'children'> {
 		class?: ClassValue;
 		children: Snippet;
 		showArrow?: boolean;
 	}
 
-	let { class: className, children, showArrow = true }: Props = $props();
+	let {
+		class: className,
+		children,
+		showArrow = true,
+		'aria-labelledby': ariaLabelledby,
+		'aria-describedby': ariaDescribedby,
+		...rest
+	}: Props = $props();
+
+	const popover = usePopoverContext();
+	const labels = getPopoverLabels();
+
+	// Explicit labelling wins; otherwise link the Title / Description rendered inside.
+	const labelledby = $derived(
+		ariaLabelledby ??
+			(labels?.hasTitle && !rest['aria-label'] ? popover().getTitleProps().id : undefined)
+	);
+	const describedby = $derived(
+		ariaDescribedby ?? (labels?.hasDescription ? popover().getDescriptionProps().id : undefined)
+	);
 </script>
 
 <Portal>
 	<Popover.Positioner>
 		<Popover.Content
+			{...rest}
+			aria-labelledby={labelledby}
+			aria-describedby={describedby}
 			class={cn(
 				'z-50 w-72 rounded-md border bg-surface-document p-4 shadow-md outline-none [--arrow-background:var(--compote-surface-1)] [--arrow-size:10px]',
 				'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',

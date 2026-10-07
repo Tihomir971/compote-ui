@@ -183,8 +183,13 @@ Composable floating panel anchored to a trigger.
 </Popover.Root>
 ```
 
-`Popover.Content` accepts `showArrow?: boolean` (default `true`). Control placement via
-`<Popover.Root positioning={{ placement: 'right' }}>`.
+`Popover.Content` accepts `showArrow?: boolean` (default `true`) and forwards other props to Ark's
+`Popover.Content`. Control placement via `<Popover.Root positioning={{ placement: 'right' }}>`.
+
+The dialog is labelled automatically: while a `Popover.Title` / `Popover.Description` is rendered
+inside, `Popover.Content` gets `aria-labelledby` / `aria-describedby` pointing at it — no `ids` or
+manual `aria-*` needed (Zag alone misses them because content mounts lazily). An explicit
+`aria-labelledby` / `aria-describedby` (or `aria-label`, for the title) on `Popover.Content` wins.
 
 ## HoverCard
 
