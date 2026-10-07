@@ -1,12 +1,17 @@
 import {
+	CalendarDate,
+	CalendarDateTime,
+	ZonedDateTime,
 	parseDate,
 	parseDateTime,
 	parseAbsolute,
 	parseAbsoluteToLocal,
+	fromAbsolute,
 	fromDate,
 	getLocalTimeZone,
-	type DateValue,
-	type ZonedDateTime
+	toTimeZone,
+	toZoned,
+	type DateValue
 } from '@internationalized/date';
 
 export type { DateValue };
@@ -83,4 +88,53 @@ export function fromDateValue(
 	if (shape === 'string') return dateValueToString(value);
 	if (shape === 'date') return dateValueToDate(value, timeZone);
 	return value;
+}
+
+/**
+ * A value read for display in `timeZone`: a calendar date (a day, with no instant behind it)
+ * or an instant converted into `timeZone`.
+ */
+export type ZonedOrCalendarDate = CalendarDate | ZonedDateTime;
+
+/**
+ * Read any date-ish value — a `DateValue`, ISO/DB string, native `Date` or epoch-millisecond
+ * number — the way it should be shown in `timeZone`. Never throws: anything unparseable
+ * (including an out-of-range date like `2024-02-30`) is `null`.
+ *
+ * - `"2024-03-15"` and `CalendarDate` stay calendar dates. They are never turned into an
+ *   instant, which would put them on the previous day in zones west of UTC.
+ * - `Date`, epoch numbers, offset strings (`Z`, `+02:00`) and `ZonedDateTime` are instants,
+ *   converted into `timeZone`.
+ * - A datetime without an offset (`"2024-03-15T10:30"`, `CalendarDateTime`) is a wall-clock
+ *   time in `timeZone`.
+ */
+export function readDateInZone(value: unknown, timeZone: string): ZonedOrCalendarDate | null {
+	try {
+		return readDate(value, timeZone);
+	} catch {
+		return null;
+	}
+}
+
+function readDate(value: unknown, timeZone: string): ZonedOrCalendarDate | null {
+	if (value == null) return null;
+	if (value instanceof Date) {
+		return Number.isNaN(value.getTime()) ? null : fromDate(value, timeZone);
+	}
+	if (typeof value === 'number') {
+		return Number.isFinite(value) ? fromAbsolute(value, timeZone) : null;
+	}
+	if (value instanceof ZonedDateTime) return toTimeZone(value, timeZone);
+	if (value instanceof CalendarDateTime) return toZoned(value, timeZone);
+	if (value instanceof CalendarDate) return value;
+	if (typeof value !== 'string') return null;
+
+	const raw = value.trim();
+	if (!raw) return null;
+	if (DATE_ONLY.test(raw)) return parseDate(raw);
+
+	const iso = normalizeIso(raw);
+	return HAS_OFFSET.test(iso)
+		? parseAbsolute(iso, timeZone)
+		: toZoned(parseDateTime(iso), timeZone);
 }

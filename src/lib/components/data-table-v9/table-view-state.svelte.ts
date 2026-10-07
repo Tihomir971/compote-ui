@@ -95,6 +95,9 @@ export function createTableViewState<T extends RowData>(getTable: () => DataTabl
 		get sorting() {
 			return sorting;
 		},
+		get columnFilters() {
+			return columnFilters;
+		},
 		get rowModel() {
 			return rowModel;
 		},

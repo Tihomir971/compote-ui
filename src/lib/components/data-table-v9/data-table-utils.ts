@@ -222,6 +222,11 @@ export function openPhoneCell(value: string) {
 	window.location.href = `tel:${value}`;
 }
 
+/** A column's display name: its string header, or its id when the header is rendered. */
+export function getColumnLabel(column: { id: string; columnDef: { header?: unknown } }): string {
+	return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
+}
+
 // `columnDef.meta` is natively typed as DataTableColumnMeta via the `columnMeta`
 // type-only slot in features.ts; this accessor just narrows the columnDef shape.
 export function getColumnMeta(columnDef: {

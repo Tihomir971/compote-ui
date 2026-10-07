@@ -19,6 +19,15 @@ import { onDestroy, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
 import { TYPE_NUMBER_FORMAT_DEFAULTS, type DataTableInstance } from './data-table-utils';
+import { filterKindFor } from './column-filter-kind';
+import { dateCellTimeZone, formatDateCell } from './date-cell';
+import {
+	isEmptyDateRange,
+	matchesDateRange,
+	resolveDateRange,
+	type DateRange
+} from '../../utils/date-filter';
+import { cancelPendingFilterEdits } from './column-filter-editing.svelte';
 import {
 	changedFilterIds,
 	FilterRevisions,
@@ -32,7 +41,6 @@ import {
 } from '../../utils/select-filter';
 import type {
 	DataTableColumn,
-	DataTableColumnType,
 	DataTableGroupColumn,
 	DataTableLeafColumn,
 	DataTableColumnMeta
@@ -157,6 +165,23 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 	}
 
 	registerFilterRevisions(table, filterRevisions);
+	// Debounced filter edits outlive the editors that made them, but not the table.
+	onDestroy(() => cancelPendingFilterEdits(table));
+
+	// A reset drops pending filter edits too — including one on a column with no committed
+	// filter, whose revision the reset leaves alone, so the edit would otherwise commit
+	// afterwards and bring a filter back. TanStack assigns these as own methods of the table
+	// (`table.reset` also writes state directly, bypassing onColumnFiltersChange).
+	const resetColumnFilters = table.resetColumnFilters;
+	table.resetColumnFilters = (defaultState?: boolean) => {
+		cancelPendingFilterEdits(table);
+		resetColumnFilters(defaultState);
+	};
+	const resetTable = table.reset;
+	table.reset = () => {
+		cancelPendingFilterEdits(table);
+		resetTable();
+	};
 
 	return table;
 }
@@ -204,7 +229,7 @@ function createColumns<T extends RowData>(
 		}
 
 		const columnId = getColumnId(column);
-		const derivedFilterFn = column.filterFn ?? getFilterFnForType(column.type);
+		const derivedFilterFn = column.filterFn ?? getFilterFnForType(column);
 		const columnDef = {
 			id: columnId,
 			header: column.header,
@@ -281,31 +306,32 @@ export function getColumnId<T extends RowData>(column: DataTableLeafColumn<T>): 
 	throw new Error('DataTableColumn with accessorFn requires an id.');
 }
 
-const TYPE_DATE_FORMAT_DEFAULTS: Record<'date' | 'time' | 'date-time', Intl.DateTimeFormatOptions> =
-	{
-		date: { day: '2-digit', month: '2-digit', year: 'numeric' },
-		time: { hour: '2-digit', minute: '2-digit' },
-		'date-time': {
-			day: '2-digit',
-			month: '2-digit',
-			year: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit'
-		}
-	};
+/**
+ * A calendar-day range filter for a date column, judged in the zone the column is shown in
+ * (read on every pass, so it follows a changed local zone like the cells do).
+ */
+function dateRangeFilterFn(
+	formatOptions: Intl.DateTimeFormatOptions | undefined
+): FilterFn<DataTableFeatures, RowData> {
+	const filterFn: FilterFn<DataTableFeatures, RowData> = (row, columnId, range: DateRange) =>
+		matchesDateRange(row.getValue(columnId), range, dateCellTimeZone(formatOptions));
+	filterFn.resolveFilterValue = resolveDateRange;
+	filterFn.autoRemove = isEmptyDateRange;
+	return filterFn;
+}
 
-function getFilterFnForType(
-	type: DataTableColumnType | undefined
+function getFilterFnForType<T extends RowData>(
+	column: DataTableLeafColumn<T>
 ): FilterFnOption<DataTableFeatures, RowData> | undefined {
-	switch (type) {
-		case 'number':
-		case 'currency':
-		case 'percent':
+	switch (filterKindFor(column.type)) {
+		case 'range':
 			return 'inNumberRange';
 		case 'boolean':
 			return 'equals';
 		case 'select':
 			return oneOfFilterFn;
+		case 'date':
+			return dateRangeFilterFn(column.formatOptions as Intl.DateTimeFormatOptions | undefined);
 		default:
 			return undefined;
 	}
@@ -330,13 +356,12 @@ function applyTypeFormat<T extends RowData>(
 	}
 
 	if (column.type === 'date' || column.type === 'time' || column.type === 'date-time') {
-		const dateValue = value instanceof Date ? value : new Date(value as string | number);
-		if (isNaN(dateValue.getTime())) return undefined;
-		const locale = column.formatLocale ?? localeCtx().locale;
-		return new Intl.DateTimeFormat(locale, {
-			...TYPE_DATE_FORMAT_DEFAULTS[column.type],
-			...(column.formatOptions as Intl.DateTimeFormatOptions | undefined)
-		}).format(dateValue);
+		return formatDateCell(
+			value,
+			column.type,
+			column.formatLocale ?? localeCtx().locale,
+			column.formatOptions as Intl.DateTimeFormatOptions | undefined
+		);
 	}
 
 	if (column.type === 'boolean') return value ? 'Yes' : 'No';

@@ -6,6 +6,8 @@
 	import type { DataTableInstance } from './data-table-utils';
 	import type { DataTableViewState } from './table-view-state.svelte';
 	import type { DataTableFeatures } from './features';
+	import type { DataTableAlign } from './types';
+	import ColumnHeaderFilter from './header/column-header-filter.svelte';
 	import {
 		alignClass,
 		getColumnMeta,
@@ -29,9 +31,17 @@
 		view: DataTableViewState<T>;
 		isVirtual?: boolean;
 		hasGrowColumn?: boolean;
+		/** Show a filter funnel in the header of every filterable column. */
+		headerFilters?: boolean;
 	};
 
-	let { table, view, isVirtual = false, hasGrowColumn = false }: Props = $props();
+	let {
+		table,
+		view,
+		isVirtual = false,
+		hasGrowColumn = false,
+		headerFilters = false
+	}: Props = $props();
 
 	type Header = HeaderGroup<DataTableFeatures, T>['headers'][number];
 
@@ -44,6 +54,21 @@
 			if (found) return found;
 		}
 		return undefined;
+	}
+
+	function showHeaderFilter(header: Header) {
+		return headerFilters && header.subHeaders.length === 0 && header.column.getCanFilter();
+	}
+
+	/**
+	 * Padding that keeps an active (always visible) filter funnel off the label, so it never
+	 * hides the sort indicator. The funnel sits on the inner edge opposite the label.
+	 */
+	function headerFilterPaddingClass(header: Header, align: DataTableAlign | undefined) {
+		if (!showHeaderFilter(header)) return undefined;
+		const filtered = view.columnFilters.some((filter) => filter.id === header.column.id);
+		if (!filtered) return undefined;
+		return align === 'right' ? 'pl-6' : 'pr-6';
 	}
 
 	function headerSortDirection(header: Header) {
@@ -141,10 +166,11 @@
 				<th
 					scope="col"
 					class={cn(
-						'relative h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 align-middle leading-5 font-medium',
+						'group/th relative h-9 border-b border-surface-3 bg-surface-2 px-3 py-0 align-middle leading-5 font-medium',
 						isVirtual && 'items-center',
 						isVirtual && justifyClass(meta?.align),
-						alignClass(meta?.align)
+						alignClass(meta?.align),
+						headerFilterPaddingClass(header, meta?.align)
 					)}
 					colspan={header.colSpan}
 					aria-sort={header.column.getCanSort() ? getHeaderAriaSort(sortDirection) : undefined}
@@ -178,6 +204,9 @@
 						{:else}
 							<FlexRender {header} />
 						{/if}
+					{/if}
+					{#if !header.isPlaceholder && showHeaderFilter(header)}
+						<ColumnHeaderFilter {table} column={header.column} />
 					{/if}
 					<!-- A group split by pinning renders as adjacent fragments; skip the
 					     divider between them so the group reads as one continuous header. -->

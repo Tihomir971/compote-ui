@@ -5,6 +5,7 @@ import {
 	dateValueToDate,
 	dateValueToString,
 	fromDateValue,
+	readDateInZone,
 	toDateValue
 } from './date';
 
@@ -134,5 +135,71 @@ describe('string round trip', () => {
 		expect(emitted).toBe(expected);
 		// Feeding the emitted value back in must be a fixed point.
 		expect(fromDateValue(toDateValue(emitted as string, 'UTC'), 'string', 'UTC')).toBe(expected);
+	});
+});
+
+describe('readDateInZone', () => {
+	it('keeps a date-only string as a calendar date, even west of UTC', () => {
+		const value = readDateInZone('2024-03-15', 'America/Los_Angeles');
+		expect(value).toBeInstanceOf(CalendarDate);
+		expect(value?.toString()).toBe('2024-03-15');
+	});
+
+	it('keeps a CalendarDate as it is', () => {
+		const value = readDateInZone(new CalendarDate(2024, 3, 15), 'America/Los_Angeles');
+		expect(value?.toString()).toBe('2024-03-15');
+	});
+
+	it('converts an offset string into the display zone', () => {
+		const value = readDateInZone('2024-03-15T02:00:00Z', 'America/New_York') as ZonedDateTime;
+		expect(value.timeZone).toBe('America/New_York');
+		expect([value.day, value.hour]).toEqual([14, 22]);
+	});
+
+	it('converts a ZonedDateTime from another zone into the display zone', () => {
+		const tokyo = new ZonedDateTime(2024, 3, 15, 'Asia/Tokyo', 9 * 3600_000, 8, 0);
+		const value = readDateInZone(tokyo, 'Europe/Belgrade') as ZonedDateTime;
+		expect(value.timeZone).toBe('Europe/Belgrade');
+		expect([value.day, value.hour]).toEqual([15, 0]);
+	});
+
+	it('converts a Date and an epoch number into the display zone', () => {
+		const instant = Date.UTC(2024, 2, 15, 2, 0);
+		for (const input of [new Date(instant), instant]) {
+			const value = readDateInZone(input, 'America/New_York') as ZonedDateTime;
+			expect([value.day, value.hour]).toEqual([14, 22]);
+		}
+	});
+
+	it('reads a datetime without offset as wall-clock time in the display zone', () => {
+		const value = readDateInZone('2024-03-15T10:30:00', 'Asia/Tokyo') as ZonedDateTime;
+		expect([value.timeZone, value.day, value.hour, value.minute]).toEqual([
+			'Asia/Tokyo',
+			15,
+			10,
+			30
+		]);
+	});
+
+	it('reads a DB timestamp with a bare hour offset', () => {
+		const value = readDateInZone('2024-03-15 10:30:00+02', 'UTC') as ZonedDateTime;
+		expect(value.hour).toBe(8);
+	});
+
+	it('returns null instead of throwing for unreadable values', () => {
+		for (const input of [
+			'2024-02-30',
+			'not a date',
+			'',
+			'  ',
+			null,
+			undefined,
+			new Date('nope'),
+			Number.NaN,
+			{},
+			true
+		]) {
+			expect(readDateInZone(input, 'UTC')).toBeNull();
+		}
 	});
 });

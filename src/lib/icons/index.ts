@@ -16,6 +16,7 @@ export { default as PhFile } from './PhFile.svelte';
 export { default as PhFileArchive } from './PhFileArchive.svelte';
 export { default as PhFileText } from './PhFileText.svelte';
 export { default as PhFunnel } from './PhFunnel.svelte';
+export { default as PhFunnelFill } from './PhFunnelFill.svelte';
 export { default as PhHeadphones } from './PhHeadphones.svelte';
 export { default as PhImage } from './PhImage.svelte';
 export { default as PhListMagnifyingGlass } from './PhListMagnifyingGlass.svelte';

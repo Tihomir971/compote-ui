@@ -22,6 +22,8 @@
 		caption?: string;
 		emptyMessage?: string;
 		class?: ClassValue;
+		/** Show a filter funnel in the header of every filterable column. */
+		headerFilters?: boolean;
 		onRowClick?: (details: { row: T; event: MouseEvent }) => void;
 		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
 	};
@@ -31,6 +33,7 @@
 		caption,
 		emptyMessage = 'No rows found',
 		class: className,
+		headerFilters = false,
 		onRowClick,
 		onRowDoubleClick,
 		...rest
@@ -77,7 +80,7 @@
 			{#if caption}
 				<caption class="sr-only">{caption}</caption>
 			{/if}
-			<DataTableHead {table} {view} hasGrowColumn={view.hasGrowColumn} />
+			<DataTableHead {table} {view} hasGrowColumn={view.hasGrowColumn} {headerFilters} />
 			<tbody>
 				{#each view.rowModel.rows as row (row.id)}
 					{@const rowSelected = view.rowSelection[row.id] === true}

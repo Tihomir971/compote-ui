@@ -8,7 +8,7 @@ description: >
 metadata:
   type: composition
   library: compote-ui
-  library_version: '0.79.2'
+  library_version: '0.80.0'
 requires:
   - component-usage
   - theming
@@ -20,6 +20,11 @@ sources:
   - src/lib/components/data-table-v9/column-helper.ts
   - src/lib/components/data-table-v9/create-table.svelte.ts
   - src/lib/components/data-table-v9/data-table.svelte
+  - src/lib/components/data-table-v9/data-table-head.svelte
+  - src/lib/components/data-table-v9/header/column-header-filter.svelte
+  - src/lib/components/data-table-v9/column-filter-kind.ts
+  - src/lib/components/data-table-v9/filter-editors/column-filter-editor.svelte
+  - src/lib/utils/date-filter.ts
   - src/lib/components/data-table-v9/virtual/data-table-virtualized.svelte
   - src/lib/components/data-table-v9/virtual/data-table-virtual-rows.svelte
 ---
@@ -160,6 +165,32 @@ shows the active filter count as a badge in the corner either way.
 ```svelte
 <DataTable.ColumnFilter {table} triggerLabel="Filters" />
 <DataTable.ColumnVisibility {table} triggerLabel="Columns" />
+```
+
+### Filter from column headers
+
+Pass `headerFilters` to `DataTable.Root` / `VirtualDataTable.Root` to put a funnel in the header
+of every filterable leaf column (not group headers, not `enableColumnFilter: false`, never
+`type: 'action'`). The funnel shows on header hover/focus (always on touch screens); once the
+column is filtered it stays visible, filled and in the primary color. Clicking it opens a popup
+titled with the column name, with a "Clear" button and the editor for the column's type:
+
+| Column `type`                       | Popup editor                           | Filter value                     |
+| ----------------------------------- | -------------------------------------- | -------------------------------- |
+| `number`, `currency`, `percent`     | From / To number inputs                | `[min?, max?]` (`inNumberRange`) |
+| `boolean`                           | All / Yes / No                         | `true` / `false`                 |
+| `select`                            | Search + checkbox list with row counts | array of options                 |
+| `date`, `date-time`                 | From / To date pickers                 | `[from?, to?]` as `YYYY-MM-DD`   |
+| anything else (`text`, `time`, ...) | Text search                            | string                           |
+
+Edits apply immediately (text and number inputs after a 300ms debounce — also when the popup
+closes first). The header popups and `DataTable.ColumnFilter` edit the same table state, so a
+filter set in one shows in the other. `headerFilters` is opt-in and defaults to `false`.
+
+```svelte
+<div class="h-96 min-h-0">
+	<DataTable.Root {table} caption="Invoices" headerFilters />
+</div>
 ```
 
 ### Add a refresh button

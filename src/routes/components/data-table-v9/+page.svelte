@@ -317,8 +317,13 @@
 			<DataTable.ColumnFilter table={typesTable} />
 		{/snippet}
 	</DataTable.Toolbar>
+	<p class="text-sm text-ink-dim">
+		<code>headerFilters</code> is on: hover a column header and click its funnel for a popup with that
+		type's filter — text, number range, Yes/No, options, or a From/To date range. It shares state with
+		the toolbar Filters button.
+	</p>
 	<div class="h-48 min-h-0">
-		<DataTable.Root table={typesTable} caption="Column type examples" />
+		<DataTable.Root table={typesTable} caption="Column type examples" headerFilters />
 	</div>
 </div>
 
@@ -379,6 +384,7 @@
 			<DataTable.Root
 				table={personTable}
 				caption="People"
+				headerFilters
 				onRowClick={({ row }) => (lastClicked = row)}
 				onRowDoubleClick={({ row }) => (lastDoubleClicked = row)}
 			/>
@@ -418,6 +424,7 @@
 			<VirtualDataTable.Root
 				table={virtualTable}
 				caption="Virtualized people"
+				headerFilters
 				onRowClick={({ row }) => (lastClicked = row)}
 				onRowDoubleClick={({ row }) => (lastDoubleClicked = row)}
 			/>

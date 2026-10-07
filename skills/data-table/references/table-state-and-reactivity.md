@@ -29,14 +29,19 @@ const filters = $derived(table.store.state.columnFilters);
 ```
 
 Change filters from app code with the table API — `column.setFilterValue(...)`,
-`table.setColumnFilters(...)`, `table.resetColumnFilters()`. `DataTable.ColumnFilter` shows the
-live filter value in its inputs (it only holds edits still inside the 300ms debounce), so an
-external change clears or updates the inputs, and editing one range bound keeps the other
-bound's current value. An edit still inside the debounce is dropped when its column's filter
-changes from outside — even if the filter ends on its old value again (e.g. reset, then saved
-filters restored), since `createTable` keeps a per-column filter revision that only goes up. A
-reset that finds the filter already empty changes nothing (TanStack keeps the state reference),
-so an edit typed into that empty filter still commits.
+`table.setColumnFilters(...)`, `table.resetColumnFilters()`. `DataTable.ColumnFilter` and the
+`headerFilters` popups show the live filter value in their inputs (they only hold edits still
+inside the 300ms debounce), so an external change clears or updates the inputs, and editing one
+range bound keeps the other bound's current value. An edit still inside the debounce is dropped
+when its column's filter changes from outside — even if the filter ends on its old value again
+(e.g. reset, then saved filters restored), since `createTable` keeps a per-column filter revision
+that only goes up.
+
+Pending edits belong to the table, not to the control they were typed in: the latest edit to a
+column wins whether it came from a header popup or the toolbar, and it still commits after its
+popup closes. `table.resetColumnFilters()` and `table.reset()` cancel every pending edit — also
+one typed into a column that had no filter yet, which a reset would otherwise leave untouched —
+and so does destroying the component that created the table.
 
 ```ts
 // e.g. drop every filter on columns that belong to the previous category

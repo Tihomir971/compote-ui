@@ -14,6 +14,8 @@
 		caption?: string;
 		emptyMessage?: string;
 		class?: ClassValue;
+		/** Show a filter funnel in the header of every filterable column. */
+		headerFilters?: boolean;
 		onRowClick?: (details: { row: T; event: MouseEvent }) => void;
 		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
 	};
@@ -23,6 +25,7 @@
 		caption,
 		emptyMessage = 'No rows found',
 		class: className,
+		headerFilters = false,
 		onRowClick,
 		onRowDoubleClick,
 		...rest
@@ -52,7 +55,7 @@
 			{#if caption}
 				<caption class="sr-only">{caption}</caption>
 			{/if}
-			<DataTableHead {table} {view} isVirtual />
+			<DataTableHead {table} {view} isVirtual {headerFilters} />
 			{#if scrollContainerRef}
 				<DataTableVirtualRows
 					{table}

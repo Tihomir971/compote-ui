@@ -58,6 +58,29 @@ Type defaults:
 
 Use one `grow: true` column to absorb extra horizontal space.
 
+## Date columns: display and filter
+
+`date`, `time` and `date-time` cells are read the same way for display and for the date filter,
+in the column's display zone — `formatOptions.timeZone` when set, otherwise the viewer's local
+zone:
+
+- `'2024-03-15'` (and a `CalendarDate`) is a calendar day. It always shows and filters as
+  15 March, also in zones west of UTC — it is never turned into a midnight-UTC instant.
+- `Date`, epoch milliseconds, strings with an offset (`Z`, `+02:00`, DB `+02`) and
+  `ZonedDateTime` are instants, shown and filtered on the day they fall on in the display zone.
+- A datetime without an offset (`'2024-03-15T10:30'`) is wall-clock time in the display zone.
+- Unreadable values (e.g. `'2024-02-30'`) render as `-` and never match an active filter.
+
+`date` and `date-time` columns filter by calendar-day range. The filter value is
+`[from?, to?]`, each `YYYY-MM-DD` or empty (open-ended); both days are inclusive, a reversed
+range is swapped, and an empty range removes the filter. Instants are judged by their calendar
+day, so 23- and 25-hour DST days need no special handling. `time` columns keep the text filter.
+
+```ts
+table.getColumn('createdAt')?.setFilterValue(['2024-03-01', '2024-03-31']); // March
+table.getColumn('createdAt')?.setFilterValue([undefined, '2024-03-31']); // up to 31 March
+```
+
 ## Select columns with multiple values
 
 A `type: 'select'` column may return an array (tags, multi-select attributes). The Funnel then
@@ -134,6 +157,8 @@ booleans and object-valued columns are excluded from global search. Also availab
 
 `table: DataTableInstance<T>` (required), `caption?: string` (sr-only `<caption>`),
 `emptyMessage?: string` (default `'No rows found'`), `class?: ClassValue`,
+`headerFilters?: boolean` (default `false`; funnel filter popups in column headers — see
+"Filter from column headers" in SKILL.md),
 `onRowClick?: (details: { row: T; event: MouseEvent }) => void`,
 `onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void` — `row` is `row.original`.
 Clicks on the row-selection checkbox and url-cell buttons do **not** trigger either handler.
