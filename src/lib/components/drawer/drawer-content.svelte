@@ -3,6 +3,7 @@
 	import type { DrawerContentBaseProps } from '@ark-ui/svelte/drawer';
 	import type { ClassValue } from 'svelte/elements';
 	import { cn } from 'tailwind-variants';
+	import { releaseFocusOnExitProps } from '#lib/utils/release-focus-on-exit';
 
 	interface Props extends DrawerContentBaseProps {
 		class?: ClassValue;
@@ -54,6 +55,7 @@
 			'pointer-events-auto relative flex h-full w-full flex-col bg-surface-1 shadow-xl outline-none',
 			className
 		)}
+		{...releaseFocusOnExitProps}
 	>
 		{@render children?.()}
 	</Drawer.Content>

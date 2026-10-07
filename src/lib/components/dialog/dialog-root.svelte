@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import { Portal } from '@ark-ui/svelte/portal';
+	import { releaseFocusOnExitProps } from '#lib/utils/release-focus-on-exit';
 	import { cn } from 'tailwind-variants';
 	import type { DialogProps } from './dialog.types';
 
@@ -35,6 +36,7 @@
 					'relative w-full max-w-2xl rounded-lg border bg-surface-1 p-6 shadow-xl data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
 					contentClass
 				)}
+				{...releaseFocusOnExitProps}
 			>
 				{@render children()}
 			</Dialog.Content>

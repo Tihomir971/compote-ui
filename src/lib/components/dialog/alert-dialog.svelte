@@ -2,6 +2,7 @@
 	import { PhX } from '#lib/icons';
 	import { Dialog } from '@ark-ui/svelte/dialog';
 	import { Portal } from '@ark-ui/svelte/portal';
+	import { releaseFocusOnExitProps } from '#lib/utils/release-focus-on-exit';
 	import type { AlertDialogProps } from './dialog.types';
 
 	let {
@@ -37,6 +38,7 @@
 		>
 			<Dialog.Content
 				class="relative w-full max-w-md rounded-lg border bg-surface-1 p-6 shadow-xl data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+				{...releaseFocusOnExitProps}
 			>
 				<Dialog.Title class="text-lg leading-none font-semibold tracking-tight">
 					{title}

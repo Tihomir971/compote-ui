@@ -3,6 +3,7 @@
 	import type { PopoverContentProps } from '@ark-ui/svelte/popover';
 	import { Portal } from '@ark-ui/svelte/portal';
 	import { cn } from 'tailwind-variants';
+	import { releaseFocusOnExitProps } from '#lib/utils/release-focus-on-exit';
 	import type { ClassValue } from 'svelte/elements';
 	import type { Snippet } from 'svelte';
 	import { getPopoverLabels } from './popover-labels.svelte';
@@ -47,6 +48,7 @@
 				'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
 				className
 			)}
+			{...releaseFocusOnExitProps}
 		>
 			{#if showArrow}
 				<Popover.Arrow>
