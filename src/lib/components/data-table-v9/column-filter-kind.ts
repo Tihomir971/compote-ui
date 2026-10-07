@@ -1,4 +1,4 @@
-import type { DataTableColumnType } from './types';
+import type { DataTableColumnMeta, DataTableColumnType } from './types';
 
 /** Which filter editor (and default filterFn) a column type uses. */
 export type ColumnFilterKind = 'text' | 'range' | 'boolean' | 'select' | 'date';
@@ -27,4 +27,14 @@ export function filterKindFor(type: DataTableColumnType | undefined): ColumnFilt
 		default:
 			return 'text';
 	}
+}
+
+/**
+ * The filter kind of a table column (from its `type`): the editor `ColumnFilterEditor` shows
+ * for it and the filter value shape its default filterFn expects.
+ */
+export function getColumnFilterKind(column: {
+	columnDef: { meta?: DataTableColumnMeta };
+}): ColumnFilterKind | null {
+	return filterKindFor(column.columnDef.meta?.type);
 }

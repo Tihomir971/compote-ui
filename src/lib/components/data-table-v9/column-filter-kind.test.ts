@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { filterKindFor } from './column-filter-kind';
+import { filterKindFor, getColumnFilterKind } from './column-filter-kind';
 
 describe('filterKindFor', () => {
 	it('maps numeric types to a range filter', () => {
@@ -28,5 +28,16 @@ describe('filterKindFor', () => {
 
 	it('gives action columns no filter', () => {
 		expect(filterKindFor('action')).toBeNull();
+	});
+});
+
+describe('getColumnFilterKind', () => {
+	it("reads the kind from the column's type", () => {
+		expect(getColumnFilterKind({ columnDef: { meta: { type: 'currency' } } })).toBe('range');
+		expect(getColumnFilterKind({ columnDef: { meta: { type: 'select' } } })).toBe('select');
+	});
+
+	it('treats a column without meta as text', () => {
+		expect(getColumnFilterKind({ columnDef: {} })).toBe('text');
 	});
 });

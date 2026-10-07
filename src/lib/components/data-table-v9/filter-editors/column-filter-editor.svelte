@@ -1,9 +1,8 @@
 <script lang="ts" generics="T extends RowData">
 	import type { Column, RowData } from '@tanstack/svelte-table';
 	import type { DataTableFeatures } from '../features';
-	import { getColumnMeta } from '../data-table-utils';
-	import { filterKindFor } from '../column-filter-kind';
-	import type { ColumnFilterEditing } from '../column-filter-editing.svelte';
+	import { getColumnFilterKind } from '../column-filter-kind';
+	import { ColumnFilterEditing } from '../column-filter-editing.svelte';
 	import TextFilterEditor from './text-filter-editor.svelte';
 	import RangeFilterEditor from './range-filter-editor.svelte';
 	import BooleanFilterEditor from './boolean-filter-editor.svelte';
@@ -12,12 +11,19 @@
 
 	type Props = {
 		column: Column<DataTableFeatures, T, unknown>;
-		editing: ColumnFilterEditing;
+		/**
+		 * Pending (debounced) text and range edits. Hosts that can tear an editor down while
+		 * it still holds an edit pass their own, with `isActive`; otherwise the editor uses
+		 * one bound to the column's table.
+		 */
+		editing?: ColumnFilterEditing;
 	};
 
-	let { column, editing }: Props = $props();
+	let { column, editing: editingProp }: Props = $props();
 
-	const kind = $derived(filterKindFor(getColumnMeta(column.columnDef)?.type));
+	const ownEditing = new ColumnFilterEditing({ table: () => column.table });
+	const editing = $derived(editingProp ?? ownEditing);
+	const kind = $derived(getColumnFilterKind(column));
 </script>
 
 {#if kind === 'range'}

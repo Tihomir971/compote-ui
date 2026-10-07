@@ -108,6 +108,11 @@
 		getRowId: (row) => row.label
 	});
 
+	// The custom filter panel: a few columns of typesTable, one per filter kind.
+	const panelColumns = ['numberVal', 'booleanVal', 'selectVal', 'dateVal']
+		.map((id) => typesTable.getColumn(id))
+		.filter((column) => column != null);
+
 	type SaleRow = {
 		product: string;
 		units: number;
@@ -324,6 +329,29 @@
 	</p>
 	<div class="h-48 min-h-0">
 		<DataTable.Root table={typesTable} caption="Column type examples" headerFilters />
+	</div>
+</div>
+
+<div class="max-w-5xl space-y-4 rounded-xl border border-surface-3 bg-surface-1 p-4">
+	<DataTable.Toolbar>
+		<DataTable.Title>Custom Filter Panel</DataTable.Title>
+	</DataTable.Toolbar>
+	<p class="text-sm text-ink-dim">
+		A side panel built from <code>ColumnFilterEditor</code> over the same table as above — set a filter
+		here and it shows in that table's header funnels and Filters button too.
+	</p>
+	<div class="flex gap-4">
+		<div class="w-56 shrink-0 space-y-3">
+			{#each panelColumns as column (column.id)}
+				<div class="space-y-1.5">
+					<h3 class="text-sm font-medium text-ink">{DataTable.getColumnLabel(column)}</h3>
+					<DataTable.ColumnFilterEditor {column} />
+				</div>
+			{/each}
+		</div>
+		<div class="h-48 min-h-0 min-w-0 flex-1">
+			<DataTable.Root table={typesTable} caption="Column type examples, filtered from the panel" />
+		</div>
 	</div>
 </div>
 

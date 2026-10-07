@@ -8,7 +8,7 @@ description: >
 metadata:
   type: composition
   library: compote-ui
-  library_version: '0.80.0'
+  library_version: '0.81.0'
 requires:
   - component-usage
   - theming
@@ -24,6 +24,8 @@ sources:
   - src/lib/components/data-table-v9/header/column-header-filter.svelte
   - src/lib/components/data-table-v9/column-filter-kind.ts
   - src/lib/components/data-table-v9/filter-editors/column-filter-editor.svelte
+  - src/lib/components/data-table-v9/column-filter-editing.svelte.ts
+  - src/lib/utils/select-filter.ts
   - src/lib/utils/date-filter.ts
   - src/lib/components/data-table-v9/virtual/data-table-virtualized.svelte
   - src/lib/components/data-table-v9/virtual/data-table-virtual-rows.svelte
@@ -191,6 +193,52 @@ filter set in one shows in the other. `headerFilters` is opt-in and defaults to 
 <div class="h-96 min-h-0">
 	<DataTable.Root {table} caption="Invoices" headerFilters />
 </div>
+```
+
+### Build your own filter UI
+
+For filter controls outside the toolbar and header popups (a facet panel beside the table, a
+filter sidebar), use the same building blocks the Funnel uses. They read and write the table's
+column filters, so the Funnel, header funnels and your UI always show the same state.
+
+- `ColumnFilterEditor` — the Funnel's editor for one column, picked by its type (see the table in
+  "Filter from column headers"). Pass `editing` only if the editor can be torn down while it holds
+  a pending text/range edit (see below); without it the editor uses one bound to the column's table.
+- `ColumnFilterEditing` — the debounced text/range edits pending on a table, shared by every host.
+  `isActive(columnId)` lets a host refuse writes from an editor it has already dropped (Ark's
+  NumberInput commits on the blur its unmount triggers).
+- `getColumnFilterKind(column)` / `filterKindFor(type)` — the column's `ColumnFilterKind`
+  (`range`, `boolean`, `select`, `date` or `text`), or `null` for columns that never filter.
+- `selectFilterOptions(column.getFacetedUniqueValues())` — a select column's options with row
+  counts, sorted by label, "(empty)" last with value `EMPTY_SELECT_VALUE` (`null`). Counts are
+  cross-filtered: every other active filter applies, the column's own does not.
+- `getColumnLabel(column)` and the `DataTableColumnInstance<T>` type for the columns you list.
+
+```svelte
+<script lang="ts">
+	import * as DataTable from 'compote-ui/data-table';
+
+	let { table }: { table: DataTable.DataTableInstance<Product> } = $props();
+
+	const facets = $derived(
+		table
+			.getAllLeafColumns()
+			.filter((column) => column.getCanFilter() && DataTable.getColumnFilterKind(column))
+	);
+</script>
+
+{#each facets as column (column.id)}
+	<h3>{DataTable.getColumnLabel(column)}</h3>
+	<DataTable.ColumnFilterEditor {column} />
+{/each}
+```
+
+A custom select list writes the same value the Funnel does — an array of options, `undefined`
+when none is ticked:
+
+```ts
+const selected = (column.getFilterValue() as DataTable.SelectFilterValue[] | undefined) ?? [];
+column.setFilterValue(next.length ? next : undefined);
 ```
 
 ### Add a refresh button

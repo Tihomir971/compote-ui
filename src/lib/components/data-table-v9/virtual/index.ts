@@ -1,7 +1,10 @@
 export { default as Root } from './data-table-virtualized.svelte';
 export {
 	ColumnFilter,
+	ColumnFilterEditing,
+	ColumnFilterEditor,
 	ColumnVisibility,
+	EMPTY_SELECT_VALUE,
 	FlexRender,
 	Refresh,
 	Search,
@@ -9,10 +12,16 @@ export {
 	Toolbar,
 	createDataTableColumnHelper,
 	createTable,
+	filterKindFor,
+	getColumnFilterKind,
+	getColumnLabel,
 	renderComponent,
-	renderSnippet
+	renderSnippet,
+	selectFilterOptions
 } from '../index';
 export type {
+	ColumnFilterEditingOptions,
+	ColumnFilterKind,
 	CreateDataTableOptions,
 	DataTableAccessorFnColumn,
 	DataTableAccessorKeyColumn,
@@ -21,10 +30,14 @@ export type {
 	DataTableCellRenderProps,
 	DataTableColumn,
 	DataTableColumnBase,
+	DataTableColumnInstance,
 	DataTableColumnOptions,
 	DataTableColumnType,
 	DataTableGroupColumn,
 	DataTableInstance,
 	DataTableLeafColumn,
-	DataTableLeafColumnBase
+	DataTableLeafColumnBase,
+	FilterableColumn,
+	SelectFilterOption,
+	SelectFilterValue
 } from '../index';

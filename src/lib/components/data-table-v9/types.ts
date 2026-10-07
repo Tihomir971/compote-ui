@@ -1,4 +1,4 @@
-import type { FilterFnOption, RowData } from '@tanstack/svelte-table';
+import type { Column, FilterFnOption, RowData } from '@tanstack/svelte-table';
 import type { Component, Snippet } from 'svelte';
 import type { DataTableFeatures } from './features';
 
@@ -98,6 +98,9 @@ export type DataTableGroupColumn<T extends RowData> = DataTableColumnBase & {
 };
 
 export type DataTableColumn<T extends RowData> = DataTableLeafColumn<T> | DataTableGroupColumn<T>;
+
+/** A column of a compote data table, as `table.getColumn()` and `getAllLeafColumns()` return it. */
+export type DataTableColumnInstance<T extends RowData> = Column<DataTableFeatures, T, unknown>;
 
 export type DataTableColumnMeta = {
 	align?: DataTableAlign;
