@@ -14,7 +14,10 @@
 </script>
 
 <div
-	class={cn('mb-4 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3', className)}
+	class={cn(
+		'grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 py-1.5',
+		className
+	)}
 	{...rest}
 >
 	<div class="col-start-1 row-start-1 flex min-w-0 flex-wrap items-center gap-3 justify-self-start">
