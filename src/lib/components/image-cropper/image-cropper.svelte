@@ -55,11 +55,11 @@
 		}
 	}));
 
-	// eslint-disable-next-line no-useless-assignment, @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-useless-assignment
 	getCroppedImage = (options) => imageCropper().getCroppedImage(options);
-	// eslint-disable-next-line no-useless-assignment, @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-useless-assignment
 	getCropData = () => imageCropper().getCropData();
-	// eslint-disable-next-line no-useless-assignment, @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-useless-assignment
 	getProcessedImage = (opts?: ProcessImageOptions) =>
 		cropImage(src, imageCropper().getCropData(), opts);
 
