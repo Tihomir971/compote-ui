@@ -18,6 +18,8 @@
 		headerFilters?: boolean;
 		onRowClick?: (details: { row: T; event: MouseEvent }) => void;
 		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
+		/** Extra classes for a row's `<tr>`; `row` is `row.original`. */
+		rowClass?: (row: T) => ClassValue;
 	};
 
 	let {
@@ -28,6 +30,7 @@
 		headerFilters = false,
 		onRowClick,
 		onRowDoubleClick,
+		rowClass,
 		...rest
 	}: Props = $props();
 
@@ -64,6 +67,7 @@
 					{emptyMessage}
 					{onRowClick}
 					{onRowDoubleClick}
+					{rowClass}
 				/>
 			{/if}
 			{#if view.hasFooter}

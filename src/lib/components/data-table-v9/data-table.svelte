@@ -26,6 +26,9 @@
 		headerFilters?: boolean;
 		onRowClick?: (details: { row: T; event: MouseEvent }) => void;
 		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
+		/** Extra classes for a row's `<tr>`; `row` is `row.original`. Set `--row-bg` too if the row has
+		 * pinned or selection cells, so they match the tint. */
+		rowClass?: (row: T) => ClassValue;
 	};
 
 	let {
@@ -36,6 +39,7 @@
 		headerFilters = false,
 		onRowClick,
 		onRowDoubleClick,
+		rowClass,
 		...rest
 	}: Props = $props();
 
@@ -90,7 +94,8 @@
 							'[--row-bg:var(--compote-surface-1)]',
 							'hover:bg-well/60 hover:[--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
 							rowSelected &&
-								'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
+								'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
+							rowClass?.(row.original)
 						)}
 						onclick={(event) => onRowClick?.({ row: row.original, event })}
 						ondblclick={(event) => onRowDoubleClick?.({ row: row.original, event })}

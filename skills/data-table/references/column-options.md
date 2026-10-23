@@ -162,6 +162,8 @@ booleans and object-valued columns are excluded from global search. Also availab
 `onRowClick?: (details: { row: T; event: MouseEvent }) => void`,
 `onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void` — `row` is `row.original`.
 Clicks on the row-selection checkbox and url-cell buttons do **not** trigger either handler.
+`rowClass?: (row: T) => ClassValue` adds classes to the row's `<tr>` (e.g. a tint; also set
+`--row-bg` so pinned and selection cells match).
 `VirtualDataTable.Root` shares the same props.
 
 ```svelte

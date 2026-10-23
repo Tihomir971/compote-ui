@@ -2,7 +2,7 @@
 	import type { RowData } from '@tanstack/svelte-table';
 	import { createVirtualizer } from '@tanstack/svelte-virtual';
 	import { untrack } from 'svelte';
-	import { cn } from 'tailwind-variants';
+	import { cn, type ClassValue } from 'tailwind-variants';
 	import type { DataTableInstance } from '../data-table-utils';
 	import type { DataTableViewState } from '../table-view-state.svelte';
 	import DataTableCellContent from '../data-table-cell-content.svelte';
@@ -25,10 +25,18 @@
 		emptyMessage: string;
 		onRowClick?: (details: { row: T; event: MouseEvent }) => void;
 		onRowDoubleClick?: (details: { row: T; event: MouseEvent }) => void;
+		rowClass?: (row: T) => ClassValue;
 	};
 
-	let { table, view, scrollContainer, emptyMessage, onRowClick, onRowDoubleClick }: Props =
-		$props();
+	let {
+		table,
+		view,
+		scrollContainer,
+		emptyMessage,
+		onRowClick,
+		onRowDoubleClick,
+		rowClass
+	}: Props = $props();
 
 	const rows = $derived(view.rowModel.rows);
 
@@ -79,7 +87,8 @@
 						'[--row-bg:var(--compote-surface-1)]',
 						'hover:bg-well/60 hover:[--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
 						rowSelected &&
-							'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]'
+							'bg-well/60 [--row-bg:color-mix(in_srgb,var(--compote-well)_60%,var(--compote-surface-1))]',
+						rowClass?.(row.original)
 					)}
 					style="display: flex; position: absolute; transform: translateY({virtualRow.start}px); width: 100%"
 					onclick={(event) => onRowClick?.({ row: row.original, event })}
