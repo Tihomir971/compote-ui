@@ -9,9 +9,12 @@ import {
 	type XlsxCell,
 	type XlsxDateFormats
 } from './xlsx-cell';
+import { rowsToExportData, type XlsxRowsColumn } from './xlsx-rows';
 
 export { DEFAULT_XLSX_DATE_FORMATS, toXlsxCell, xlsxNumberFormat } from './xlsx-cell';
 export type { XlsxCell, XlsxDateFormats, XlsxDatePart } from './xlsx-cell';
+export { rowsToExportData } from './xlsx-rows';
+export type { XlsxRowsColumn } from './xlsx-rows';
 
 export type XlsxExporterOptions = Partial<XlsxDateFormats> & {
 	id?: string;
@@ -85,6 +88,28 @@ export async function exportDataToXlsxBlob(
 		stickyRowsCount: 1,
 		columns: xlsxColumnWidths(data).map((width) => ({ width }))
 	}).toBlob();
+}
+
+export type XlsxRowsOptions = XlsxExporterOptions & {
+	/**
+	 * Locale the values are formatted in: the text that sets column widths, the text of cells
+	 * written as text (a number format Excel can't express), and the decimals of a number format.
+	 * Default `en-US`.
+	 */
+	locale?: string;
+};
+
+/**
+ * Plain row objects as an .xlsx file, for an export that isn't a DataTable: typed cells, a bold
+ * frozen header row and content-fitted column widths, exactly like a table export. Download
+ * the result with `downloadBlob(blob, 'name.xlsx')`.
+ */
+export async function exportRowsToXlsxBlob(
+	rows: ReadonlyArray<Record<string, unknown>>,
+	columns: ReadonlyArray<XlsxRowsColumn>,
+	options: XlsxRowsOptions = {}
+): Promise<Blob> {
+	return exportDataToXlsxBlob(rowsToExportData(rows, columns, options.locale), options);
 }
 
 function pickFormats({ date, time, dateTime }: XlsxExporterOptions): Partial<XlsxDateFormats> {

@@ -21,6 +21,8 @@ export * as ScrollArea from './components/scroll-area';
 export { loadImage, fileToDataUrl, cropImage, processImage } from './utils/image-processing';
 export type { ProcessImageOptions, CropRegion } from './utils/image-processing';
 
+export { downloadBlob } from './utils/download';
+
 export * as Carousel from './components/carousel';
 
 export { default as Checkbox } from './components/checkbox/checkbox.svelte';

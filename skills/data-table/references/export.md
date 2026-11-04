@@ -107,6 +107,55 @@ const excel = createXlsxExporter({
 `exportDataToXlsxBlob(data, options)` returns the file as a `Blob` (e.g. to upload instead of
 download), and `toXlsxCell` maps one cell.
 
+### Plain rows (an export that isn't a table)
+
+`exportRowsToXlsxBlob(rows, columns, options)` writes row objects with the same typed cells, bold
+frozen header and content-fitted widths. `columns` are `{ key, header?, type?, formatOptions? }`;
+`options` are the exporter options plus `locale` (default `en-US`), the locale values are
+formatted in: it sets the text column widths are measured on, the text of cells written as text
+(a number format Excel can't express, such as `notation: 'compact'`), and the decimals of a
+number format.
+`downloadBlob` (exported from `compote-ui`) hands the file to the browser. Browser-only: call it
+from an event handler.
+
+```ts
+import { downloadBlob } from 'compote-ui';
+import { exportRowsToXlsxBlob } from 'compote-ui/data-table/xlsx';
+
+const blob = await exportRowsToXlsxBlob(
+	rows, // Record<string, unknown>[]
+	[
+		{ key: 'sku', header: 'SKU' },
+		{
+			key: 'qty',
+			header: 'Qty',
+			type: 'number',
+			formatOptions: { useGrouping: false, maximumFractionDigits: 0 }
+		},
+		{
+			key: 'price',
+			header: 'Price',
+			type: 'number',
+			formatOptions: { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+		}
+	],
+	{ sheet: 'Cart' }
+);
+downloadBlob(blob, 'cart.xlsx');
+```
+
+- A column without a `type` (or `text`) is written as text, so a numeric column needs
+  `type: 'number'` to stay computable in Excel; a text SKU such as `00123` keeps its zeros.
+- A `number` column with no `formatOptions` shows as many decimals as each value has (up to 3):
+  give prices `minimumFractionDigits`/`maximumFractionDigits` for a fixed `#,##0.00`, and
+  `{ useGrouping: false, maximumFractionDigits: 0 }` for a plain `0` (quantities, ids);
+  `useGrouping: false` alone only drops the thousands separator, so `1.5` would be `0.0`.
+- Values are read like the table reads them: a numeric string in a `number` column is a number,
+  a `date` column takes a `Date`, an ISO string or an epoch number, and `NaN` or text that isn't
+  a number or date is an empty cell.
+- `null`, `undefined` and `''` are empty cells. `rowsToExportData(rows, columns, locale)` is the
+  conversion alone, if you want to pass the result to `exportDataToXlsxBlob` yourself.
+
 ## Custom exporter
 
 An exporter is `{ id, label, icon?, export(context) }`. `context` holds `table`, `scope`

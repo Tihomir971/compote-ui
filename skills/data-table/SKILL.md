@@ -34,6 +34,7 @@ sources:
   - src/lib/components/data-table-v9/toolbar/data-table-export.svelte
   - src/lib/components/data-table-v9/xlsx/index.ts
   - src/lib/components/data-table-v9/xlsx/xlsx-cell.ts
+  - src/lib/components/data-table-v9/xlsx/xlsx-rows.ts
   - src/lib/components/data-table-v9/virtual/data-table-virtualized.svelte
   - src/lib/components/data-table-v9/virtual/data-table-virtual-rows.svelte
 ---
