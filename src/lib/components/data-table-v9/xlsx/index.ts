@@ -20,8 +20,34 @@ export type XlsxExporterOptions = Partial<XlsxDateFormats> & {
 	sheet?: string;
 };
 
-// Roughly how many px a character of Excel's default font takes.
-const PX_PER_CHAR = 7;
+// Column widths in characters of Excel's default font.
+const MIN_COLUMN_WIDTH = 8;
+const MAX_COLUMN_WIDTH = 60;
+// One character of slack: char counts already overshoot narrow lowercase text, and this keeps
+// wide letters (W, M, capitals) from being cut off.
+const COLUMN_WIDTH_PADDING = 1;
+
+/** Characters in the longest line of `text` (code points, so č or 🙂 count once). */
+function longestLine(text: string): number {
+	let longest = 0;
+	for (const line of text.split(/\r\n|\r|\n/)) longest = Math.max(longest, Array.from(line).length);
+	return longest;
+}
+
+/**
+ * A width per column that fits its header and the longest cell text (the text the table
+ * shows, which is close to what Excel shows), plus padding, between 8 and 60 characters.
+ */
+export function xlsxColumnWidths(data: DataTableExportData): number[] {
+	return data.columns.map((column, index) => {
+		let longest = longestLine(column.header);
+		for (const cells of data.rows) {
+			const text = cells[index]?.text;
+			if (text) longest = Math.max(longest, longestLine(text));
+		}
+		return Math.min(MAX_COLUMN_WIDTH, Math.max(MIN_COLUMN_WIDTH, longest + COLUMN_WIDTH_PADDING));
+	});
+}
 
 /** The export data as sheet rows: a bold header row, then typed cells. */
 export function exportDataToSheet(
@@ -57,9 +83,7 @@ export async function exportDataToXlsxBlob(
 	return writeXlsxFile(sheetData as SheetData, {
 		sheet: options.sheet,
 		stickyRowsCount: 1,
-		columns: data.columns.map((column) => ({
-			width: Math.max(8, Math.round(column.size / PX_PER_CHAR))
-		}))
+		columns: xlsxColumnWidths(data).map((width) => ({ width }))
 	}).toBlob();
 }
 

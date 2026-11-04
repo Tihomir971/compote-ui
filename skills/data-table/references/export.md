@@ -89,7 +89,9 @@ Cells stay computable in Excel:
 - Everything else, and any column with its own `cell` but no `exportValue`, is the text the
   table shows. Typed cells can't hold formulas, so there is no `'` prefix.
 
-The header row is bold and frozen; column widths follow the table's.
+The header row is bold and frozen. Each column is as wide as its header or its longest cell
+text (longest line for multi-line text) plus 1 character, between 8 and 60
+(`xlsxColumnWidths(data)` computes them).
 
 ```ts
 import { createXlsxExporter } from 'compote-ui/data-table/xlsx';

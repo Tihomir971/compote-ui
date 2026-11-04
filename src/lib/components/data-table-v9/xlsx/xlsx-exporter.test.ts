@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { strFromU8, unzipSync } from 'fflate';
 import type { DataTableExportColumn, DataTableExportData } from '../export/export-data';
-import { exportDataToXlsxBlob } from './index';
+import { exportDataToXlsxBlob, xlsxColumnWidths } from './index';
 
 function column(overrides: Partial<DataTableExportColumn>): DataTableExportColumn {
 	return {
@@ -83,10 +83,35 @@ describe('exportDataToXlsxBlob', () => {
 		expect(styles).toContain('formatCode="dd.mm.yyyy"');
 	});
 
-	it('freezes the header row, sets column widths and names the sheet', async () => {
+	it('freezes the header row, fits column widths to the content and names the sheet', async () => {
 		const { sheet, workbook } = await writeXlsx();
 		expect(sheet).toContain('ySplit="1"');
-		expect(sheet).toMatch(/<col [^>]*width="20"/);
+		// Name: min 8; Amount: "$1,234.50" + 1; Day: "03/15/2024" + 1; Active: min 8; Start: "09:30 AM" + 1.
+		const widths = [...sheet.matchAll(/<col [^>]*width="([\d.]+)"/g)].map((m) => Number(m[1]));
+		expect(widths).toEqual([8, 10, 11, 8, 9]);
 		expect(workbook).toContain('name="People"');
+	});
+});
+
+describe('xlsxColumnWidths', () => {
+	const widthsOf = (header: string, texts: string[]) =>
+		xlsxColumnWidths({
+			columns: [column({ header })],
+			rows: texts.map((text) => [{ value: text, text }])
+		})[0];
+
+	it('fits the longest of the header and the cell texts, plus padding', () => {
+		expect(widthsOf('Description', ['short', 'a much longer description'])).toBe(26);
+		expect(widthsOf('A very long column header', ['x'])).toBe(26);
+	});
+
+	it('keeps a minimum and a maximum width', () => {
+		expect(widthsOf('Id', ['1', '2'])).toBe(8);
+		expect(widthsOf('Notes', ['x'.repeat(200)])).toBe(60);
+	});
+
+	it('measures the longest line of multi-line text, counting characters once', () => {
+		expect(widthsOf('Note', ['first line\nthe second, longer line'])).toBe(24);
+		expect(widthsOf('Ime', ['Đorđe Čučković'])).toBe(15);
 	});
 });
