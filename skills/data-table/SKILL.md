@@ -1,14 +1,15 @@
 ---
 name: data-table
 description: >
-  Load when using compote-ui/data-table or compote-ui/data-table/virtual.
-  Covers TanStack Table v9 wrapper usage, createTable,
+  Load when using compote-ui/data-table, compote-ui/data-table/virtual or
+  compote-ui/data-table/xlsx. Covers TanStack Table v9 wrapper usage, createTable,
   createDataTableColumnHelper, table columns, row selection, filters,
-  formatting, toolbars, virtualized imports, and optional peer dependencies.
+  formatting, toolbars, CSV/Excel export, virtualized imports, and optional
+  peer dependencies.
 metadata:
   type: composition
   library: compote-ui
-  library_version: '0.81.0'
+  library_version: '0.84.0'
 requires:
   - component-usage
   - theming
@@ -27,6 +28,12 @@ sources:
   - src/lib/components/data-table-v9/column-filter-editing.svelte.ts
   - src/lib/utils/select-filter.ts
   - src/lib/utils/date-filter.ts
+  - src/lib/utils/csv.ts
+  - src/lib/components/data-table-v9/export/export-data.ts
+  - src/lib/components/data-table-v9/export/csv-exporter.ts
+  - src/lib/components/data-table-v9/toolbar/data-table-export.svelte
+  - src/lib/components/data-table-v9/xlsx/index.ts
+  - src/lib/components/data-table-v9/xlsx/xlsx-cell.ts
   - src/lib/components/data-table-v9/virtual/data-table-virtualized.svelte
   - src/lib/components/data-table-v9/virtual/data-table-virtual-rows.svelte
 ---
@@ -266,6 +273,25 @@ spins its icon and sets `aria-busy` until the promise settles. Clicks while busy
 Props: `onRefresh: () => void | Promise<unknown>`, `loading?: boolean`, `triggerLabel?: string`
 (icon-only with `aria-label="Refresh"` and a tooltip when omitted). Errors thrown by `onRefresh` are not caught.
 
+### Export to a file
+
+`DataTable.Export` downloads the visible columns and the filtered, sorted rows. It writes CSV by
+default; pass `exporters` for more formats or your own (an exporter on the server, or a library
+the app already has). With selected rows it offers all rows or only the selected ones. Excel
+comes from `compote-ui/data-table/xlsx` and needs the optional peer `write-excel-file`.
+
+```svelte
+<script lang="ts">
+	import * as DataTable from 'compote-ui/data-table';
+	import { xlsxExporter } from 'compote-ui/data-table/xlsx';
+</script>
+
+<DataTable.Export {table} filename="invoices" exporters={[DataTable.csvExporter, xlsxExporter]} />
+```
+
+Exclude a column with `enableExport: false` (action columns are excluded by default). Use
+`exportValue` when a cell holds a value a file can't show. See [Export](references/export.md).
+
 ## Common Mistakes
 
 ### CRITICAL Missing id for accessorFn column
@@ -355,8 +381,20 @@ The virtual subpath imports `@tanstack/svelte-virtual`.
 
 Source: `package.json`, `src/lib/components/data-table-v9/virtual/data-table-virtual-rows.svelte`
 
+### HIGH Using the Excel exporter without its optional peer
+
+`compote-ui/data-table/xlsx` imports `write-excel-file` (dynamically, on export). Without it the
+app's build fails to resolve the import. Install it first:
+
+```bash
+bun add write-excel-file
+```
+
+Source: `package.json`, `src/lib/components/data-table-v9/xlsx/index.ts`
+
 ## References
 
 - [Column options](references/column-options.md)
 - [Table state and reactivity](references/table-state-and-reactivity.md)
 - [Virtual table](references/virtual-table.md)
+- [Export](references/export.md)

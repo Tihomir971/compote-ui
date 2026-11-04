@@ -65,6 +65,15 @@ export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<
 		grow?: boolean;
 		sum?: boolean;
 		footer?: (values: unknown[]) => string | number | undefined;
+		/**
+		 * The value an export writes for this column, in place of the accessor value. Use it
+		 * when the cell holds something a file can't show (an object rendered by
+		 * `cellComponent`). Without `cell`, its text is formatted by the column `type`; it is
+		 * never passed to `cell`, which keeps receiving the accessor value.
+		 */
+		exportValue?: (value: unknown, row: T) => unknown;
+		/** Whether exports include this column. Defaults to `true`, `false` for `type: 'action'`. */
+		enableExport?: boolean;
 		columns?: never;
 	};
 
@@ -110,4 +119,19 @@ export type DataTableColumnMeta = {
 	grow?: boolean;
 	sum?: boolean;
 	footer?: (values: unknown[]) => string | number | undefined;
+	/** Leaf columns only: what exports read. Set by `createTable`, not by consumers. */
+	export?: DataTableColumnExportMeta;
+};
+
+export type DataTableColumnExportMeta = {
+	enabled: boolean;
+	/** The column has its own `cell` renderer, so its text is not derived from `type`. */
+	hasCustomCell: boolean;
+	exportValue?: (value: unknown, row: never) => unknown;
+	/** The cell text the table shows (`cell`, else type formatting), without the `-` placeholder. */
+	formatText: (value: unknown, row: never) => string | undefined;
+	/** Type formatting only, never `cell` — for `exportValue` output. */
+	formatTypedText: (value: unknown) => string | undefined;
+	/** `formatLocale`, else the current locale context. */
+	resolveLocale: () => string;
 };

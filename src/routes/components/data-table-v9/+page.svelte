@@ -2,6 +2,7 @@
 	import Button from '#lib/components/button/button.svelte';
 	import * as DataTable from '#lib/components/data-table-v9';
 	import * as VirtualDataTable from '#lib/components/data-table-v9/virtual';
+	import { xlsxExporter } from '#lib/components/data-table-v9/xlsx';
 	import { makeData, type Person } from './makeData.ts';
 	import RowActionsCell from './RowActionsCell.svelte';
 
@@ -292,6 +293,10 @@
 		enableMultiRowSelection: true
 	});
 
+	const personExporters = [
+		DataTable.createCsvExporter({ id: 'csv-comma', label: 'CSV (comma)', separator: ',' })
+	];
+
 	const virtualTable = VirtualDataTable.createTable({
 		get data() {
 			return virtualData;
@@ -319,6 +324,12 @@
 	<DataTable.Toolbar>
 		<DataTable.Title>Column Types</DataTable.Title>
 		{#snippet right()}
+			<!-- CSV and Excel (typed cells); the action column is left out. -->
+			<DataTable.Export
+				table={typesTable}
+				filename="column-types"
+				exporters={[DataTable.csvExporter, xlsxExporter]}
+			/>
 			<DataTable.ColumnFilter table={typesTable} />
 		{/snippet}
 	</DataTable.Toolbar>
@@ -403,6 +414,8 @@
 			{/snippet}
 			{#snippet right()}
 				<DataTable.Refresh onRefresh={refreshData} />
+				<!-- One format, no selection: a plain button; select rows to get All/Selected rows. -->
+				<DataTable.Export table={personTable} filename="people" exporters={personExporters} />
 				<DataTable.ColumnFilter table={personTable} />
 				<DataTable.ColumnVisibility table={personTable} />
 			{/snippet}

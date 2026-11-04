@@ -10,6 +10,7 @@ export { default as PhCaretRight } from './PhCaretRight.svelte';
 export { default as PhCaretUp } from './PhCaretUp.svelte';
 export { default as PhCheck } from './PhCheck.svelte';
 export { default as PhColumns } from './PhColumns.svelte';
+export { default as PhDownloadSimple } from './PhDownloadSimple.svelte';
 export { default as PhEye } from './PhEye.svelte';
 export { default as PhEyeSlash } from './PhEyeSlash.svelte';
 export { default as PhFile } from './PhFile.svelte';

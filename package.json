@@ -53,14 +53,22 @@
 			"types": "./dist/components/data-table-v9/virtual/index.d.ts",
 			"svelte": "./dist/components/data-table-v9/virtual/index.js"
 		},
+		"./data-table/xlsx": {
+			"types": "./dist/components/data-table-v9/xlsx/index.d.ts",
+			"svelte": "./dist/components/data-table-v9/xlsx/index.js"
+		},
 		"./theme.css": "./dist/theme.css"
 	},
 	"peerDependencies": {
 		"@tanstack/svelte-table": ">=9.1.0 <10",
-		"svelte": "^5.0.0"
+		"svelte": "^5.0.0",
+		"write-excel-file": "^4.1.0"
 	},
 	"peerDependenciesMeta": {
 		"@tanstack/svelte-table": {
+			"optional": true
+		},
+		"write-excel-file": {
 			"optional": true
 		}
 	},
@@ -80,6 +88,7 @@
 		"eslint": "^10.12.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.23.1",
+		"fflate": "^0.8.2",
 		"globals": "^17.13.0",
 		"prettier": "^3.9.10",
 		"prettier-plugin-svelte": "^4.1.1",
@@ -94,7 +103,8 @@
 		"unplugin-icons": "^24.0.0",
 		"vite": "^8.3.4",
 		"vitest": "^5.0.4",
-		"wrangler": "^4.151.0"
+		"wrangler": "^4.151.0",
+		"write-excel-file": "^4.1.1"
 	},
 	"keywords": [
 		"svelte",

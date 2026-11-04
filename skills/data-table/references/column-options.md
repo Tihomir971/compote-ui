@@ -40,6 +40,10 @@ Common options:
 - `grow?: boolean`
 - `sum?: boolean`
 - `footer?: (values: unknown[]) => string | number | undefined`
+- `exportValue?: (value, row) => unknown` — the value `DataTable.Export` writes instead of the
+  accessor value (e.g. a number out of an object a `cellComponent` renders). Without `cell`, its
+  text is formatted by `type`; it is never passed to `cell`. See [Export](export.md).
+- `enableExport?: boolean` — defaults to `true`, `false` for `type: 'action'`.
 
 Type defaults:
 

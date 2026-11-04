@@ -18,7 +18,14 @@ import { useLocaleContext } from '@ark-ui/svelte/locale';
 import { onDestroy, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
-import { TYPE_NUMBER_FORMAT_DEFAULTS, type DataTableInstance } from './data-table-utils';
+import {
+	TYPE_NUMBER_FORMAT_DEFAULTS,
+	getBooleanCellValue,
+	getPhoneCellValue,
+	getUrlCellValue,
+	type DataTableInstance
+} from './data-table-utils';
+import { formatPhoneCellValue } from './phone-format';
 import { filterKindFor } from './column-filter-kind';
 import { dateCellTimeZone, formatDateCell } from './date-cell';
 import {
@@ -43,6 +50,7 @@ import type {
 	DataTableColumn,
 	DataTableGroupColumn,
 	DataTableLeafColumn,
+	DataTableColumnExportMeta,
 	DataTableColumnMeta
 } from './types';
 
@@ -249,7 +257,8 @@ function createColumns<T extends RowData>(
 				formatLocale: column.formatLocale,
 				grow: column.grow,
 				sum: column.sum,
-				footer: column.footer
+				footer: column.footer,
+				export: createExportMeta(column, localeCtx)
 			} satisfies DataTableColumnMeta,
 			// Select cells may hold an array (multi-value / tag columns): facet each item
 			// separately so the Funnel lists options, not value combinations.
@@ -388,15 +397,74 @@ function formatCellValue<T extends RowData>(
 		return renderSnippet(column.cellSnippet, { value, row });
 	}
 
+	return formatCellText(column, value, row, localeCtx) ?? '-';
+}
+
+/**
+ * A cell's text as the table shows it — `cell`, else type formatting — or undefined when
+ * empty. Shared by the cell renderer (which shows `-` for empty) and exports.
+ */
+function formatCellText<T extends RowData>(
+	column: DataTableLeafColumn<T>,
+	value: unknown,
+	row: T,
+	localeCtx: ReturnType<typeof useLocaleContext>
+): string | undefined {
 	const rendered = column.cell
 		? column.cell(value, row)
 		: applyTypeFormat(column, value, localeCtx);
-
-	if (rendered === null || rendered === undefined || rendered === '') {
-		return '-';
-	}
-
+	if (rendered === null || rendered === undefined || rendered === '') return undefined;
 	return String(rendered);
+}
+
+// DataTableCellContent draws these types itself, ignoring `cell`/`cellComponent`.
+const BUILT_IN_CELL_TYPES = new Set(['boolean', 'url', 'phone']);
+
+/**
+ * The text DataTableCellContent shows for a type it draws itself (`{ text: undefined }` for its
+ * `-`), or undefined for any other type. Keep in step with data-table-cell-content.svelte.
+ */
+function formatBuiltInCellText(
+	type: DataTableLeafColumn<RowData>['type'],
+	value: unknown
+): { text: string | undefined } | undefined {
+	switch (type) {
+		case 'boolean': {
+			const checked = getBooleanCellValue(value);
+			return { text: checked === undefined ? undefined : checked ? 'Yes' : 'No' };
+		}
+		case 'url':
+			return { text: getUrlCellValue(value) };
+		case 'phone': {
+			const phone = getPhoneCellValue(value);
+			return { text: phone === undefined ? undefined : formatPhoneCellValue(phone) };
+		}
+		default:
+			return undefined;
+	}
+}
+
+function createExportMeta<T extends RowData>(
+	column: DataTableLeafColumn<T>,
+	localeCtx: ReturnType<typeof useLocaleContext>
+): DataTableColumnExportMeta {
+	const builtIn = column.type !== undefined && BUILT_IN_CELL_TYPES.has(column.type);
+	return {
+		enabled: column.enableExport ?? column.type !== 'action',
+		hasCustomCell: typeof column.cell === 'function' && !builtIn,
+		exportValue: column.exportValue as DataTableColumnExportMeta['exportValue'],
+		formatText: (value, row) =>
+			builtIn
+				? formatBuiltInCellText(column.type, value)?.text
+				: formatCellText(column, value, row as T, localeCtx),
+		formatTypedText: (value) => {
+			if (builtIn) return formatBuiltInCellText(column.type, value)?.text;
+			const rendered = applyTypeFormat(column, value, localeCtx);
+			if (rendered === null || rendered === undefined || rendered === '') return undefined;
+			return String(rendered);
+		},
+		resolveLocale: () => column.formatLocale ?? localeCtx().locale
+	};
 }
 
 function getCellComponentProps<T extends RowData>(
