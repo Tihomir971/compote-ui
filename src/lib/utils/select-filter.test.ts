@@ -78,6 +78,56 @@ describe('selectFilterOptions', () => {
 	});
 });
 
+describe('selectFilterOptions numeric ordering', () => {
+	it('sorts number columns by magnitude, empty last', () => {
+		const facets = new Map<unknown, number>([
+			[10, 1],
+			[2, 1],
+			[-5, 1],
+			[1.5, 1],
+			[null, 1]
+		]);
+		expect(selectFilterOptions(facets).map((o) => o.value)).toEqual([
+			'-5',
+			'1.5',
+			'2',
+			'10',
+			EMPTY_SELECT_VALUE
+		]);
+	});
+
+	it('falls back to label order when a number column contains NaN', () => {
+		const facets = new Map<unknown, number>([
+			[10, 1],
+			[NaN, 1],
+			[2, 1]
+		]);
+		expect(selectFilterOptions(facets).map((o) => o.label)).toEqual(['2', '10', 'NaN']);
+	});
+
+	it('compares digit runs numerically in string labels', () => {
+		const facets = new Map<unknown, number>([
+			['Item 10', 1],
+			['Item 2', 1],
+			['Item 1', 1]
+		]);
+		expect(selectFilterOptions(facets).map((o) => o.label)).toEqual([
+			'Item 1',
+			'Item 2',
+			'Item 10'
+		]);
+	});
+
+	it('keeps plain strings in label order when numbers and strings are mixed', () => {
+		const facets = new Map<unknown, number>([
+			['b', 1],
+			[10, 1],
+			[2, 1]
+		]);
+		expect(selectFilterOptions(facets).map((o) => o.label)).toEqual(['2', '10', 'b']);
+	});
+});
+
 describe('selectFilterOptions with the string "null"', () => {
 	it('lists "null" as a regular option when there are no empty cells', () => {
 		const facets = new Map<unknown, number>([

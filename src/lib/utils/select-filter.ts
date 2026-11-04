@@ -74,7 +74,14 @@ export function selectFilterOptions(
 		label: value,
 		count
 	}));
-	options.sort((a, b) => a.label.localeCompare(b.label));
+	// A column whose values are all numbers sorts by magnitude (so 2 < 10, -5 < 1.5); anything
+	// else sorts by label with digit runs compared numerically ("Item 2" < "Item 10").
+	const allNumbers = [...facets.keys()].every((key) => isEmpty(key) || Number.isFinite(key));
+	options.sort(
+		allNumbers
+			? (a, b) => Number(a.value) - Number(b.value)
+			: (a, b) => a.label.localeCompare(b.label, undefined, { numeric: true })
+	);
 	if (emptyCount > 0) {
 		options.push({ value: EMPTY_SELECT_VALUE, label: emptyLabel, count: emptyCount });
 	}
