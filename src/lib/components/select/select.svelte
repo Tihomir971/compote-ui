@@ -17,6 +17,7 @@
 		invalid,
 		readOnly,
 		disabled,
+		deselectable = true,
 		...restProps
 	}: SelectProps<T> = $props();
 
@@ -34,7 +35,7 @@
 	invalid={isInvalid}
 	readOnly={isReadOnly}
 	disabled={isDisabled}
-	deselectable
+	{deselectable}
 	value={value ? [value.toString()] : []}
 	onValueChange={(valueChangeDetails) => {
 		if (valueChangeDetails.items == null || valueChangeDetails.items.length === 0) {
