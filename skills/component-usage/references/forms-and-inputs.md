@@ -170,7 +170,12 @@ If selection must be restricted to a fixed set (pick-only, no free text), use `C
 ```
 
 Props: `value?: number | null` (bindable), `label?`, `readonly?`, `layout?: 'vertical' | 'horizontal'`,
-plus Ark UI NumberInput props (`min`, `max`, `step`, `formatOptions`, `locale`).
+plus Ark UI NumberInput props (`min`, `max`, `step`, `largeStep`, `smallStep`, `formatOptions`,
+`locale`).
+
+Step modifiers (focused input): arrow keys and mouse wheel use `step`; **Shift** uses `largeStep`
+(default `10 × step`), **Alt** uses `smallStep` (default `step / 10`). Shift/Alt+wheel are handled by
+Compote (values are clamped to `min`/`max` unless `allowOverflow`); Ark only provides them for keys.
 
 `value` is controlled: setting it to `null` from outside clears the input. Use `defaultValue`
 (a string) only for uncontrolled use, without passing `value`.

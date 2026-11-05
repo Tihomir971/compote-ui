@@ -3,6 +3,7 @@
 
 	let numberInputValue = $state(1);
 	let numberCurrency = $state(1);
+	let numberWheel = $state(5);
 </script>
 
 <div class="max-w-4xl space-y-5 *:rounded-xl *:border *:border-surface-3 *:bg-surface-1 *:p-4">
@@ -25,6 +26,11 @@
 				step={0.01}
 				formatOptions={{ minimumFractionDigits: 2 }}
 				layout="horizontal"
+			/>
+			<NumberInput
+				label="Shift/Alt + wheel (focus, then scroll)"
+				bind:value={numberWheel}
+				step={1}
 			/>
 			<NumberInput
 				label="Custom step"

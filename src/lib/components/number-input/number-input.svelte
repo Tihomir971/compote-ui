@@ -5,6 +5,11 @@
 	import { PhCaretDown, PhCaretUp } from '#lib/icons';
 	import { useLocaleContext } from '@ark-ui/svelte/locale';
 	import { toNumberInputValue } from '#lib/utils/number-input-value';
+	import {
+		getWheelDirection,
+		getWheelNextValue,
+		getWheelStep
+	} from '#lib/utils/number-input-wheel';
 
 	let {
 		value = $bindable(),
@@ -21,6 +26,39 @@
 			? 'flex items-center justify-between gap-1.5 w-full data-disabled:opacity-50 data-disabled:grayscale'
 			: 'flex flex-col gap-1.5 w-full max-w-48 data-disabled:opacity-50 data-disabled:grayscale'
 	);
+
+	type NumberInputApi = { setValue: (n: number) => void; valueAsNumber: number };
+
+	// Shift+wheel steps by `largeStep`, Alt+wheel by `smallStep` (same modifiers as the arrow
+	// keys). Capture phase + stopImmediatePropagation keeps Zag's plain-step wheel handler from also
+	// firing. Zag only listens while the input is focused, so we do the same.
+	function modifierWheel(api: () => NumberInputApi) {
+		return (node: HTMLElement) => {
+			function onWheel(event: WheelEvent) {
+				if (restProps.disabled || readonly) return;
+				const input = node.querySelector('input');
+				if (!input || document.activeElement !== input) return;
+				const stepSize = getWheelStep(event, restProps);
+				if (stepSize === null) return;
+				event.preventDefault();
+				event.stopImmediatePropagation();
+				const direction = getWheelDirection(event);
+				if (direction === 0) return;
+				api().setValue(
+					getWheelNextValue({
+						current: api().valueAsNumber,
+						direction,
+						stepSize,
+						min: restProps.min,
+						max: restProps.max,
+						allowOverflow: restProps.allowOverflow
+					})
+				);
+			}
+			node.addEventListener('wheel', onWheel, { capture: true, passive: false });
+			return () => node.removeEventListener('wheel', onWheel, { capture: true });
+		};
+	}
 </script>
 
 <input type="hidden" {name} value={Number.isNaN(value) ? undefined : value?.toString()} />
@@ -47,23 +85,27 @@
 			<Field.RequiredIndicator />
 		</NumberInput.Label>
 	{/if}
-	<NumberInput.Control class="relative isolate">
-		<NumberInput.Input
-			class="h-9 w-full max-w-48 rounded-md border bg-surface-1 px-3 pr-8 text-right text-sm font-medium tabular-nums shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-invalid:border-danger data-invalid:focus-visible:ring-danger"
-		/>
-		<div
-			class="absolute top-px right-px bottom-px z-10 flex w-6 flex-col overflow-hidden rounded-r border-l"
-		>
-			<NumberInput.IncrementTrigger
-				class="inline-flex flex-1 cursor-pointer items-center justify-center border-none text-ink-dim hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary active:bg-surface-2 disabled:cursor-not-allowed disabled:text-ink-dim"
-			>
-				<PhCaretUp class="h-4 w-4 shrink-0" />
-			</NumberInput.IncrementTrigger>
-			<NumberInput.DecrementTrigger
-				class="inline-flex flex-1 cursor-pointer items-center justify-center border-t text-ink-dim hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary active:bg-surface-2 disabled:cursor-not-allowed disabled:text-ink-dim"
-			>
-				<PhCaretDown class="h-4 w-4 shrink-0" />
-			</NumberInput.DecrementTrigger>
-		</div>
-	</NumberInput.Control>
+	<NumberInput.Context>
+		{#snippet render(api)}
+			<NumberInput.Control class="relative isolate" {@attach modifierWheel(api)}>
+				<NumberInput.Input
+					class="h-9 w-full max-w-48 rounded-md border bg-surface-1 px-3 pr-8 text-right text-sm font-medium tabular-nums shadow-sm focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none data-invalid:border-danger data-invalid:focus-visible:ring-danger"
+				/>
+				<div
+					class="absolute top-px right-px bottom-px z-10 flex w-6 flex-col overflow-hidden rounded-r border-l"
+				>
+					<NumberInput.IncrementTrigger
+						class="inline-flex flex-1 cursor-pointer items-center justify-center border-none text-ink-dim hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary active:bg-surface-2 disabled:cursor-not-allowed disabled:text-ink-dim"
+					>
+						<PhCaretUp class="h-4 w-4 shrink-0" />
+					</NumberInput.IncrementTrigger>
+					<NumberInput.DecrementTrigger
+						class="inline-flex flex-1 cursor-pointer items-center justify-center border-t text-ink-dim hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary active:bg-surface-2 disabled:cursor-not-allowed disabled:text-ink-dim"
+					>
+						<PhCaretDown class="h-4 w-4 shrink-0" />
+					</NumberInput.DecrementTrigger>
+				</div>
+			</NumberInput.Control>
+		{/snippet}
+	</NumberInput.Context>
 </NumberInput.Root>
