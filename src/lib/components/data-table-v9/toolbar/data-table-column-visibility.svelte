@@ -22,7 +22,8 @@
 	const columnVisibility = $derived.by(() => table.atoms.columnVisibility.get());
 	const allLeafColumns = $derived.by(() => {
 		void columnVisibility;
-		return table.getAllLeafColumns();
+		// Filter-only columns are never shown, so the menu doesn't offer them.
+		return table.getAllLeafColumns().filter((c) => !c.columnDef.meta?.filterOnly);
 	});
 	const allColumnsVisible = $derived(
 		allLeafColumns.every((c) => !c.getCanHide() || columnVisibility[c.id] !== false)

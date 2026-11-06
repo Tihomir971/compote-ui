@@ -44,6 +44,10 @@ Common options:
   accessor value (e.g. a number out of an object a `cellComponent` renders). Without `cell`, its
   text is formatted by `type`; it is never passed to `cell`. See [Export](export.md).
 - `enableExport?: boolean` — defaults to `true`, `false` for `type: 'action'`.
+- `filterOnly?: boolean` — the column is never shown, only filtered (Funnel, facet panels built
+  on `getAllLeafColumns()`). It stays hidden through show all, resets and a persisted
+  `initialState.columnVisibility`, and the column menu leaves it out. Use it for columns that
+  exist to narrow rows (e.g. dynamic attribute columns), not to display them.
 
 Type defaults:
 

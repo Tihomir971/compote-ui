@@ -74,6 +74,12 @@ export type DataTableLeafColumnBase<T extends RowData> = DataTableColumnOptions<
 		exportValue?: (value: unknown, row: T) => unknown;
 		/** Whether exports include this column. Defaults to `true`, `false` for `type: 'action'`. */
 		enableExport?: boolean;
+		/**
+		 * A column that is never shown, only filtered (Funnel, facet panels). It stays hidden
+		 * whatever writes the visibility (show all, reset, a persisted `initialState`), and is
+		 * left out of the column menu. Filtering works on hidden columns.
+		 */
+		filterOnly?: boolean;
 		columns?: never;
 	};
 
@@ -119,6 +125,8 @@ export type DataTableColumnMeta = {
 	grow?: boolean;
 	sum?: boolean;
 	footer?: (values: unknown[]) => string | number | undefined;
+	/** Leaf columns only: the column is never shown (see `filterOnly`). */
+	filterOnly?: boolean;
 	/** Leaf columns only: what exports read. Set by `createTable`, not by consumers. */
 	export?: DataTableColumnExportMeta;
 };

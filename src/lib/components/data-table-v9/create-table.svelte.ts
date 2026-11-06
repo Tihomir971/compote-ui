@@ -15,7 +15,7 @@ import {
 	type RowSelectionState
 } from '@tanstack/svelte-table';
 import { useLocaleContext } from '@ark-ui/svelte/locale';
-import { onDestroy, type Component } from 'svelte';
+import { onDestroy, untrack, type Component } from 'svelte';
 import { renderComponent, renderSnippet } from '@tanstack/svelte-table';
 import { dataTableFeatures, type DataTableFeatures } from './features';
 import {
@@ -88,10 +88,25 @@ export type CreateDataTableOptions<T extends RowData> = {
 export function createTable<T extends RowData>(options: CreateDataTableOptions<T>) {
 	const localeCtx = useLocaleContext();
 
-	const initialColumnVisibility = {
-		...createColumnVisibility(options.columns),
-		...options.initialState?.columnVisibility
-	};
+	// Filter-only columns are forced hidden on every visibility write (TanStack's show-all
+	// writes `true` even for columns that can't hide, and a reset can restore a stale `true`),
+	// and whenever the columns change (a column added later has no entry, so it'd show).
+	const filterOnlyIds = $derived(
+		getLeafColumns(options.columns)
+			.filter((column) => column.filterOnly)
+			.map(getColumnId)
+	);
+
+	// Only the creation-time columns matter here; later ones go through the effect below.
+	const initialColumnVisibility = untrack(() =>
+		hideFilterOnly(
+			{
+				...createColumnVisibility(options.columns),
+				...options.initialState?.columnVisibility
+			},
+			filterOnlyIds
+		)
+	);
 
 	// Recompute the resolved column defs only when the source columns change.
 	// $derived keeps the reference stable between changes so TanStack's column
@@ -140,6 +155,17 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 			atom.set((old: ColumnFiltersState) => functionalUpdate(updater, old));
 			filterRevisions.bump(changedFilterIds(prev, atom.get()));
 		}) as never,
+		// Same write as TanStack's default handler, with filter-only columns kept hidden.
+		onColumnVisibilityChange: ((
+			updater: ColumnVisibilityState | ((old: ColumnVisibilityState) => ColumnVisibilityState)
+		) => {
+			table.baseAtoms.columnVisibility.set((old: ColumnVisibilityState) => {
+				const next = hideFilterOnly(functionalUpdate(updater, old), filterOnlyIds);
+				// TanStack's equality check ran before this normalization: a write asking to show
+				// a filter-only column can end where it started, and must not notify as a change.
+				return sameVisibility(old, next) ? old : next;
+			});
+		}) as never,
 		debugTable: options.debugTable,
 		initialState: {
 			columnVisibility: initialColumnVisibility,
@@ -172,6 +198,13 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 		onDestroy(() => subscription.unsubscribe());
 	}
 
+	// Columns passed through a getter can gain filter-only columns after creation; a no-op
+	// write runs them through the handler above. Untracked: only the ids should re-run it.
+	$effect.pre(() => {
+		void filterOnlyIds;
+		untrack(() => table.setColumnVisibility((visibility) => visibility));
+	});
+
 	registerFilterRevisions(table, filterRevisions);
 	// Debounced filter edits outlive the editors that made them, but not the table.
 	onDestroy(() => cancelPendingFilterEdits(table));
@@ -189,6 +222,9 @@ export function createTable<T extends RowData>(options: CreateDataTableOptions<T
 	table.reset = () => {
 		cancelPendingFilterEdits(table);
 		resetTable();
+		// The reset restores the creation-time visibility straight into the atoms, so a
+		// filter-only column added later would show; a no-op write hides it again.
+		table.setColumnVisibility((visibility) => visibility);
 	};
 
 	return table;
@@ -199,6 +235,22 @@ function createColumnVisibility<T extends RowData>(columns: DataTableColumn<T>[]
 		visibility[getColumnId(column)] = true;
 		return visibility;
 	}, {});
+}
+
+/** `visibility` with every `ids` column hidden; the same object when none was shown. */
+function hideFilterOnly(visibility: ColumnVisibilityState, ids: string[]): ColumnVisibilityState {
+	const shown = ids.filter((id) => visibility[id] !== false);
+	if (!shown.length) return visibility;
+	// Null-prototype like TanStack's own maps, so a `__proto__` column id is a plain key.
+	const next: ColumnVisibilityState = Object.assign(Object.create(null), visibility);
+	for (const id of shown) next[id] = false;
+	return next;
+}
+
+function sameVisibility(a: ColumnVisibilityState, b: ColumnVisibilityState): boolean {
+	if (a === b) return true;
+	const aKeys = Object.keys(a);
+	return aKeys.length === Object.keys(b).length && aKeys.every((id) => b[id] === a[id]);
 }
 
 function createColumnSizing<T extends RowData>(columns: DataTableColumn<T>[]) {
@@ -245,7 +297,8 @@ function createColumns<T extends RowData>(
 			minSize: column.minSize,
 			maxSize: column.maxSize,
 			enableResizing: column.enableResizing,
-			enableHiding: column.enableHiding,
+			// A filter-only column's own toggle must not show it.
+			enableHiding: column.filterOnly ? false : column.enableHiding,
 			enableSorting: column.enableSorting,
 			sortDescFirst: column.sortDescFirst,
 			enableColumnFilter: column.enableColumnFilter,
@@ -258,6 +311,7 @@ function createColumns<T extends RowData>(
 				grow: column.grow,
 				sum: column.sum,
 				footer: column.footer,
+				filterOnly: column.filterOnly,
 				export: createExportMeta(column, localeCtx)
 			} satisfies DataTableColumnMeta,
 			// Select cells may hold an array (multi-value / tag columns): facet each item
