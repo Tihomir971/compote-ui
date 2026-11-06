@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Tabs } from '@ark-ui/svelte/tabs';
 	import type { TabListBaseProps } from '@ark-ui/svelte/tabs';
+	import { cn } from 'tailwind-variants';
 
 	interface Props extends TabListBaseProps {
 		class?: string;
@@ -11,8 +12,10 @@
 
 <Tabs.List
 	{...rest}
-	class={className ??
-		"relative isolate inline-flex gap-1 data-[orientation='horizontal']:flex-row data-[orientation='vertical']:flex-col"}
+	class={cn(
+		"relative isolate inline-flex gap-1 data-[orientation='horizontal']:flex-row data-[orientation='vertical']:flex-col",
+		className
+	)}
 >
 	{@render children?.()}
 </Tabs.List>
